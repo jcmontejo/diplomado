@@ -70,11 +70,11 @@
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-id-badge"></i><span>Estudiantes</span></a>
                                 <ul class="collapse">
-                                <li><a href="{{url('/alumnos')}}">Todos los Estudiantes</a></li>
+                                    <li><a href="{{url('/alumnos')}}">Todos los Estudiantes</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="#" aria-expanded="true"><i class="ti-blackboard"></i><span>Docentes</span></a>
+                                <a href="{{url('/docentes')}}" aria-expanded="true"><i class="ti-blackboard"></i><span>Docentes</span></a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-agenda"></i><span>Control

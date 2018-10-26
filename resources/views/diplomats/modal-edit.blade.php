@@ -8,19 +8,20 @@
             <div class="modal-body">
                 <div class="col-lg-6 col-ml-12">
                     <form id="form">
-                        {{-- <input type="hidden" name="_token" value="{{csrf_token()}}" id="token"> --}}
-                        <div class="form-group">
-                            <input type="hidden" id="id">
-                            <label for="exampleInputEmail1">Nombre Diplomado</label>
-                            <input type="text" class="form-control" id="name" placeholder="Introduce nombre de diplomado...">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Clave Diplomado</label>
-                            <input type="text" class="form-control" id="key" placeholder="Introduce clave de diplomado...">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Costo Diplomado</label>
-                            <input type="number" class="form-control" id="cost">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <input type="hidden" id="id">
+                                <label for="exampleInputEmail1">Nombre Diplomado</label>
+                                <input type="text" class="form-control form-control-lg" id="name" placeholder="Introduce nombre de diplomado">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">Clave Diplomado</label>
+                                <input type="text" class="form-control form-control-lg" id="key" placeholder="Introduce clave de diplomado">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">Costo Diplomado</label>
+                                <input type="number" class="form-control form-control-lg" id="cost">
+                            </div>
                         </div>
                     </form>
                 </div>

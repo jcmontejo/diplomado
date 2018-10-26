@@ -30,6 +30,18 @@ Route::group(['prefix' => 'alumnos'], function () {
     Route::delete('eliminar/{id}', 'StudentController@destroy');
 });
 
+// Tecahers
+Route::group(['prefix' => 'docentes'], function () {
+    Route::get('/', 'TeacherController@index');
+    Route::get('/datos', 'TeacherController@dataTeachers')->name('teachers.data');
+    Route::get('/crear', 'TeacherController@create');
+    Route::post('/guardar', 'TeacherController@store');
+    Route::get('/editar/{id}', 'TeacherController@edit');
+    Route::put('/actualizar/{id}', 'TeacherController@update');
+    Route::delete('eliminar/{id}', 'TeacherController@destroy');
+});
+
+
 
 // Diplomats
 Route::group(['prefix' => 'diplomados'], function () {
