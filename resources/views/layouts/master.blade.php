@@ -64,7 +64,6 @@
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Perfil</span></a>
                                 <ul class="collapse">
                                     <li><a href="{{url('/perfil')}}">Actualizar Perfil</a></li>
-                                    <li><a href="#">Cambiar Contraseña</a></li>
                                 </ul>
                             </li>
                             <li>

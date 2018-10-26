@@ -23,14 +23,18 @@ Actualizar Perfil
                 </div>
                 <form id="form">
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <input type="hidden" id="id">
                             <label for="exampleInputEmail1">Nombre de Usuario</label>
                             <input type="text" class="form-control form-control-lg" id="name" placeholder="Introduce nombre de docente">
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label for="exampleInputPassword1">Correo Electrónico de Acceso</label>
                             <input type="email" class="form-control form-control-lg" id="email" placeholder="Introduce apellido paterno">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="exampleInputPassword1">Contraseña de Acceso</label>
+                            <input type="password" class="form-control form-control-lg" id="password" placeholder="********">
                         </div>
                     </div>
                     <div>
@@ -55,6 +59,7 @@ Actualizar Perfil
         $.get(route, function (res) {
             $("#name").val(res.name);
             $("#email").val(res.email);
+            $("#passowrd").val();
             $("#id").val(res.id);
         });
     }
@@ -63,6 +68,7 @@ Actualizar Perfil
         var value = $("#id").val();
         var name = $("#name").val();
         var email = $("#email").val();
+        var password = $("#password").val();
         var route = "perfil/actualizar/" + value;
 
         $.ajax({
@@ -74,7 +80,8 @@ Actualizar Perfil
             dataType: 'json',
             data: {
                 name: name,
-                email: email
+                email: email,
+                password: password
             },
             success: function () {
                 Show();

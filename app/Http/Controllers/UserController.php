@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
+
 use App\Http\Requests\StoreUser;
 use App\User;
 use Auth;
+use Hash;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -12,6 +14,7 @@ class UserController extends Controller
     {
         return view('profile.update');
     }
+
     public function edit()
     {
         $id = Auth::user()->id;
@@ -23,7 +26,12 @@ class UserController extends Controller
     public function update(StoreUser $request, $id)
     {
         $user = User::find($id);
-        $user->fill($request->all());
+        $user->name = $request->name;
+        $user->email = $request->email;
+        // check for password change
+        if ($request->get('password')) {
+            $user->password = bcrypt($request->get('password'));
+        }
         $user->save();
         return response()->json(["message" => "success"]);
     }
