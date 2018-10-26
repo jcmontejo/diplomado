@@ -19,6 +19,12 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::group(['prefix' => 'perfil'], function () {
+    Route::get('/','UserController@show');
+    Route::get('/editar/', 'UserController@edit');
+    Route::put('/actualizar/{id}', 'UserController@update');
+});
+
 // Students
 Route::group(['prefix' => 'alumnos'], function () {
     Route::get('/', 'StudentController@index');
@@ -40,8 +46,6 @@ Route::group(['prefix' => 'docentes'], function () {
     Route::put('/actualizar/{id}', 'TeacherController@update');
     Route::delete('eliminar/{id}', 'TeacherController@destroy');
 });
-
-
 
 // Diplomats
 Route::group(['prefix' => 'diplomados'], function () {
