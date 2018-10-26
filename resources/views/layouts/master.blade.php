@@ -68,13 +68,16 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-id-badge"></i><span>Estudiantes</span></a>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-id-badge"></i><span>Alumnos</span></a>
                                 <ul class="collapse">
-                                    <li><a href="{{url('/alumnos')}}">Todos los Estudiantes</a></li>
+                                    <li><a href="{{url('/alumnos')}}">Todos los Alumnos</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="{{url('/docentes')}}" aria-expanded="true"><i class="ti-blackboard"></i><span>Docentes</span></a>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-blackboard"></i><span>Docentes</span></a>
+                                <ul class="collapse">
+                                    <li><a href="{{url('/docentes')}}">Todos los Docentes</a></li>
+                                </ul>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-agenda"></i><span>Control
