@@ -70,7 +70,7 @@
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-id-badge"></i><span>Estudiantes</span></a>
                                 <ul class="collapse">
-                                    <li><a href="#">Todos los Estudiantes</a></li>
+                                <li><a href="{{url('/alumnos')}}">Todos los Estudiantes</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -131,7 +131,7 @@
                                     <li><a href="#">Balance Financiero</a></li>
                                 </ul>
                             </li>
-                            <li><a href="maps.html"><i class="fa fa-users"></i> <span>Gestión de Usuarios</span></a></li>
+                            <li><a href="#"><i class="fa fa-users"></i> <span>Gestión de Usuarios</span></a></li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-cogs"></i> <span>Administración</span></a>
                                 <ul class="collapse">
