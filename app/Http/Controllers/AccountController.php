@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Diplomat;
-use App\Http\Requests\StoreDiplomat;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreAccount;
+use App\Account;
 use Yajra\Datatables\Datatables;
 
-class DiplomatController extends Controller
+
+class AccountController extends Controller
 {
     public function index(Request $request)
     {
-        return view('diplomats.index');
+        return view('accounts.index');
     }
 
-    public function dataDiplomats()
+    public function dataAccounts()
     {
-        $diplomats = Diplomat::select(['id', 'name', 'key', 'cost']);
+        $accounts = Account::select(['id', 'account_name', 'opening_balance', 'note']);
 
-        return Datatables::of($diplomats)
-            ->addColumn('action', function ($diplomat) {
-                $id = $diplomat->id;
+        return Datatables::of($accounts)
+            ->addColumn('action', function ($account) {
+                $id = $account->id;
                 return '<td><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
                 <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></td>';
             })
@@ -29,14 +30,14 @@ class DiplomatController extends Controller
 
     public function create()
     {
-        return view('diplomats.create');
+        return view('accounts.create');
     }
 
-    public function store(StoreDiplomat $request)
+    public function store(StoreAccount $request)
     {
         if ($request->ajax()) {
             $validated = $request->validated();
-            Diplomat::create($request->all());
+            Account::create($request->all());
 
             return response()->json([
                 "message" => "success",
@@ -46,25 +47,24 @@ class DiplomatController extends Controller
 
     public function edit($id)
     {
-        $diplomat = Diplomat::find($id);
+        $diplomat = Account::find($id);
         return response()->json($diplomat);
     }
 
-    public function update(StoreDiplomat $request, $id)
+    public function update(StoreAccount $request, $id)
     {
-        $diplomat = Diplomat::find($id);
-        $diplomat->fill($request->all());
-        $diplomat->save();
+        $account = Account::find($id);
+        $account->fill($request->all());
+        $account->save();
         return response()->json(["message" => "success"]);
     }
 
     public function destroy($id)
     {
-        Diplomat::find($id)->delete();
+        Account::find($id)->delete();
 
         return response()->json([
             'success' => 'Record has been deleted successfully!',
         ]);
     }
-
 }

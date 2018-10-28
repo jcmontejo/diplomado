@@ -21,8 +21,8 @@ class StudentController extends Controller
         return Datatables::of($students)
             ->addColumn('action', function ($student) {
                 $id = $student->id;
-                return '<td><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-success mb-3" data-toggle="modal" data-target="#modalEdit">Editar</button>
-                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);">Eliminar</button></td>';
+                return '<td><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
+                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></td>';
             })
             ->make(true);
     }

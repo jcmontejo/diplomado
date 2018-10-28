@@ -23,16 +23,20 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Apellido Materno</label>
-                                <input type="text" class="form-control form-control-lg" id="motherlastname"
-                                    placeholder="Introduce apellido materno">
+                                <input type="text" class="form-control form-control-lg" id="motherlastname" placeholder="Introduce apellido materno">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="exampleInputPassword1">Fecha de Nacimiento</label>
                                 <input type="date" class="form-control form-control-lg" id="birthdate" placeholder="Introduce fecha de nacimiento">
                             </div>
                             <div class="form-group col-md-2">
-                                <label for="exampleInputPassword1">Genero (H/M)</label>
-                                <input type="text" class="form-control form-control-lg" id="sex" placeholder="H/M">
+                                <label for="exampleInputPassword1">Genero</label>
+                                <select name="sex" id="sex" class="form-control form-control-lg">
+                                    <option value="H">Hombre</option>
+                                    <option value="M">Mujer</option>
+                                </select>
+                                {{-- <input type="text" class="form-control form-control-lg" id="sex" placeholder="H/M">
+                                --}}
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="exampleInputPassword1">Teléfono de Contacto</label>
@@ -48,8 +52,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Fecha de Ingreso</label>
-                                <input type="date" class="form-control form-control-lg" id="joiningdate"
-                                    placeholder="">
+                                <input type="date" class="form-control form-control-lg" id="joiningdate" placeholder="">
                             </div>
                         </div>
                     </form>

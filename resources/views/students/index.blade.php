@@ -20,20 +20,9 @@ Lista de Alumnos
                 </div>
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createStudent">Agregar
                     Nuevo Alumno</a>
-                <table class="table" id="students">
-                    <thead>
-                        <th>Nombre Alumno</th>
-                        <th>Apellido Paterno</th>
-                        <th>Apellido Materno</th>
-                        <th>Fecha de Nacimiento</th>
-                        <th>Genero</th>
-                        <th>Teléfono</th>
-                        <th>Dirección</th>
-                        <th>Correo Electrónico</th>
-                        <th>Acciones</th>
-                    </thead>
-                    <tfoot>
-                        <tr>
+                <div class="table-responsive">
+                    <table class="table" id="students">
+                        <thead>
                             <th>Nombre Alumno</th>
                             <th>Apellido Paterno</th>
                             <th>Apellido Materno</th>
@@ -43,9 +32,22 @@ Lista de Alumnos
                             <th>Dirección</th>
                             <th>Correo Electrónico</th>
                             <th>Acciones</th>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Nombre Alumno</th>
+                                <th>Apellido Paterno</th>
+                                <th>Apellido Materno</th>
+                                <th>Fecha de Nacimiento</th>
+                                <th>Genero</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>Correo Electrónico</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -75,8 +77,7 @@ Lista de Alumnos
             processing: true,
             serverSide: true,
             ajax: '{!! url('alumnos/datos') !!}',
-            columns: [
-                {
+            columns: [{
                     data: 'name',
                     name: 'name'
                 },
@@ -240,6 +241,7 @@ Lista de Alumnos
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
             confirmButtonText: 'Si, borralo!',
             showLoaderOnConfirm: true,
 

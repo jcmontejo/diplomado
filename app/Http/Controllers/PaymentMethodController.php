@@ -1,26 +1,26 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Diplomat;
-use App\Http\Requests\StoreDiplomat;
+use App\PaymentMethod;
+use App\Http\Requests\StorePaymentMethod;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 
-class DiplomatController extends Controller
+
+class PaymentMethodController extends Controller
 {
     public function index(Request $request)
     {
-        return view('diplomats.index');
+        return view('payment_methods.index');
     }
 
-    public function dataDiplomats()
+    public function dataMethods()
     {
-        $diplomats = Diplomat::select(['id', 'name', 'key', 'cost']);
+        $methods = PaymentMethod::select(['id', 'name']);
 
-        return Datatables::of($diplomats)
-            ->addColumn('action', function ($diplomat) {
-                $id = $diplomat->id;
+        return Datatables::of($methods)
+            ->addColumn('action', function ($method) {
+                $id = $method->id;
                 return '<td><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
                 <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></td>';
             })
@@ -29,14 +29,14 @@ class DiplomatController extends Controller
 
     public function create()
     {
-        return view('diplomats.create');
+        return view('payment_methods.create');
     }
 
-    public function store(StoreDiplomat $request)
+    public function store(StorePaymentMethod $request)
     {
         if ($request->ajax()) {
             $validated = $request->validated();
-            Diplomat::create($request->all());
+            PaymentMethod::create($request->all());
 
             return response()->json([
                 "message" => "success",
@@ -46,25 +46,24 @@ class DiplomatController extends Controller
 
     public function edit($id)
     {
-        $diplomat = Diplomat::find($id);
-        return response()->json($diplomat);
+        $method = PaymentMethod::find($id);
+        return response()->json($method);
     }
 
-    public function update(StoreDiplomat $request, $id)
+    public function update(StorePaymentMethod $request, $id)
     {
-        $diplomat = Diplomat::find($id);
-        $diplomat->fill($request->all());
-        $diplomat->save();
+        $method = PaymentMethod::find($id);
+        $method->fill($request->all());
+        $method->save();
         return response()->json(["message" => "success"]);
     }
 
     public function destroy($id)
     {
-        Diplomat::find($id)->delete();
+        PaymentMethod::find($id)->delete();
 
         return response()->json([
             'success' => 'Record has been deleted successfully!',
         ]);
     }
-
 }

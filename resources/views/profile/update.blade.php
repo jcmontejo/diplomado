@@ -26,11 +26,11 @@ Actualizar Perfil
                         <div class="form-group col-md-4">
                             <input type="hidden" id="id">
                             <label for="exampleInputEmail1">Nombre de Usuario</label>
-                            <input type="text" class="form-control form-control-lg" id="name" placeholder="Introduce nombre de docente">
+                            <input type="text" class="form-control form-control-lg" id="name" placeholder="Introduce tu nombre de usuario">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="exampleInputPassword1">Correo Electrónico de Acceso</label>
-                            <input type="email" class="form-control form-control-lg" id="email" placeholder="Introduce apellido paterno">
+                            <input type="email" class="form-control form-control-lg" id="email" placeholder="EJ. admin@serendipity.com">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="exampleInputPassword1">Contraseña de Acceso</label>

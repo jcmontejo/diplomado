@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{{asset('/css/sweetalert2.min.css')}}">
     {{-- Datatables --}}
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{{asset('/datatables/buttons.dataTables.css')}}">
     @yield('css')
 </head>
 
@@ -57,43 +58,46 @@
                             <li class="active">
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Inicio</span></a>
                                 <ul class="collapse">
-                                    <li class="active"><a href="{{url('/home')}}">Panel Principal</a></li>
+                                    <li class="{{ Request::url()== url('/home') ? 'active' : '' }}"><a href="{{url('/home')}}">Panel
+                                            Principal</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Perfil</span></a>
-                                <ul class="collapse">
-                                    <li><a href="{{url('/perfil')}}">Actualizar Perfil</a></li>
+                                <ul class="collapse {{ Request::url()== url('/perfil') ? 'in' : '' }}">
+                                    <li class="{{ Request::url()== url('/perfil') ? 'active' : '' }}"><a href="{{url('/perfil')}}">Actualizar
+                                            Perfil</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-id-badge"></i><span>Alumnos</span></a>
-                                <ul class="collapse">
-                                    <li><a href="{{url('/alumnos')}}">Todos los Alumnos</a></li>
+                                <ul class="collapse {{ Request::url()== url('/alumnos') ? 'in' : '' }}">
+                                    <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a href="{{url('/alumnos')}}">Todos
+                                            los Alumnos</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-blackboard"></i><span>Docentes</span></a>
-                                <ul class="collapse">
-                                    <li><a href="{{url('/docentes')}}">Todos los Docentes</a></li>
+                                <ul class="collapse {{ Request::url()== url('/docentes') ? 'in' : '' }}">
+                                    <li class="{{ Request::url()== url('/docentes') ? 'active' : '' }}"><a href="{{url('/docentes')}}">Todos
+                                            los Docentes</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-agenda"></i><span>Control
                                         Escolar</span></a>
-                                <ul class="collapse">
-                                    <li><a href="{{url('diplomados')}}">Diplomados</a></li>
-                                    <li><a href="#">Materias</a></li>
-                                    <li><a href="#">Asignar Materias</a></li>
+                                <ul class="collapse {{ Request::url()== url('/diplomados') ? 'in' : '' }}">
+                                    <li class="{{ Request::url()== url('/diplomados') ? 'active' : '' }}"><a href="{{url('diplomados')}}">Diplomados</a></li>
+                                    <li><a href="#">Generaciones</a></li>
                                     <li><a href="#">Asignaciones</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-bank"></i>
                                     <span>Cuentas Bancarias</span></a>
-                                <ul class="collapse">
-                                    <li><a href="#">Cuentas</a></li>
-                                    <li><a href="#">Agregar Nueva</a></li>
+                                <ul class="collapse {{ Request::url()== url('/cuentas') ? 'in' : '' }}">
+                                    <li class="{{ Request::url()== url('/cuentas') ? 'active' : '' }}"><a href="{{url('/cuentas')}}">Todas
+                                            las Cuentas</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -102,7 +106,7 @@
                                 <ul class="collapse">
                                     <li><a href="#">Ingresos</a></li>
                                     <li><a href="#">Egresos</a></li>
-                                    <li><a href="#">Metodos de Pago</a></li>
+                                    <li><a href="{{url('/metodos-de-pago')}}">Metodos de Pago</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -393,6 +397,8 @@
     <script src="{{asset('/js/sweetalert2.min.js')}}"></script>
     {{-- Datatables --}}
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="{{asset('/datatables/buttons.server-side.js')}}"></script>
+    <script src="{{asset('/datatables/dataTables.buttons.js')}}"></script>
     @yield('js')
 </body>
 

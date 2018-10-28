@@ -25,6 +25,29 @@ Route::group(['prefix' => 'perfil'], function () {
     Route::put('/actualizar/{id}', 'UserController@update');
 });
 
+// Accounts
+Route::group(['prefix' => 'cuentas'], function () {
+    Route::get('/', 'AccountController@index');
+    Route::get('/datos', 'AccountController@dataAccounts')->name('accounts.data');
+    Route::get('/crear', 'AccountController@create');
+    Route::post('/guardar', 'AccountController@store');
+    Route::get('/editar/{id}', 'AccountController@edit');
+    Route::put('/actualizar/{id}', 'AccountController@update');
+    Route::delete('eliminar/{id}', 'AccountController@destroy');
+});
+
+// Payment Methods
+Route::group(['prefix' => 'metodos-de-pago'], function () {
+    Route::get('/', 'PaymentMethodController@index');
+    Route::get('/datos', 'PaymentMethodController@dataMethods')->name('payment_methods.data');
+    Route::get('/crear', 'PaymentMethodController@create');
+    Route::post('/guardar', 'PaymentMethodController@store');
+    Route::get('/editar/{id}', 'PaymentMethodController@edit');
+    Route::put('/actualizar/{id}', 'PaymentMethodController@update');
+    Route::delete('eliminar/{id}', 'PaymentMethodController@destroy');
+});
+
+
 // Students
 Route::group(['prefix' => 'alumnos'], function () {
     Route::get('/', 'StudentController@index');

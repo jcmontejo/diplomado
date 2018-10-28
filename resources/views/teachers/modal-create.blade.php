@@ -23,15 +23,21 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Apellido Materno</label>
-                                <input type="text" class="form-control form-control-lg" id="motherlastnameSave" placeholder="Introduce apellido materno">
+                                <input type="text" class="form-control form-control-lg" id="motherlastnameSave"
+                                    placeholder="Introduce apellido materno">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="exampleInputPassword1">Fecha de Nacimiento</label>
                                 <input type="date" class="form-control form-control-lg" id="birthdateSave" placeholder="Introduce fecha de nacimiento">
                             </div>
                             <div class="form-group col-md-2">
-                                <label for="exampleInputPassword1">Genero (H/M)</label>
-                                <input type="text" class="form-control form-control-lg" id="sexSave" placeholder="H/M">
+                                <label for="exampleInputPassword1">Genero</label>
+                                <select name="sexSave" id="sexSave" class="form-control form-control-lg">
+                                    <option value="H">Hombre</option>
+                                    <option value="M">Mujer</option>
+                                </select>
+                                {{-- <input type="text" class="form-control form-control-lg" id="sexSave" placeholder="H/M">
+                                --}}
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="exampleInputPassword1">Teléfono de Contacto</label>
@@ -47,7 +53,8 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Fecha de Ingreso</label>
-                                <input type="date" class="form-control form-control-lg" id="joiningdateSave" placeholder="">
+                                <input type="date" class="form-control form-control-lg" id="joiningdateSave"
+                                    placeholder="">
                             </div>
                         </div>
                     </form>
