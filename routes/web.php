@@ -19,10 +19,32 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+// Users
+Route::group(['prefix' => 'usuarios'], function () {
+    Route::get('/', 'EmployeController@index');
+    Route::get('/datos', 'EmployeController@dataEmployes')->name('users.data');
+    Route::get('/crear', 'EmployeController@create');
+    Route::post('/guardar', 'EmployeController@store');
+    Route::get('/editar/{id}', 'EmployeController@edit');
+    Route::put('/actualizar/{id}', 'EmployeController@update');
+    Route::delete('eliminar/{id}', 'EmployeController@destroy');
+});
+
 Route::group(['prefix' => 'perfil'], function () {
     Route::get('/','UserController@show');
     Route::get('/editar/', 'UserController@edit');
     Route::put('/actualizar/{id}', 'UserController@update');
+});
+
+// Fees
+Route::group(['prefix' => 'cuotas'], function () {
+    Route::get('/', 'AccountTypeController@index');
+    Route::get('/datos', 'AccountTypeController@dataAccounts')->name('accounts.data');
+    Route::get('/crear', 'AccountTypeController@create');
+    Route::post('/guardar', 'AccountTypeController@store');
+    Route::get('/editar/{id}', 'AccountTypeController@edit');
+    Route::put('/actualizar/{id}', 'AccountTypeController@update');
+    Route::delete('eliminar/{id}', 'AccountTypeController@destroy');
 });
 
 // Accounts

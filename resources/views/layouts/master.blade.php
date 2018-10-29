@@ -113,7 +113,7 @@
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-credit-card"></i>
                                     <span>Cuotas de Estudiantes</span></a>
                                 <ul class="collapse">
-                                    <li><a href="#">Tipos de Cuentas</a></li>
+                                    <li><a href="{{url('/cuotas')}}">Tipos de Cuotas</a></li>
                                     <li><a href="#">Recibir Pago</a></li>
                                     <li><a href="#">Historico de Pagos</a></li>
                                 </ul>
@@ -137,7 +137,8 @@
                                     <li><a href="#">Balance Financiero</a></li>
                                 </ul>
                             </li>
-                            <li><a href="#"><i class="fa fa-users"></i> <span>Gestión de Usuarios</span></a></li>
+                            <li class="{{ Request::url()== url('/usuarios') ? 'active' : '' }}"><a href="{{url('/usuarios')}}"><i
+                                        class="fa fa-users"></i> <span>Gestión de Usuarios</span></a></li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-cogs"></i> <span>Administración</span></a>
                                 <ul class="collapse">
