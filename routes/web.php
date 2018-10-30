@@ -103,3 +103,17 @@ Route::group(['prefix' => 'diplomados'], function () {
     Route::delete('eliminar/{id}', 'DiplomatController@destroy');
 });
 
+// Generations of Diplomats
+Route::group(['prefix' => 'generaciones'], function () {
+    Route::get('/', 'GenerationController@index');
+    Route::get('/datos', 'GenerationController@dataGenerations')->name('generations.data');
+    Route::get('/crear', 'GenerationController@create');
+    Route::post('/guardar', 'GenerationController@store');
+    Route::get('/editar/{id}', 'GenerationController@edit');
+    Route::put('/actualizar/{id}', 'GenerationController@update');
+    Route::delete('eliminar/{id}', 'GenerationController@destroy');
+
+    Route::get('/alumnos/buscar', 'GenerationController@findStudent');
+});
+
+

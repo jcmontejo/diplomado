@@ -88,7 +88,7 @@
                                         Escolar</span></a>
                                 <ul class="collapse {{ Request::url()== url('/diplomados') ? 'in' : '' }}">
                                     <li class="{{ Request::url()== url('/diplomados') ? 'active' : '' }}"><a href="{{url('diplomados')}}">Diplomados</a></li>
-                                    <li><a href="#">Generaciones</a></li>
+                                    <li class="{{ Request::url()== url('/generaciones') ? 'active' : '' }}"><a href="{{url('/generaciones')}}">Generaciones</a></li>
                                     <li><a href="#">Asignaciones</a></li>
                                 </ul>
                             </li>

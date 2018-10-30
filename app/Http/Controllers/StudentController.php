@@ -16,7 +16,7 @@ class StudentController extends Controller
 
     public function dataStudents()
     {
-        $students = Student::select(['id', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email']);
+        $students = Student::select(['id', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'created_at']);
 
         return Datatables::of($students)
             ->addColumn('action', function ($student) {

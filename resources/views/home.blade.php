@@ -81,7 +81,7 @@ Inicio
                 <div class="seo-fact sbg3">
                     <div class="p-4 d-flex justify-content-between align-items-center">
                         <div class="seofct-icon"><i class="fa fa-money"></i>Gastos</div>
-                        <h2>$ 5000.00
+                        <h2>$ 5,000.00
                         </h2>
                     </div>
                     <canvas id="seolinechart2" height="50"></canvas>

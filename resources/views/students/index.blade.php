@@ -31,6 +31,7 @@ Lista de Alumnos
                             <th>Teléfono</th>
                             <th>Dirección</th>
                             <th>Correo Electrónico</th>
+                            <th>Fecha/Hora de Creación</th>
                             <th>Acciones</th>
                         </thead>
                         <tfoot>
@@ -43,6 +44,7 @@ Lista de Alumnos
                                 <th>Teléfono</th>
                                 <th>Dirección</th>
                                 <th>Correo Electrónico</th>
+                                <th>Fecha/Hora de Creación</th>
                                 <th>Acciones</th>
                             </tr>
                         </tfoot>
@@ -108,6 +110,10 @@ Lista de Alumnos
                 {
                     data: 'email',
                     name: 'email'
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at'
                 },
                 {
                     data: 'action',
