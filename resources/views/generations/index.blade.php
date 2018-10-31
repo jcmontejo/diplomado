@@ -26,6 +26,7 @@ Lista de Generaciones
                 <table class="table" id="generations">
                     <thead>
                         <th>Nombre Diplomado</th>
+                        <th>Docente</th>
                         <th>Generación</th>
                         <th>Alumnos Inscritos</th>
                         <th>Costo de Diplomado</th>
@@ -37,6 +38,7 @@ Lista de Generaciones
                     <tfoot>
                         <tr>
                             <th>Nombre Diplomado</th>
+                            <th>Docente</th>
                             <th>Generación</th>
                             <th>Alumnos Inscritos</th>
                             <th>Costo de Diplomado</th>
@@ -88,6 +90,10 @@ Lista de Generaciones
                     name: 'name_diplomat'
                 },
                 {
+                    data: 'docent',
+                    name: 'docent'
+                },
+                {
                     data: 'number_generation',
                     name: 'number_generation'
                 },
@@ -131,6 +137,7 @@ Lista de Generaciones
         var number_payments = $("#numberpaymentsSave").val();
         var note = $("#noteSave").val();
         var status = $("#statusSave").val();
+        var docent_id = $("#docentSave").val();
         var route = "/generaciones/guardar"
 
         $.ajax({
@@ -145,7 +152,8 @@ Lista de Generaciones
                 number_generation: number_generation,
                 number_payments: number_payments,
                 note: note,
-                status: status
+                status: status,
+                docent_id: docent_id
             },
             success: function () {
                 $('#namediplomatSave').val('');
@@ -153,6 +161,7 @@ Lista de Generaciones
                 $('#numberpaymentsSave').val('');
                 $('#noteSave').val('');
                 $('#statusSave').val('');
+                $("#docentSave").val('');
                 $("#modalCreate").modal('toggle');
                 $('#message-error').css('display', 'none');
                 reload();

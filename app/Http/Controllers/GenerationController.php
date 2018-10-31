@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Diplomat;
 use App\Generation;
+use App\Teacher;
 use App\Http\Requests\StoreGeneration;
 use App\Student;
 use Illuminate\Http\Request;
@@ -14,7 +15,8 @@ class GenerationController extends Controller
     public function index(Request $request)
     {
         $diplomats = Diplomat::all();
-        return view('generations.index', compact('diplomats'));
+        $docents = Teacher::all();
+        return view('generations.index', compact('diplomats','docents'));
     }
 
     public function findStudent(Request $request)
@@ -40,7 +42,7 @@ class GenerationController extends Controller
 
     public function dataGenerations()
     {
-        $generations = Generation::select(['id', 'name_diplomat', 'number_generation', 'number_students',
+        $generations = Generation::select(['id', 'name_diplomat', 'docent', 'number_generation', 'number_students',
             'cost', 'number_payments', 'note', 'created_at']);
 
         return Datatables::of($generations)
@@ -56,6 +58,7 @@ class GenerationController extends Controller
         if ($request->ajax()) {
             $validated = $request->validated();
             $diplomat = Diplomat::find($request->name_diplomat);
+            $docent = Teacher::find($request->docent_id);
 
             $generation = new Generation();
             $generation->name_diplomat = $diplomat->name;
@@ -64,6 +67,8 @@ class GenerationController extends Controller
             $generation->number_payments = $request->number_payments;
             $generation->note = $request->note;
             $generation->status = $request->status;
+            $generation->docent = $docent->name.' '.$docent->last_name.' '.$docent->mother_last_name;
+            $generation->docent_id = $docent->id;
             $generation->diplomat_id = $diplomat->id;
             $generation->save();
 
