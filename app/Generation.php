@@ -12,6 +12,8 @@ class Generation extends Model
         'number_payments',
         'note',
         'status',
+        'docent',
+        'docent_id',
         'diplomat_id'
     ];
 }

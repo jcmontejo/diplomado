@@ -22,6 +22,16 @@
                                     @endforelse
                                 </select>
                             </div>
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputEmail1">Nombre Docente</label>
+                                <select class="form-control form-control-lg" id="docentSave">
+                                    @forelse ($docents as $docent)
+                                    <option value="{{$docent->id}}">{{$docent->name}} {{$docent->last_name}} {{$docent->mother_last_name}}</option>
+                                    @empty
+                                    <option value="0">No hay docentes registrados.</option>
+                                    @endforelse
+                                </select>
+                            </div>
                             <div class="form-group col-md-6">
                                 <label for="exampleInputPassword1">Número de Generación</label>
                                 <input type="number" class="form-control form-control-lg" id="numbergenerationSave">
