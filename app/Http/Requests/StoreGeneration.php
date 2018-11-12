@@ -27,7 +27,8 @@ class StoreGeneration extends FormRequest
             'name_diplomat' => 'required',
             'number_generation' => 'required',
             'number_payments' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'docent_id' => 'required',
         ];
     }
 }

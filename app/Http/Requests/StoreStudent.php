@@ -31,7 +31,8 @@ class StoreStudent extends FormRequest
             'sex' => 'required',
             'phone' => 'required|digits:10',
             'address' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            // 'profession' => 'required',
         ];
 
     }

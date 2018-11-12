@@ -30,6 +30,42 @@
     {{-- Datatables --}}
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{asset('/datatables/buttons.dataTables.css')}}">
+    <style>
+        /* Preloader */
+#preloader{
+	display: none;
+	background: rgba(39, 60, 117,.5);
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1100 !important;
+}
+    #preloader > .bar {
+  display: inline-block;
+  padding: 0px;
+  text-align: left;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%,-50%);	
+  width: 150px;
+  height: 20px;
+  border: 1px solid #2980b9;
+  border-radius: 3px;
+  background-image: 
+    repeating-linear-gradient(
+      -90deg,
+      #34495e,
+      #34495e 11px,
+      #eee 10px,
+      #eee 20px /* determines size */
+    );
+  background-size: 28px 28px;
+  animation: move .8s linear infinite;
+}
+    </style>
     @yield('css')
 </head>
 
@@ -40,6 +76,9 @@
     <!-- preloader area start -->
     <div id="preloader">
         <div class="loader"></div>
+    </div>
+    <div id="preloader">
+        <div class="bar"></div>
     </div>
     <!-- preloader area end -->
     <!-- page container area start -->
@@ -89,7 +128,6 @@
                                 <ul class="collapse {{ Request::url()== url('/diplomados') ? 'in' : '' }}">
                                     <li class="{{ Request::url()== url('/diplomados') ? 'active' : '' }}"><a href="{{url('diplomados')}}">Diplomados</a></li>
                                     <li class="{{ Request::url()== url('/generaciones') ? 'active' : '' }}"><a href="{{url('/generaciones')}}">Generaciones</a></li>
-                                    <li><a href="#">Asignaciones</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -114,7 +152,7 @@
                                     <span>Cuotas de Estudiantes</span></a>
                                 <ul class="collapse">
                                     <li><a href="{{url('/cuotas')}}">Tipos de Cuotas</a></li>
-                                    <li><a href="#">Recibir Pago</a></li>
+                                    <li><a href="{{url('/pagos/procesar')}}">Recibir Pago</a></li>
                                     <li><a href="#">Historico de Pagos</a></li>
                                 </ul>
                             </li>

@@ -79,6 +79,7 @@ Route::group(['prefix' => 'alumnos'], function () {
     Route::get('/editar/{id}', 'StudentController@edit');
     Route::put('/actualizar/{id}', 'StudentController@update');
     Route::delete('eliminar/{id}', 'StudentController@destroy');
+    Route::get('/documentos/{id}', 'StudentController@Documents');
 });
 
 // Tecahers
@@ -114,6 +115,17 @@ Route::group(['prefix' => 'generaciones'], function () {
     Route::delete('eliminar/{id}', 'GenerationController@destroy');
 
     Route::get('/alumnos/buscar', 'GenerationController@findStudent');
+    Route::get('/alumnos/inscritos/{id}', 'GenerationController@studentsInscription');
+    Route::get('/alumnos/{id}', 'GenerationController@students');
 });
+
+// Payments
+Route::group(['prefix' => 'pagos'], function () {
+    Route::get('/procesar', 'PaymentController@processPayment');
+    Route::get('/generaciones/{id}', 'PaymentController@listGenerations');
+    Route::get('/generaciones/alumnos/{id}', 'PaymentController@listStudents');
+
+});
+
 
 

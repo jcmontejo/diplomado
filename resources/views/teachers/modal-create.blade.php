@@ -62,7 +62,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary mt-4 pr-4 pl-4" data-dismiss="modal">Cerrar</button>
-                <a href="#" id="saveTeacher" class="btn btn-success mt-4 pr-4 pl-4" name="saveDiplomat">Guardar</a>
+                <a href="#" id="saveTeacher" class="btn btn-info mt-4 pr-4 pl-4" name="saveDiplomat">Guardar</a>
             </div>
         </div>
     </div>

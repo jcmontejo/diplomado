@@ -71,6 +71,13 @@ Lista de Generaciones
         })
     }
 
+    function reloadStudents() {
+        $('#students').each(function () {
+            dt = $(this).dataTable();
+            dt.fnDraw();
+        })
+    }
+
     function addStudents(btn) {
         var id_generation = btn.value;
         $("#id_generation").val(id_generation);
@@ -134,6 +141,7 @@ Lista de Generaciones
     $("#saveGeneration").click(function () {
         var name_diplomat = $('#namediplomatSave').val();
         var number_generation = $("#numbergenerationSave").val();
+        var start_date = $("#startdateSave").val();
         var number_payments = $("#numberpaymentsSave").val();
         var note = $("#noteSave").val();
         var status = $("#statusSave").val();
@@ -150,6 +158,7 @@ Lista de Generaciones
             data: {
                 name_diplomat: name_diplomat,
                 number_generation: number_generation,
+                start_date: start_date,
                 number_payments: number_payments,
                 note: note,
                 status: status,
@@ -158,6 +167,7 @@ Lista de Generaciones
             success: function () {
                 $('#namediplomatSave').val('');
                 $('#numbergenerationSave').val('');
+                $('#startdateSave').val('');
                 $('#numberpaymentsSave').val('');
                 $('#noteSave').val('');
                 $('#statusSave').val('');
@@ -261,6 +271,36 @@ Lista de Generaciones
                 });
             },
             allowOutsideClick: false
+        });
+    }
+
+     function Students(btn) {
+        var route = "generaciones/alumnos/" + btn.value;
+        
+        $('#students').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            ajax:  'generaciones/alumnos/' + btn.value,
+            columns: [{
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'last_name',
+                    name: 'last_name'
+                },
+                {
+                    data: 'mother_last_name',
+                    name: 'mother_last_name'
+                },
+                {
+                    data: 'debt',
+                    name: 'debt'
+                }
+            ]
         });
     }
 

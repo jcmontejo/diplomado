@@ -14,6 +14,13 @@ class Student extends Model
         'sex',
         'phone',
         'address',
-        'email'
+        'email',
+        'profession',
+        'documents'
     ];
+
+    public function document()
+    {
+        return $this->hasOne('App\Document');
+    }
 }

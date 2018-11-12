@@ -8,6 +8,10 @@ Alumnos
 @section('header-2')
 Lista de Alumnos
 @endsection
+@section('css')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
+@endsection
 @section('content')
 <div class="row">
     <!-- data table start -->
@@ -31,6 +35,8 @@ Lista de Alumnos
                             <th>Teléfono</th>
                             <th>Dirección</th>
                             <th>Correo Electrónico</th>
+                            <th>Profesión</th>
+                            <th>Documentos</th>
                             <th>Fecha/Hora de Creación</th>
                             <th>Acciones</th>
                         </thead>
@@ -44,6 +50,8 @@ Lista de Alumnos
                                 <th>Teléfono</th>
                                 <th>Dirección</th>
                                 <th>Correo Electrónico</th>
+                                <th>Profesión</th>
+                                <th>Documentos</th>
                                 <th>Fecha/Hora de Creación</th>
                                 <th>Acciones</th>
                             </tr>
@@ -57,11 +65,25 @@ Lista de Alumnos
 </div>
 @include('students.modal-edit')
 @include('students.modal-create')
+@include('students.modal-documents')
 @endsection
 @section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
         Charge();
+        $('#modalDocuments').on('hidden.bs.modal', function () {
+             $("#file-address").append("");
+             $("#file-address").attr("href", "");
+             $("#file-study").append("");
+             $("#file-study").attr("href", "");
+        });
+        $('#professionSave').select2({
+             width: '100%',
+             placeholder: 'Selecciona una profesión',
+             allowClear: true,
+             dropdownParent: $('#modalCreate')
+        });
     });
 
     function reload() {
@@ -112,6 +134,15 @@ Lista de Alumnos
                     name: 'email'
                 },
                 {
+                    data: 'profession',
+                    name: 'profession'
+                },
+                {
+                    data: 'documents',
+                     "render": function (data, type, row) {
+                          return (data == true) ? '<button class="btn btn-rounded btn-success mb-3"><i class="fa fa-check"></i></button>' : '<button class="btn btn-rounded btn-danger mb-3"><i class="fa fa-close"></i></button>';}
+                },
+                {
                     data: 'created_at',
                     name: 'created_at'
                 },
@@ -138,6 +169,30 @@ Lista de Alumnos
         var phone = $("#phoneSave").val();
         var address = $("#addressSave").val();
         var email = $("#emailSave").val();
+        var profession = $("#professionSave").val();
+        var generation_id = $("#generationSave").val();
+        // Save Files
+    
+           var file_address = $('#proofaddressSave').prop('files')[0];
+           var file_studies = $("#proofstudiesSave").prop('files')[0];
+
+            var form_data = new FormData();
+            // Files
+            form_data.append('file_address', file_address);
+            form_data.append('file_studies',file_studies);
+            // Rest of data
+            form_data.append('name', name);
+            form_data.append('last_name', last_name);
+            form_data.append('mother_last_name', mother_last_name);
+            form_data.append('birthdate', birthdate);
+            form_data.append('sex', sex);
+            form_data.append('phone', phone);
+            form_data.append('address', address);
+            form_data.append('email', email);
+            form_data.append('profession', profession);
+            form_data.append('generation_id', generation_id);
+    
+        // End
         var route = "/alumnos/guardar"
 
         $.ajax({
@@ -147,16 +202,20 @@ Lista de Alumnos
             },
             type: 'POST',
             dataType: 'json',
-            data: {
-                name: name,
-                last_name: last_name,
-                mother_last_name: mother_last_name,
-                birthdate: birthdate,
-                sex: sex,
-                phone: phone,
-                address: address,
-                email: email
-            },
+            data: form_data,
+            contentType: false, // The content type used when sending data to the server.
+            cache: false, // To unable request pages to be cached
+            processData: false,
+            // data: {
+            //     name: name,
+            //     last_name: last_name,
+            //     mother_last_name: mother_last_name,
+            //     birthdate: birthdate,
+            //     sex: sex,
+            //     phone: phone,
+            //     address: address,
+            //     email: email
+            // },
             success: function () {
                 $('#nameSave').val('');
                 $('#lastnameSave').val('');
@@ -275,6 +334,18 @@ Lista de Alumnos
                 });
             },
             allowOutsideClick: false
+        });
+    }
+
+    function Documents(btn) {
+        var route = "alumnos/documentos/" + btn.value;
+
+        $.get(route, function (res) {
+            $("#file-address").append(res.proof_of_address);
+            $("#file-address").attr("href", "assets/files/"+res.proof_of_address);
+            $("#file-study").append(res.proof_of_studies);
+            $("#file-study").attr("href", "assets/files/"+res.proof_of_studies);
+            $("#file-id").val(res.id);
         });
     }
 
