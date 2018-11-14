@@ -36,4 +36,19 @@ class StoreStudent extends FormRequest
         ];
 
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'El campo nombre es obligatorio.',
+            'last_name.required' => 'El campo apellido paterno es obligatorio.',
+            'mother_last_name.required' => 'El campo apellido materno es obligatorio.',
+            'birthdate.required' => 'El campo fecha de nacimiento es obligatorio.',
+            'sex.required' => 'El campo genero es obligatorio.',
+            'phone.required' => 'El campo teléfono es obligatorio.',
+            'address.required' => 'El campo dirección es obligatorio.',
+            'email.required' => 'El campo correo electrónico es obligatorio.',
+            'digits' => 'El teléfono debe ser de 10 digitos.'
+        ];
+    }
 }

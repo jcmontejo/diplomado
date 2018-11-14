@@ -206,17 +206,11 @@ Lista de Alumnos
             contentType: false, // The content type used when sending data to the server.
             cache: false, // To unable request pages to be cached
             processData: false,
-            // data: {
-            //     name: name,
-            //     last_name: last_name,
-            //     mother_last_name: mother_last_name,
-            //     birthdate: birthdate,
-            //     sex: sex,
-            //     phone: phone,
-            //     address: address,
-            //     email: email
-            // },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $('#nameSave').val('');
                 $('#lastnameSave').val('');
                 $('#motherlastnameSave').val('');
@@ -231,6 +225,7 @@ Lista de Alumnos
                 swal("Bien hecho!", "Has registrado un nuevo alumno!", "success");
             },
             error: function (data) {
+                $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
                 $.each(response.errors, function (key, value) {
@@ -288,10 +283,25 @@ Lista de Alumnos
                 address: address,
                 email: email
             },
+             beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $("#modalEdit").modal('toggle');
                 reload();
                 swal("Bien hecho!", "Has actualizado al alumno exitosamente!", "success");
+            },
+             error: function (data) {
+                $("#preloader").css("display", "none");
+                var response = JSON.parse(data.responseText);
+                var errorString = "<ul>";
+                $.each(response.errors, function (key, value) {
+                    errorString += "<li>" + value + "</li>";
+                });
+
+                $("#error-edit").html(errorString);
+                $("#message-error-edit").fadeIn();
             }
         });
     });

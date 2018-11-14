@@ -27,8 +27,21 @@ class StoreGeneration extends FormRequest
             'name_diplomat' => 'required',
             'number_generation' => 'required',
             'number_payments' => 'required',
+            'start_date' => 'required',
             'status' => 'required',
             'docent_id' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name_diplomat.required' => 'El campo nombre de diplomado es obligatorio.',
+            'number_generation.required' => 'El campo número de generación es obligatorio.',
+            'number_payments.required' => 'El campo nombre número de pagos es obligatorio.',
+            'status' => 'required',
+            'docent_id' => 'required',
+            'start_date.required' => 'El campo fecha de inicio es obligatorio.',
         ];
     }
 }

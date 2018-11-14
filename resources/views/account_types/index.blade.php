@@ -109,7 +109,11 @@ Lista de Cuotas
                 account_code: account_code,
                 note: note
             },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $('#accounttypeSave').val('');
                 $('#accountcodeSave').val('');
                 $('#noteSave').val('');
@@ -119,6 +123,7 @@ Lista de Cuotas
                 swal("Bien hecho!", "Has creado un nuevo tipo de cuota!", "success");
             },
             error: function (data) {
+                $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
                 $.each(response.errors, function (key, value) {
@@ -161,10 +166,25 @@ Lista de Cuotas
                 account_code: account_code,
                 note: note
             },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $("#modalEdit").modal('toggle');
                 reload();
                 swal("Bien hecho!", "Has actualizado el tipo de cuota exitosamente!", "success");
+            },
+            error: function (data) {
+                $("#preloader").css("display", "none");
+                var response = JSON.parse(data.responseText);
+                var errorString = "<ul>";
+                $.each(response.errors, function (key, value) {
+                    errorString += "<li>" + value + "</li>";
+                });
+
+                $("#error-edit").html(errorString);
+                $("#message-error-edit").fadeIn();
             }
         });
     });

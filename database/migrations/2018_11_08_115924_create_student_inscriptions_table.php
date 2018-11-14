@@ -15,9 +15,11 @@ class CreateStudentInscriptionsTable extends Migration
     {
         Schema::create('student_inscriptions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('student_id');
+            $table->unsignedInteger('student_id');
             $table->integer('diplomat_id');
             $table->integer('generation_id');
+            $table->foreign('student_id')->references('id')->on('students');
+
             $table->timestamps();
         });
     }

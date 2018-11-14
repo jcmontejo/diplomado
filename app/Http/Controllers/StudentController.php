@@ -78,6 +78,7 @@ class StudentController extends Controller
             $debt = new Debt();
             $debt->amount = $diplomat->cost;
             $debt->student_id = $student->id;
+            $debt->generation_id = $inscription->id;
             $debt->save();
 
             for ($i = 1; $i <= $generation->number_payments; $i++) {

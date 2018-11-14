@@ -164,7 +164,11 @@ Lista de Generaciones
                 status: status,
                 docent_id: docent_id
             },
+             beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $('#namediplomatSave').val('');
                 $('#numbergenerationSave').val('');
                 $('#startdateSave').val('');
@@ -178,6 +182,7 @@ Lista de Generaciones
                 swal("Bien hecho!", "Has creado una nueva generación!", "success");
             },
             error: function (data) {
+                $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
                 $.each(response.errors, function (key, value) {

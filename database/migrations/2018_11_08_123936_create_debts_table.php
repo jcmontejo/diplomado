@@ -17,9 +17,9 @@ class CreateDebtsTable extends Migration
             $table->increments('id');
             $table->float('amount', 8, 2);
             $table->string('status')->default('ACTIVA');
-            $table->unsignedInteger('student_id');
-
-            $table->foreign('student_id')->references('id')->on('students');
+            $table->integer('student_id');
+            $table->unsignedInteger('generation_id');
+            $table->foreign('generation_id')->references('id')->on('student_inscriptions');
             $table->timestamps();
         });
     }

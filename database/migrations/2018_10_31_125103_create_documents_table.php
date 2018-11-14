@@ -18,7 +18,7 @@ class CreateDocumentsTable extends Migration
             $table->string('proof_of_address')->nullable();
             $table->string('proof_of_studies')->nullable();
             $table->unsignedInteger('student_id');
-
+            // 
             $table->foreign('student_id')->references('id')->on('students');
             $table->timestamps();
         });

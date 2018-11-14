@@ -109,7 +109,11 @@ Lista de Diplomados
                 key: key,
                 cost: cost
             },
+             beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $('#nameSave').val('');
                 $('#keySave').val('');
                 $('#costSave').val('');
@@ -119,14 +123,15 @@ Lista de Diplomados
                 swal("Bien hecho!", "Has creado un nuevo diplomado!", "success");
             },
             error: function (data) {
+                $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
                 $.each(response.errors, function (key, value) {
                     errorString += "<li>" + value + "</li>";
                 });
 
-                $("#error").html(errorString);
-                $("#message-error").fadeIn();
+                $("#error-save").html(errorString);
+                $("#message-error-save").fadeIn();
             }
         });
     })
@@ -161,10 +166,25 @@ Lista de Diplomados
                 key: key,
                 cost
             },
+             beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $("#modalEdit").modal('toggle');
                 reload();
                 swal("Bien hecho!", "Has actualizado un diplomado exitosamente!", "success");
+            },
+            error: function (data) {
+                $("#preloader").css("display", "none");
+                var response = JSON.parse(data.responseText);
+                var errorString = "<ul>";
+                $.each(response.errors, function (key, value) {
+                    errorString += "<li>" + value + "</li>";
+                });
+
+                $("#error-edit").html(errorString);
+                $("#message-error-edit").fadeIn();
             }
         });
     });
