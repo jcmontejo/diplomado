@@ -6,11 +6,12 @@ use App\Debt;
 use App\Diplomat;
 use App\Document;
 use App\Generation;
-use App\Payment;
 use App\Http\Requests\StoreStudent;
+use App\Payment;
 use App\Student;
 use App\StudentInscription;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 
@@ -43,96 +44,102 @@ class StudentController extends Controller
 
     public function store(StoreStudent $request)
     {
-        if ($request->ajax()) {
-            $validated = $request->validated();
+        try {
+            DB::beginTransaction();
+            if ($request->ajax()) {
+                $validated = $request->validated();
 
-            $generation = Generation::find($request->generation_id);
-            $diplomat = Diplomat::find($generation->diplomat_id);
+                $generation = Generation::find($request->generation_id);
+                $diplomat = Diplomat::find($generation->diplomat_id);
 
-            $student = new Student();
-            $student->name = $request->name;
-            $student->last_name = $request->last_name;
-            $student->mother_last_name = $request->mother_last_name;
-            $student->birthdate = $request->birthdate;
-            $student->sex = $request->sex;
-            $student->phone = $request->phone;
-            $student->address = $request->address;
-            $student->email = $request->email;
-            $student->profession = $request->profession;
-            $student->save();
-
-            // Student Inscription
-            $inscription = new StudentInscription();
-            $inscription->student_id = $student->id;
-            $inscription->diplomat_id = $generation->diplomat_id;
-            $inscription->generation_id = $generation->id;
-            $inscription->save();
-
-            $generation->number_students = $generation->number_students + 1;
-            $generation->save();
-
-            // Add Debt and Payments to student
-            $date = new Carbon($generation->start_date);
-            $amount = ($diplomat->cost / $generation->number_payments);
-
-            $debt = new Debt();
-            $debt->amount = $diplomat->cost;
-            $debt->student_id = $student->id;
-            $debt->generation_id = $inscription->id;
-            $debt->save();
-
-            for ($i = 1; $i <= $generation->number_payments; $i++) {
-                $date = $date->addWeeks(2);
-                if ($date->dayOfWeek === Carbon::SUNDAY) {
-                    $date->addDay();
-                }
-                $datePayment[$i] = $date->toDateString();
-
-                $payment = new Payment();
-                $payment->concept = 'COLEGIATURA';
-                $payment->date = $datePayment[$i];
-                $payment->amount_payable = $amount;
-                $payment->student_id = $student->id;
-                $payment->generation_id = $generation->id;
-                $payment->diplomat_id = $diplomat->id;
-                $payment->status = 'PENDIENTE';
-                $payment->debt_id = $debt->id;
-                $payment->save();
-            }
-
-            if ($request->hasFile('file_address')) {
-                $extension = $request->file('file_address');
-                $extension = $request->file('file_address')->getClientOriginalExtension(); // getting excel extension
-                $dir = 'assets/files/';
-                $proof_of_address = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension;
-                $request->file('file_address')->move($dir, $proof_of_address);
-
-                // Save Document
-                $document = new Document();
-                $document->proof_of_address = $proof_of_address;
-                $document->student_id = $student->id;
-                $document->save();
-
-                // add document to student
-                $student->documents = 1;
+                $student = new Student();
+                $student->name = $request->name;
+                $student->last_name = $request->last_name;
+                $student->mother_last_name = $request->mother_last_name;
+                $student->birthdate = $request->birthdate;
+                $student->sex = $request->sex;
+                $student->phone = $request->phone;
+                $student->address = $request->address;
+                $student->email = $request->email;
+                $student->profession = $request->profession;
                 $student->save();
+
+                // Student Inscription
+                $inscription = new StudentInscription();
+                $inscription->student_id = $student->id;
+                $inscription->diplomat_id = $generation->diplomat_id;
+                $inscription->generation_id = $generation->id;
+                $inscription->save();
+
+                $generation->number_students = $generation->number_students + 1;
+                $generation->save();
+
+                // Add Debt and Payments to student
+                $date = new Carbon($generation->start_date);
+                $amount = ($diplomat->cost / $generation->number_payments);
+
+                $debt = new Debt();
+                $debt->amount = $diplomat->cost;
+                $debt->student_id = $student->id;
+                $debt->generation_id = $inscription->id;
+                $debt->save();
+
+                for ($i = 1; $i <= $generation->number_payments; $i++) {
+                    $date = $date->addWeeks(2);
+                    if ($date->dayOfWeek === Carbon::SUNDAY) {
+                        $date->addDay();
+                    }
+                    $datePayment[$i] = $date->toDateString();
+
+                    $payment = new Payment();
+                    $payment->concept = 'COLEGIATURA';
+                    $payment->date = $datePayment[$i];
+                    $payment->amount_payable = $amount;
+                    $payment->student_id = $student->id;
+                    $payment->generation_id = $generation->id;
+                    $payment->diplomat_id = $diplomat->id;
+                    $payment->status = 'PENDIENTE';
+                    $payment->debt_id = $debt->id;
+                    $payment->save();
+                }
+
+                if ($request->hasFile('file_address')) {
+                    $extension = $request->file('file_address');
+                    $extension = $request->file('file_address')->getClientOriginalExtension(); // getting excel extension
+                    $dir = 'assets/files/';
+                    $proof_of_address = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension;
+                    $request->file('file_address')->move($dir, $proof_of_address);
+
+                    // Save Document
+                    $document = new Document();
+                    $document->proof_of_address = $proof_of_address;
+                    $document->student_id = $student->id;
+                    $document->save();
+
+                    // add document to student
+                    $student->documents = 1;
+                    $student->save();
+                }
+
+                if ($request->hasFile('file_studies')) {
+                    $extension_study = $request->file('file_studies');
+                    $extension_study = $request->file('file_studies')->getClientOriginalExtension(); // getting excel extension
+                    $dir_study = 'assets/files/';
+                    $proof_of_studies = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension_study;
+                    $request->file('file_studies')->move($dir_study, $proof_of_studies);
+
+                    // Save Document
+                    $document->proof_of_studies = $proof_of_studies;
+                    $document->save();
+                }
+                DB::commit();
+
+                return response()->json([
+                    "message" => "success",
+                ]);
             }
-
-            if ($request->hasFile('file_studies')) {
-                $extension_study = $request->file('file_studies');
-                $extension_study = $request->file('file_studies')->getClientOriginalExtension(); // getting excel extension
-                $dir_study = 'assets/files/';
-                $proof_of_studies = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension_study;
-                $request->file('file_studies')->move($dir_study, $proof_of_studies);
-
-                // Save Document
-                $document->proof_of_studies = $proof_of_studies;
-                $document->save();
-            }
-
-            return response()->json([
-                "message" => "success",
-            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
         }
     }
 

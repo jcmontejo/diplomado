@@ -124,7 +124,9 @@ Route::group(['prefix' => 'pagos'], function () {
     Route::get('/procesar', 'PaymentController@processPayment');
     Route::get('/generaciones/{id}', 'PaymentController@listGenerations');
     Route::get('/generaciones/alumnos/{id}', 'PaymentController@listStudents');
-
+    Route::post('/recibir', 'PaymentController@received');
+    Route::get('/ingresos', 'PaymentController@showReceiveds');
+    Route::get('/recibidos', 'PaymentController@paymentReceiveds');
 });
 
 

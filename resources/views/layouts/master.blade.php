@@ -49,21 +49,10 @@
   left: 50%;
   top: 50%;
   position: absolute;
-  transform: translate(-50%,-50%);	
   width: 150px;
   height: 20px;
   border: 1px solid #2980b9;
-  border-radius: 3px;
-  background-image: 
-    repeating-linear-gradient(
-      -90deg,
-      #34495e,
-      #34495e 11px,
-      #eee 10px,
-      #eee 20px /* determines size */
-    );
   background-size: 28px 28px;
-  animation: move .8s linear infinite;
 }
     </style>
     @yield('css')
@@ -78,7 +67,9 @@
         <div class="loader"></div>
     </div>
     <div id="preloader">
-        <div class="bar"></div>
+        <div class="bar">
+            <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
+        </div>
     </div>
     <!-- preloader area end -->
     <!-- page container area start -->
@@ -142,7 +133,7 @@
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-money"></i>
                                     <span>Transacciones</span></a>
                                 <ul class="collapse">
-                                    <li><a href="#">Ingresos</a></li>
+                                    <li><a href="{{url('/pagos/ingresos')}}">Ingresos</a></li>
                                     <li><a href="#">Egresos</a></li>
                                     <li><a href="{{url('/metodos-de-pago')}}">Metodos de Pago</a></li>
                                 </ul>
