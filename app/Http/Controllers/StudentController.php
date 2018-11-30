@@ -36,7 +36,8 @@ class StudentController extends Controller
                  <button class="btn btn-rounded btn-xs btn-success mb-3" value="' . $id . '" OnClick="Documents(this);" data-toggle="modal" data-target="#modalDocuments"><i class="fa fa-eye"></i> Documentos</button></td>';
                 } else {
                     return '<td><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
-                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></td>';
+                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></td>
+                <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="addDocuments(this);" data-toggle="modal" data-target="#modalAddDocuments"><i class="fa fa-plus"></i> Agregar Documentos</button></td>';
                 }
             })
             ->make(true);

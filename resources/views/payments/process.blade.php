@@ -27,7 +27,7 @@ Procesar Pago
                 </div>
                 <form id="form">
                     <div class="form-row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <input type="hidden" id="id">
                             <label for="exampleInputEmail1">Selecciona Diplomado</label>
                             <select name="diplomat_id" id="diplomat_id" class="form-control">
@@ -39,16 +39,20 @@ Procesar Pago
                                 @endforelse
                             </select>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="exampleInputPassword1">Selecciona Generación</label>
                             <select name="generation_id" id="generation_id" class="form-control">
                                 <option value="">--- Selecciona Diplomado Antes---</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label for="exampleInputPassword1">Selecciona Alumno</label>
                             <select name="student_id" id="student_id" class="form-control student_id">
                             </select>
+                        </div>
+                         <div class="form-group col-md-3">
+                            <label for="exampleInputPassword1">Total para Liquidar</label>
+                            <input type="text" class="form-control bg-warning" id="debt" name="debt" style="font-size:30px; text-align:center;" readonly>
                         </div>
                         <div class="form-group col-md-4">
                             <label for="exampleInputPassword1">Fecha de Pago</label>
@@ -163,7 +167,7 @@ Procesar Pago
             }
         });
 
-        $('select[name="generation_id"]').on('click', function () {
+        $('select[name="generation_id"]').on('change', function () {
             var generationID = $(this).val();
             if (generationID) {
                 $.ajax({
@@ -185,6 +189,28 @@ Procesar Pago
                 });
             } else {
                 $('select[name="student_id"]').empty();
+            }
+        });
+
+        $('select[name="student_id"]').on('change', function () {
+            var inscriptionID = $(this).val();
+            if (inscriptionID) {
+                $.ajax({
+                    url: '/pagos/deuda/' + inscriptionID,
+                    type: "GET",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#preloader").css("display", "block");
+                    },
+                    success: function (data) {
+                        $("#preloader").css("display", "none");
+                        var input = $( "#debt" );
+                        input.val(data.amount);
+                        console.log(data.amount);
+                    }
+                });
+            } else {
+                $('select[name="debt"]').empty();
             }
         });
 
@@ -257,9 +283,15 @@ Procesar Pago
                 $('select[name="student_id"]').empty();
 
                 $('#message-error-save').css('display', 'none');
+                var input = $( "#debt" );
+                input.val('');
                 swal("Bien hecho!", "Hemos procesado el pago exitosamente!", "success");
             },
             error: function (data) {
+                if (data.status === 400) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Estas introduciendo un monto mayor al adeudo del alumno.", "error");
+                }
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";

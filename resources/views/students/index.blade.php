@@ -359,5 +359,17 @@ Lista de Alumnos
         });
     }
 
+    function addDocuments(btn) {
+        var route = "alumnos/documentos/agregar" + btn.value;
+
+        $.get(route, function (res) {
+            $("#file-address").append(res.proof_of_address);
+            $("#file-address").attr("href", "assets/files/"+res.proof_of_address);
+            $("#file-study").append(res.proof_of_studies);
+            $("#file-study").attr("href", "assets/files/"+res.proof_of_studies);
+            $("#file-id").val(res.id);
+        });
+    }
+
 </script>
 @endsection

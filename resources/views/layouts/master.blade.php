@@ -134,7 +134,7 @@
                                     <span>Transacciones</span></a>
                                 <ul class="collapse">
                                     <li><a href="{{url('/pagos/ingresos')}}">Ingresos</a></li>
-                                    <li><a href="#">Egresos</a></li>
+                                    <li><a href="{{url('/gastos')}}">Egresos</a></li>
                                     <li><a href="{{url('/metodos-de-pago')}}">Metodos de Pago</a></li>
                                 </ul>
                             </li>

@@ -182,6 +182,10 @@ Lista de Generaciones
                 swal("Bien hecho!", "Has creado una nueva generación!", "success");
             },
             error: function (data) {
+                if (data.status === 400) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Ya existe un registro de este diploma con el mismo número de generación.", "error");
+                }
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";

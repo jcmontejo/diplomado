@@ -98,6 +98,18 @@ class PaymentController extends Controller
         return json_encode($generations);
     }
 
+    public function debt($id)
+    {
+        $inscription = StudentInscription::find($id);
+        $debt = DB::table('debts')
+            ->select('amount')
+            ->where('generation_id', '=', $inscription->id)
+            ->where('status', '=', 'ACTIVA')
+            ->first();
+
+        return json_encode($debt);
+    }
+
     public function listStudents($id)
     {
         $students = DB::table('student_inscriptions')
@@ -148,6 +160,11 @@ class PaymentController extends Controller
                 ]);
             } else {
                 DB::rollBack();
+                return response()
+                    ->json([
+                        'message' => 'Cantidad mayor a la deuda.',
+                        'status' => 400,
+                    ], 400);
             }
         } catch (Exception $e) {
             DB::rollBack();

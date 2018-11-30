@@ -127,7 +127,21 @@ Route::group(['prefix' => 'pagos'], function () {
     Route::post('/recibir', 'PaymentController@received');
     Route::get('/ingresos', 'PaymentController@showReceiveds');
     Route::get('/recibidos', 'PaymentController@paymentReceiveds');
+    Route::get('/deuda/{id}', 'PaymentController@debt');
 });
+
+// Expenses
+Route::group(['prefix' => 'gastos'], function () {
+    Route::get('/', 'ExpenseController@index');
+    Route::get('/datos', 'ExpenseController@dataExpenses')->name('expenses.data');
+    Route::get('/crear', 'ExpenseController@create');
+    Route::post('/guardar', 'ExpenseController@store');
+    Route::get('/editar/{id}', 'ExpenseController@edit');
+    Route::put('/actualizar/{id}', 'ExpenseController@update');
+    Route::delete('eliminar/{id}', 'ExpenseController@destroy');
+});
+
+
 
 
 
