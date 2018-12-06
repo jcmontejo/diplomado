@@ -144,25 +144,23 @@
                                 <ul class="collapse">
                                     <li><a href="{{url('/cuotas')}}">Tipos de Cuotas</a></li>
                                     <li><a href="{{url('/pagos/procesar')}}">Recibir Pago</a></li>
-                                    <li><a href="#">Historico de Pagos</a></li>
+                                    {{-- <li><a href="#">Historico de Pagos</a></li> --}}
                                 </ul>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-envelope"></i>
-                                    <span>Email & SMS</span></a>
+                                    <span>Email</span></a>
                                 <ul class="collapse">
-                                    <li><a href="#">Enviar SMS</a></li>
-                                    <li><a href="#">Mensajes SMS Enviados</a></li>
-                                    <li><a href="#">Enviar EMAIL</a></li>
-                                    <li><a href="#">Mensajes EMAIL Enviados</a></li>
+                                    <li><a href="{{url('/mensajeria/crear')}}">Enviar</a></li>
+                                    <li><a href="#">Mensajes Enviados</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-line-chart"></i>
                                     <span>Reportes</span></a>
                                 <ul class="collapse">
-                                    <li><a href="#">Reporte de Ingresos</a></li>
-                                    <li><a href="#">Reporte de Egresos</a></li>
+                                    <li><a href="{{url('/pagos/ingresos')}}">Reporte de Ingresos</a></li>
+                                    <li><a href="{{url('/gastos')}}">Reporte de Egresos</a></li>
                                     <li><a href="#">Balance Financiero</a></li>
                                 </ul>
                             </li>
@@ -195,15 +193,15 @@
                             <span></span>
                             <span></span>
                         </div>
-                        <div class="search-box pull-left">
+                        {{-- <div class="search-box pull-left">
                             <form action="#">
                                 <input type="text" name="search" placeholder="Buscar..." required>
                                 <i class="ti-search"></i>
                             </form>
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- profile info & task notification -->
-                    <div class="col-md-6 col-sm-4 clearfix">
+                    {{-- <div class="col-md-6 col-sm-4 clearfix">
                         <ul class="notification-area pull-right">
                             <li id="full-view"><i class="ti-fullscreen"></i></li>
                             <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
@@ -345,7 +343,7 @@
                                 </div>
                             </li>
                         </ul>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <!-- header area end -->
@@ -429,6 +427,9 @@
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="{{asset('/datatables/buttons.server-side.js')}}"></script>
     <script src="{{asset('/datatables/dataTables.buttons.js')}}"></script>
+    {{-- SummerNote --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
     @yield('js')
 </body>
 

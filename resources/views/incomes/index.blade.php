@@ -47,6 +47,7 @@ Total de Ingresos
                             <th>Importe</th>
                             <th>Descuento</th>
                             <th>Total</th>
+                            <th>Acciones</th>
                         </thead>
                         <tfoot>
                             <tr>
@@ -162,6 +163,10 @@ Total de Ingresos
                 {
                     data: 'total',
                     name: 'total'
+                },
+                {
+                    data: 'action',
+                    name: 'action'
                 },
             ]
         });

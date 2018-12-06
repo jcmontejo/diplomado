@@ -23,7 +23,6 @@ Lista de Alumnos
                         <th>Nombre Alumno</th>
                         <th>Apellido Paterno</th>
                         <th>Apellido Materno</th>
-                        <th>Total Adeudo</th>
                         <th>Fecha-Hora de Inscripción</th>
                     </thead>
                     <tbody>
@@ -32,7 +31,7 @@ Lista de Alumnos
                             <td>{{$student->name}}</td>
                             <td>{{$student->last_name}}</td>
                             <td>{{$student->mother_last_name}}</td>
-                            <td>${{number_format($student->debt,2)}}</td>
+                            {{-- <td>${{number_format($student->debt,2)}}</td> --}}
                             <td><span class="badge badge-pill badge-primary">{{$student->date}}</span></td>
                         </tr>
                         @endforeach

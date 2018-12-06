@@ -18,6 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/descargar/recibo/{id}', 'PaymentController@voucher');
+
 
 // Users
 Route::group(['prefix' => 'usuarios'], function () {
@@ -80,6 +82,10 @@ Route::group(['prefix' => 'alumnos'], function () {
     Route::put('/actualizar/{id}', 'StudentController@update');
     Route::delete('eliminar/{id}', 'StudentController@destroy');
     Route::get('/documentos/{id}', 'StudentController@Documents');
+    Route::get('/consultar/{id}', 'StudentController@show');
+    Route::post('/subir/documentos', 'StudentController@uploadDocuments');
+    Route::get('/consultar/{id}', 'StudentController@searchStudent');
+    Route::post('/procesar/inscripcion', 'StudentController@incscriptionStudent');
 });
 
 // Tecahers
@@ -140,6 +146,13 @@ Route::group(['prefix' => 'gastos'], function () {
     Route::put('/actualizar/{id}', 'ExpenseController@update');
     Route::delete('eliminar/{id}', 'ExpenseController@destroy');
 });
+
+// Messages
+Route::group(['prefix' => 'mensajeria'], function () {
+    Route::get('/crear', 'MessageController@create');
+    Route::post('/enviar', 'MessageController@store');
+});
+
 
 
 

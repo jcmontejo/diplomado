@@ -14,6 +14,7 @@ use App\StudentInscription;
 use DB;
 use Illuminate\Support\Facades\Input;
 use Yajra\Datatables\Datatables;
+use PDF;
 
 class PaymentController extends Controller
 {
@@ -37,6 +38,7 @@ class PaymentController extends Controller
                 ->join('accounts', 'payment_receiveds.destination_account', '=', 'accounts.id')
                 ->join('account_types', 'payment_receiveds.account_type', '=', 'account_types.id')
                 ->select(
+                    'payment_receiveds.id as id',
                     'diplomats.name as diplomat',
                     'generations.number_generation as generation',
                     DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as student'),
@@ -49,8 +51,12 @@ class PaymentController extends Controller
                     'payment_receiveds.discount as discount',
                     'payment_receiveds.total as total'
                 )->get();
-
+            //
             return Datatables::of($receiveds)
+                ->addColumn('action', function ($received) {
+                    $id = $received->id;
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example"><a href="/descargar/recibo/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-print"></i> Recibo</a></div></td>';
+                })
                 ->make(true);
         } else {
             $receiveds = DB::table('payment_receiveds')
@@ -61,6 +67,7 @@ class PaymentController extends Controller
                 ->join('accounts', 'payment_receiveds.destination_account', '=', 'accounts.id')
                 ->join('account_types', 'payment_receiveds.account_type', '=', 'account_types.id')
                 ->select(
+                    'payment_receiveds.id as id',
                     'diplomats.name as diplomat',
                     'generations.number_generation as generation',
                     DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as student'),
@@ -76,6 +83,10 @@ class PaymentController extends Controller
                 ->whereBetween('payment_receiveds.date_payment', [$start_date, $end_date])->get();
 
             return Datatables::of($receiveds)
+                ->addColumn('action', function ($received) {
+                    $id = $received->id;
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example"><a href="/descargar/recibo/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-print"></i> Recibo</a></div></td>';
+                })
                 ->make(true);
         }
     }
@@ -195,5 +206,13 @@ class PaymentController extends Controller
         $account->save();
 
         return true;
+    }
+
+    public function voucher($id)
+    {   
+        $data = PaymentReceived::find($id);
+
+        $pdf = PDF::loadView('payments.voucher',compact('data'))->setPaper('a4', 'landscape');
+        return $pdf->download('comprobante-de-pago.pdf');
     }
 }

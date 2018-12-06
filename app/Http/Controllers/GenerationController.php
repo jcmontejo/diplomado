@@ -49,7 +49,7 @@ class GenerationController extends Controller
         return Datatables::of($generations)
             ->addColumn('action', function ($generation) {
                 $id = $generation->id;
-                return '<td><a href="generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-users"></i>Alumnos</a><button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></td>';
+                return '<td><div class="btn-group" role="group" aria-label="Basic example"><a href="generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-users"></i>Alumnos</a><button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></div></td>';
             })
             ->make(true);
     }
@@ -60,9 +60,9 @@ class GenerationController extends Controller
 
         $students = DB::table('student_inscriptions')
             ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
-            ->join('debts', 'students.id', '=', 'debts.student_id')
+            // ->join('debts', 'debts.student_id', '=', 'students.id')
             ->where('student_inscriptions.generation_id', '=', $id)
-            ->select('students.name as name', 'students.last_name as last_name', 'students.mother_last_name as mother_last_name', 'debts.amount as debt', 'student_inscriptions.created_at as date')
+            ->select('students.name as name', 'students.last_name as last_name', 'students.mother_last_name as mother_last_name', 'student_inscriptions.created_at as date')
             ->get();
 
         return view('generations.students', compact('students', 'generation'));
