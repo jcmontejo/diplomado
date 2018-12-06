@@ -23,6 +23,8 @@ class CreateStudentsTable extends Migration
             $table->string('phone', 10);
             $table->text('address');
             $table->string('email');
+            $table->string('profession');
+            $table->boolean('documents')->nullable();
             $table->timestamps();
         });
     }

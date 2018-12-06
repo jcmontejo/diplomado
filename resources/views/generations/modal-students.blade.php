@@ -2,23 +2,25 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Matricular Alumnos</h5>
+                <h5 class="modal-title">Alumnos</h5>
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="col-lg-12 col-ml-12">
-                    <form id="form">
-                        <input type="text" id="id_generation">
-                            <div class="form-group col-md-12">
-                                <label for="exampleInputPassword1">Selecciona Alumnos</label>
-                                <select id="tag_list" name="tag_list[]" class="form-control form-control-lg" multiple></select>
-                            </div>
-                    </form>
+                    <div class="table-responsive">
+                        <table class="table" id="students">
+                            <thead>
+                                <th>Nombre Alumno</th>
+                                <th>Apellido Paterno</th>
+                                <th>Apellido Materno</th>
+                                <th>Total Adeudo</th>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary mt-4 pr-4 pl-4" data-dismiss="modal">Cerrar</button>
-                <a href="#" id="updateGeneration" class="btn btn-primary mt-4 pr-4 pl-4" name="saveDiplomat">Actualizar</a>
+                <button type="button" onclick="reloadStudents()" class="btn btn-secondary mt-4 pr-4 pl-4" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>

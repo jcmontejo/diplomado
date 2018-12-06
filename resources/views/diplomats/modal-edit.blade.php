@@ -7,6 +7,9 @@
             </div>
             <div class="modal-body">
                 <div class="col-lg-6 col-ml-12">
+                     <div id='message-error-edit' class="alert alert-danger alert-dismissible fade show" role='alert' style="display: none">
+                        <strong id="error-edit"></strong>
+                    </div>
                     <form id="form">
                         <div class="form-row">
                             <div class="form-group col-md-12">
@@ -20,7 +23,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="exampleInputPassword1">Costo Diplomado</label>
-                                <input type="number" class="form-control form-control-lg" id="cost">
+                                <input type="number" class="form-control form-control-lg" id="cost" readonly>
                             </div>
                         </div>
                     </form>

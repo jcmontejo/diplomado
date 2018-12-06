@@ -38,7 +38,7 @@ Actualizar Perfil
                         </div>
                     </div>
                     <div>
-                        <a href="#" id="updateProfile" class="btn btn-success mt-4 pr-4 pl-4" name="updateProfile">Actualizar</a>
+                        <a href="#" id="updateProfile" class="btn btn-primary mt-4 pr-4 pl-4" name="updateProfile">Actualizar</a>
                     </div>
                 </form>
             </div>
@@ -83,7 +83,11 @@ Actualizar Perfil
                 email: email,
                 password: password
             },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 Show();
                 $('#message-error-save').css('display', 'none');
                 swal("Bien hecho!", "Has actualizado tu perfil exitosamente!", "success");

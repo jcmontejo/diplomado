@@ -32,8 +32,8 @@ class StoreAccount extends FormRequest
     public function messages()
     {
         return [
-            'account_name.required' => 'El campo nombre de cuenta es obligatorio',
-            'opening_balance.required' => 'El campo saldo de apertura es obligatorio'
+            'account_name.required' => 'El campo nombre de cuenta es obligatorio.',
+            'opening_balance.required' => 'El campo saldo de apertura es obligatorio.'
         ];
     }
 }

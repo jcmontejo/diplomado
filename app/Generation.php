@@ -9,6 +9,7 @@ class Generation extends Model
     protected $fillable = [
         'name_diplomat',
         'number_generation',
+        'start_date',
         'number_payments',
         'note',
         'status',

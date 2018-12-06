@@ -7,8 +7,8 @@
             </div>
             <div class="modal-body">
                 <div class="col-lg-6 col-ml-12">
-                    <div id='message-error' class="alert alert-danger alert-dismissible fade show" role='alert' style="display: none">
-                        <strong id="error"></strong>
+                    <div id='message-error-edit' class="alert alert-danger alert-dismissible fade show" role='alert' style="display: none">
+                        <strong id="error-edit"></strong>
                     </div>
                     <form id="form">
                         <div class="form-row">
@@ -19,7 +19,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="exampleInputPassword1">Saldo</label>
-                                <input type="number" step="0.01" class="form-control form-control-lg" id="openingbalance" placeholder="Introduce saldo de apertura">
+                                <input type="number" step="0.01" class="form-control form-control-lg" id="openingbalance" placeholder="Introduce saldo de apertura" readonly>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="exampleInputPassword1">Notas</label>

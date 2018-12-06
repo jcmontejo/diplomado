@@ -157,7 +157,11 @@ Lista de Docentes
                 address: address,
                 joining_date: joiningdate
             },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $('#nameSave').val('');
                 $('#lastnameSave').val('');
                 $('#motherlastnameSave').val('');
@@ -173,6 +177,7 @@ Lista de Docentes
                 swal("Bien hecho!", "Has registrado un nuevo docente!", "success");
             },
             error: function (data) {
+                $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
                 $.each(response.errors, function (key, value) {
@@ -233,10 +238,26 @@ Lista de Docentes
                 address: address,
                 joining_date: joiningdate
             },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $("#modalEdit").modal('toggle');
+                $("#message-error-edit").fadeOut();
                 reload();
                 swal("Bien hecho!", "Has actualizado al docente exitosamente!", "success");
+            },
+            error: function (data) {
+                $("#preloader").css("display", "none");
+                var response = JSON.parse(data.responseText);
+                var errorString = "<ul>";
+                $.each(response.errors, function (key, value) {
+                    errorString += "<li>" + value + "</li>";
+                });
+
+                $("#error-edit").html(errorString);
+                $("#message-error-edit").fadeIn();
             }
         });
     });

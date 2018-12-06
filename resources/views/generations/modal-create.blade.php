@@ -37,6 +37,10 @@
                                 <input type="number" class="form-control form-control-lg" id="numbergenerationSave">
                             </div>
                             <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">Fecha de Inicio</label>
+                                <input type="date" class="form-control form-control-lg" id="startdateSave">
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label for="exampleInputPassword1">Número de Pagos</label>
                                 <input type="number" class="form-control form-control-lg" id="numberpaymentsSave">
                             </div>
@@ -44,7 +48,7 @@
                                 <label for="exampleInputPassword1">Notas</label>
                                 <input type="text" class="form-control form-control-lg" id="noteSave" placeholder="Introduce observaciones">
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label for="exampleInputPassword1">Estatus</label>
                                 <select class="form-control form-control-lg" name="statusSave" id="statusSave">
                                     <option value="1">ACTIVO</option>

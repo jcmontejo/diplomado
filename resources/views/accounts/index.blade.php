@@ -109,7 +109,11 @@ Lista de Cuentas Bancarias
                 opening_balance: opening_balance,
                 note: note
             },
+             beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $('#accountnameSave').val('');
                 $('#openingbalanceSave').val('');
                 $('#noteSave').val('');
@@ -119,14 +123,15 @@ Lista de Cuentas Bancarias
                 swal("Bien hecho!", "Has creado una nueva cuenta!", "success");
             },
             error: function (data) {
+                $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
                 $.each(response.errors, function (key, value) {
                     errorString += "<li>" + value + "</li>";
                 });
 
-                $("#error").html(errorString);
-                $("#message-error").fadeIn();
+                $("#error-save").html(errorString);
+                $("#message-error-save").fadeIn();
             }
         });
     })
@@ -161,10 +166,26 @@ Lista de Cuentas Bancarias
                 opening_balance: openingbalance,
                 note: note
             },
+             beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
+                $("#message-error-edit").fadeOut();
                 $("#modalEdit").modal('toggle');
                 reload();
                 swal("Bien hecho!", "Has actualizado la cuenta exitosamente!", "success");
+            },
+            error: function (data) {
+                $("#preloader").css("display", "none");
+                var response = JSON.parse(data.responseText);
+                var errorString = "<ul>";
+                $.each(response.errors, function (key, value) {
+                    errorString += "<li>" + value + "</li>";
+                });
+
+                $("#error-edit").html(errorString);
+                $("#message-error-edit").fadeIn();
             }
         });
     });

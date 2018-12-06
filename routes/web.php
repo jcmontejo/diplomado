@@ -18,6 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/descargar/recibo/{id}', 'PaymentController@voucher');
+
 
 // Users
 Route::group(['prefix' => 'usuarios'], function () {
@@ -79,6 +81,11 @@ Route::group(['prefix' => 'alumnos'], function () {
     Route::get('/editar/{id}', 'StudentController@edit');
     Route::put('/actualizar/{id}', 'StudentController@update');
     Route::delete('eliminar/{id}', 'StudentController@destroy');
+    Route::get('/documentos/{id}', 'StudentController@Documents');
+    Route::get('/consultar/{id}', 'StudentController@show');
+    Route::post('/subir/documentos', 'StudentController@uploadDocuments');
+    Route::get('/consultar/{id}', 'StudentController@searchStudent');
+    Route::post('/procesar/inscripcion', 'StudentController@incscriptionStudent');
 });
 
 // Tecahers
@@ -114,6 +121,40 @@ Route::group(['prefix' => 'generaciones'], function () {
     Route::delete('eliminar/{id}', 'GenerationController@destroy');
 
     Route::get('/alumnos/buscar', 'GenerationController@findStudent');
+    Route::get('/alumnos/inscritos/{id}', 'GenerationController@studentsInscription');
+    Route::get('/alumnos/{id}', 'GenerationController@students');
 });
+
+// Payments
+Route::group(['prefix' => 'pagos'], function () {
+    Route::get('/procesar', 'PaymentController@processPayment');
+    Route::get('/generaciones/{id}', 'PaymentController@listGenerations');
+    Route::get('/generaciones/alumnos/{id}', 'PaymentController@listStudents');
+    Route::post('/recibir', 'PaymentController@received');
+    Route::get('/ingresos', 'PaymentController@showReceiveds');
+    Route::get('/recibidos', 'PaymentController@paymentReceiveds');
+    Route::get('/deuda/{id}', 'PaymentController@debt');
+});
+
+// Expenses
+Route::group(['prefix' => 'gastos'], function () {
+    Route::get('/', 'ExpenseController@index');
+    Route::get('/datos', 'ExpenseController@dataExpenses')->name('expenses.data');
+    Route::get('/crear', 'ExpenseController@create');
+    Route::post('/guardar', 'ExpenseController@store');
+    Route::get('/editar/{id}', 'ExpenseController@edit');
+    Route::put('/actualizar/{id}', 'ExpenseController@update');
+    Route::delete('eliminar/{id}', 'ExpenseController@destroy');
+});
+
+// Messages
+Route::group(['prefix' => 'mensajeria'], function () {
+    Route::get('/crear', 'MessageController@create');
+    Route::post('/enviar', 'MessageController@store');
+});
+
+
+
+
 
 

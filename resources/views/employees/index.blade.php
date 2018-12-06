@@ -14,7 +14,7 @@ Lista de Cuentas de Usuario
     <div class="col-12 mt-5">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Lista De Cuentas de Usuario</h4>
+                <h4 class="header-title">Lista De Cuentas de Usuarios</h4>
                 <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
                     <strong>Cuenta Actualizada Correctamente.</strong>
                 </div>

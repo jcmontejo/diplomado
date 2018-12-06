@@ -93,7 +93,11 @@ Lista de Métodos de Pago
             data: {
                 name: name
             },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $('#nameSave').val('');
                 $("#modalCreate").modal('toggle');
                 $('#message-error').css('display', 'none');
@@ -101,6 +105,7 @@ Lista de Métodos de Pago
                 swal("Bien hecho!", "Has creado un nuevo método de pago!", "success");
             },
             error: function (data) {
+                $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
                 $.each(response.errors, function (key, value) {
@@ -137,12 +142,17 @@ Lista de Métodos de Pago
             data: {
                 name: name
             },
+             beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
             success: function () {
+                $("#preloader").css("display", "none");
                 $("#modalEdit").modal('toggle');
                 reload();
                 swal("Bien hecho!", "Has actualizado el método de pago exitosamente!", "success");
             },
             error: function (data) {
+                $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
                 $.each(response.errors, function (key, value) {

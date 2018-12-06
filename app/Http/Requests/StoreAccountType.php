@@ -26,7 +26,14 @@ class StoreAccountType extends FormRequest
         return [
             'account_type' => 'required',
             'account_code' => 'required',
-            // 'note' => 'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'account_type.required' => 'El campo tipo de cuota es obligatorio.',
+            'account_code.required' => 'El campo código de cuota es obligatorio.',
         ];
     }
 }
