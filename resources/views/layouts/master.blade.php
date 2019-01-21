@@ -31,6 +31,201 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{asset('/datatables/buttons.dataTables.css')}}">
     <style>
+        /* Styles for wrapping the search box */
+
+.main {
+    width: 50%;
+    margin: 50px auto;
+}
+
+/* Bootstrap 4 text input with search icon */
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+        #invoice{
+    padding: 30px;
+}
+
+.invoice {
+    position: relative;
+    background-color: #FFF;
+    min-height: 680px;
+    padding: 15px
+}
+
+.invoice header {
+    padding: 10px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #3989c6
+}
+
+.invoice .company-details {
+    text-align: right
+}
+
+.invoice .company-details .name {
+    margin-top: 0;
+    margin-bottom: 0
+}
+
+.invoice .contacts {
+    margin-bottom: 20px
+}
+
+.invoice .invoice-to {
+    text-align: left
+}
+
+.invoice .invoice-to .to {
+    margin-top: 0;
+    margin-bottom: 0
+}
+
+.invoice .invoice-details {
+    text-align: right
+}
+
+.invoice .invoice-details .invoice-id {
+    margin-top: 0;
+    color: #3989c6
+}
+
+.invoice main {
+    padding-bottom: 50px
+}
+
+.invoice main .thanks {
+    margin-top: -100px;
+    font-size: 2em;
+    margin-bottom: 50px
+}
+
+.invoice main .notices {
+    padding-left: 6px;
+    border-left: 6px solid #3989c6
+}
+
+.invoice main .notices .notice {
+    font-size: 1.2em
+}
+
+.invoice table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 20px
+}
+
+.invoice table td,.invoice table th {
+    padding: 15px;
+    background: #eee;
+    border-bottom: 1px solid #fff
+}
+
+.invoice table th {
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: 16px
+}
+
+.invoice table td h3 {
+    margin: 0;
+    font-weight: 400;
+    color: #3989c6;
+    font-size: 1.2em
+}
+
+.invoice table .qty,.invoice table .total,.invoice table .unit {
+    text-align: right;
+    font-size: 1.2em
+}
+
+.invoice table .no {
+    color: #fff;
+    font-size: 1.6em;
+    background: #3989c6
+}
+
+.invoice table .unit {
+    background: #ddd
+}
+
+.invoice table .total {
+    background: #3989c6;
+    color: #fff
+}
+
+.invoice table tbody tr:last-child td {
+    border: none
+}
+
+.invoice table tfoot td {
+    background: 0 0;
+    border-bottom: none;
+    white-space: nowrap;
+    text-align: right;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    border-top: 1px solid #aaa
+}
+
+.invoice table tfoot tr:first-child td {
+    border-top: none
+}
+
+.invoice table tfoot tr:last-child td {
+    color: #3989c6;
+    font-size: 1.4em;
+    border-top: 1px solid #3989c6
+}
+
+.invoice table tfoot tr td:first-child {
+    border: none
+}
+
+.invoice footer {
+    width: 100%;
+    text-align: center;
+    color: #777;
+    border-top: 1px solid #aaa;
+    padding: 8px 0
+}
+
+@media print {
+    .invoice {
+        font-size: 11px!important;
+        overflow: hidden!important
+    }
+
+    .invoice footer {
+        position: absolute;
+        bottom: 10px;
+        page-break-after: always
+    }
+
+    .invoice>div:last-child {
+        page-break-before: always
+    }
+}
+        .table-wrapper-scroll-y {
+display: block;
+max-height: 200px;
+overflow-y: auto;
+-ms-overflow-style: -ms-autohiding-scrollbar;
+}
         /* Preloader */
 #preloader{
 	display: none;
@@ -86,50 +281,64 @@
                     <nav>
                         <ul class="metismenu" id="menu">
                             <li class="active">
+                                @can('modulo-inicio')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Inicio</span></a>
                                 <ul class="collapse">
                                     <li class="{{ Request::url()== url('/home') ? 'active' : '' }}"><a href="{{url('/home')}}">Panel
                                             Principal</a></li>
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-perfil')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Perfil</span></a>
                                 <ul class="collapse {{ Request::url()== url('/perfil') ? 'in' : '' }}">
                                     <li class="{{ Request::url()== url('/perfil') ? 'active' : '' }}"><a href="{{url('/perfil')}}">Actualizar
                                             Perfil</a></li>
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-alumnos')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-id-badge"></i><span>Alumnos</span></a>
                                 <ul class="collapse {{ Request::url()== url('/alumnos') ? 'in' : '' }}">
-                                    <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a href="{{url('/alumnos')}}">Todos
-                                            los Alumnos</a></li>
+                                    <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a href="{{url('/alumnos')}}">Estudiantes</a></li>
+                                    <li class="{{ Request::url()== url('/alumnos/prospectos') ? 'active' : '' }}"><a
+                                            href="{{url('/alumnos/prospectos')}}">Seguimiento de Prospectos</a></li>
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-docentes')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-blackboard"></i><span>Docentes</span></a>
                                 <ul class="collapse {{ Request::url()== url('/docentes') ? 'in' : '' }}">
                                     <li class="{{ Request::url()== url('/docentes') ? 'active' : '' }}"><a href="{{url('/docentes')}}">Todos
                                             los Docentes</a></li>
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-control-escolar')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-agenda"></i><span>Control
                                         Escolar</span></a>
                                 <ul class="collapse {{ Request::url()== url('/diplomados') ? 'in' : '' }}">
                                     <li class="{{ Request::url()== url('/diplomados') ? 'active' : '' }}"><a href="{{url('diplomados')}}">Diplomados</a></li>
                                     <li class="{{ Request::url()== url('/generaciones') ? 'active' : '' }}"><a href="{{url('/generaciones')}}">Generaciones</a></li>
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-cuentas-bancarias')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-bank"></i>
                                     <span>Cuentas Bancarias</span></a>
                                 <ul class="collapse {{ Request::url()== url('/cuentas') ? 'in' : '' }}">
                                     <li class="{{ Request::url()== url('/cuentas') ? 'active' : '' }}"><a href="{{url('/cuentas')}}">Todas
                                             las Cuentas</a></li>
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-transacciones')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-money"></i>
                                     <span>Transacciones</span></a>
                                 <ul class="collapse">
@@ -137,8 +346,19 @@
                                     <li><a href="{{url('/gastos')}}">Egresos</a></li>
                                     <li><a href="{{url('/metodos-de-pago')}}">Metodos de Pago</a></li>
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-transacciones')
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-key"></i>
+                                    <span>Movimientos</span></a>
+                                <ul class="collapse">
+                                    <li><a href="{{url('/pagos/ingresos/modificar')}}">Modificar Pagos</a></li>
+                                </ul>
+                                @endcan
+                            </li>
+                            <li>
+                                @can('modulo-cuotas-de-estudiantes')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-credit-card"></i>
                                     <span>Cuotas de Estudiantes</span></a>
                                 <ul class="collapse">
@@ -146,35 +366,54 @@
                                     <li><a href="{{url('/pagos/procesar')}}">Recibir Pago</a></li>
                                     {{-- <li><a href="#">Historico de Pagos</a></li> --}}
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-emails')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-envelope"></i>
                                     <span>Email</span></a>
                                 <ul class="collapse">
                                     <li><a href="{{url('/mensajeria/crear')}}">Enviar</a></li>
                                     <li><a href="#">Mensajes Enviados</a></li>
                                 </ul>
+                                @endcan
                             </li>
                             <li>
+                                @can('modulo-reportes')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-line-chart"></i>
                                     <span>Reportes</span></a>
                                 <ul class="collapse">
                                     <li><a href="{{url('/pagos/ingresos')}}">Reporte de Ingresos</a></li>
                                     <li><a href="{{url('/gastos')}}">Reporte de Egresos</a></li>
-                                    <li><a href="#">Balance Financiero</a></li>
+                                    <li><a href="{{url('/reportes/adeudos')}}">Reporte de Adeudos</a></li>
+                                    <li><a href="{{url('/reportes/no-documentos')}}">Reporte de Estudiantes Faltantes de Documentación</a></li>
                                 </ul>
+                                @endcan
                             </li>
-                            <li class="{{ Request::url()== url('/usuarios') ? 'active' : '' }}"><a href="{{url('/usuarios')}}"><i
-                                        class="fa fa-users"></i> <span>Gestión de Usuarios</span></a></li>
+                            {{-- <li class="{{ Request::url()== url('/usuarios') ? 'active' : '' }}"><a href="{{url('/usuarios')}}"><i
+                                        class="fa fa-users"></i> <span>Gestión de Usuarios</span></a></li> --}}
                             <li>
+                                @can('modulo-administracion')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-cogs"></i> <span>Administración</span></a>
                                 <ul class="collapse">
-                                    <li><a href="#">Ajustes del Sistema</a></li>
-                                    <li><a href="#">Roles de Usuario</a></li>
-                                    <li><a href="#">Permisos de Usuario</a></li>
-                                    <li><a href="#">copia de seguridad de base de datos</a></li>
+                                    <li class="{{ Request::url()== url('/usuarios') ? 'active' : '' }}"><a href="{{url('/usuarios')}}">Gestión
+                                            de Usuarios</a></li>
+                                    <li><a href="{{url('/admin/roles')}}">Roles de Usuario</a></li>
+                                    {{-- <li><a href="#">Permisos de Usuario</a></li>
+                                    <li><a href="#">copia de seguridad de base de datos</a></li> --}}
                                 </ul>
+                                @endcan
                             </li>
+                            {{-- <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user-md"></i> <span>Historia
+                                        Clinica</span></a>
+                                <ul class="collapse">
+                                    <li><a href="#">Consultorios</a></li>
+                                    <li><a href="#">Médicos</a></li>
+                                    <li><a href="#">Pacientes</a></li>
+                                    <li><a href="#">Citas</a></li>
+                                </ul>
+                            </li> --}}
                         </ul>
                     </nav>
                 </div>

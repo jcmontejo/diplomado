@@ -30,8 +30,8 @@ Lista de Generaciones
                         <th>Generación</th>
                         <th>Alumnos Inscritos</th>
                         <th>Costo de Diplomado</th>
-                        <th>Número de Pagos</th>
-                        <th>Observaciones</th>
+                        <th>Importe a pagar por comisión</th>
+                        <th>Importe a pagar por FULL PRICE</th>
                         <th>Fecha/Hora de Creación</th>
                         <th>Acciones</th>
                     </thead>
@@ -42,8 +42,8 @@ Lista de Generaciones
                             <th>Generación</th>
                             <th>Alumnos Inscritos</th>
                             <th>Costo de Diplomado</th>
-                            <th>Número de Pagos</th>
-                            <th>Observaciones</th>
+                            <th>Importe a pagar por comisión</th>
+                            <th>Importe a pagar por FULL PRICE</th>
                             <th>Fecha/Hora de Creación</th>
                             <th>Acciones</th>
                         </tr>
@@ -92,6 +92,7 @@ Lista de Generaciones
             processing: true,
             serverSide: true,
             ajax: '{!! route('generations.data') !!}',
+
             columns: [{
                     data: 'name_diplomat',
                     name: 'name_diplomat'
@@ -110,15 +111,21 @@ Lista de Generaciones
                 },
                 {
                     data: 'cost',
-                    name: 'cost'
+                    "render": function (data, type, row) {
+                        return '$' + data;
+                    }
                 },
                 {
-                    data: 'number_payments',
-                    name: 'number_payments'
+                    data: 'commision',
+                    "render": function (data, type, row) {
+                        return '$' + data;
+                    }
                 },
                 {
-                    data: 'note',
-                    name: 'note'
+                    data: 'full_price',
+                    "render": function (data, type, row) {
+                        return '$' + data;
+                    }
                 },
                 {
                     data: 'created_at',
@@ -142,8 +149,8 @@ Lista de Generaciones
         var name_diplomat = $('#namediplomatSave').val();
         var number_generation = $("#numbergenerationSave").val();
         var start_date = $("#startdateSave").val();
-        var number_payments = $("#numberpaymentsSave").val();
-        var note = $("#noteSave").val();
+        var commision = $("#commisionSave").val();
+        var full_price = $("#full_priceSave").val();
         var status = $("#statusSave").val();
         var docent_id = $("#docentSave").val();
         var route = "/generaciones/guardar"
@@ -159,8 +166,8 @@ Lista de Generaciones
                 name_diplomat: name_diplomat,
                 number_generation: number_generation,
                 start_date: start_date,
-                number_payments: number_payments,
-                note: note,
+                commision: commision,
+                full_price: full_price,
                 status: status,
                 docent_id: docent_id
             },

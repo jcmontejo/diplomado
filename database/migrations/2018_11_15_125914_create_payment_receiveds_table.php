@@ -26,6 +26,7 @@ class CreatePaymentReceivedsTable extends Migration
             $table->decimal('amount', 8, 2);
             $table->decimal('discount', 8, 2);
             $table->decimal('total', 8, 2);
+            $table->integer('type');
             $table->unsignedInteger('debt_id');
             $table->foreign('debt_id')->references('id')->on('debts');
 

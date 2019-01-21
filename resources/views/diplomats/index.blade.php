@@ -228,6 +228,5 @@ Lista de Diplomados
             allowOutsideClick: false
         });
     }
-
 </script>
 @endsection

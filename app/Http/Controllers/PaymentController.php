@@ -12,9 +12,10 @@ use App\PaymentMethod;
 use App\PaymentReceived;
 use App\StudentInscription;
 use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Yajra\Datatables\Datatables;
 use PDF;
+use Yajra\Datatables\Datatables;
 
 class PaymentController extends Controller
 {
@@ -22,6 +23,15 @@ class PaymentController extends Controller
     public function showReceiveds()
     {
         return view('incomes.index');
+    }
+
+    public function showPayments()
+    {
+        $accounts = Account::all();
+        $methods = PaymentMethod::all();
+        $account_types = AccountType::all();
+
+        return view('incomes.payments', compact('accounts', 'methods', 'account_types'));
     }
 
     public function paymentReceiveds()
@@ -91,6 +101,73 @@ class PaymentController extends Controller
         }
     }
 
+    public function paymentReceivedsForRevert()
+    {
+        $start_date = Input::get('one');
+        $end_date = Input::get('second');
+
+        if ($start_date == '' and $end_date == '') {
+            $receiveds = DB::table('payment_receiveds')
+                ->join('diplomats', 'payment_receiveds.diplomat_id', '=', 'diplomats.id')
+                ->join('generations', 'payment_receiveds.generation_id', '=', 'generations.id')
+                ->join('students', 'payment_receiveds.student_id', '=', 'students.id')
+                ->join('payment_methods', 'payment_receiveds.payment_method', '=', 'payment_methods.id')
+                ->join('accounts', 'payment_receiveds.destination_account', '=', 'accounts.id')
+                ->join('account_types', 'payment_receiveds.account_type', '=', 'account_types.id')
+                ->select(
+                    'payment_receiveds.id as id',
+                    'diplomats.name as diplomat',
+                    'generations.number_generation as generation',
+                    DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as student'),
+                    'payment_receiveds.date_payment as date',
+                    'payment_receiveds.observation as observation',
+                    'payment_methods.name as method',
+                    'accounts.account_name as destination',
+                    'account_types.account_type as type',
+                    'payment_receiveds.amount as amount',
+                    'payment_receiveds.discount as discount',
+                    'payment_receiveds.total as total'
+                )->get();
+            //
+            return Datatables::of($receiveds)
+                ->addColumn('action', function ($received) {
+                    $id = $received->id;
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button></div></td>';
+                })
+                ->make(true);
+        } else {
+            $receiveds = DB::table('payment_receiveds')
+                ->join('diplomats', 'payment_receiveds.diplomat_id', '=', 'diplomats.id')
+                ->join('generations', 'payment_receiveds.generation_id', '=', 'generations.id')
+                ->join('students', 'payment_receiveds.student_id', '=', 'students.id')
+                ->join('payment_methods', 'payment_receiveds.payment_method', '=', 'payment_methods.id')
+                ->join('accounts', 'payment_receiveds.destination_account', '=', 'accounts.id')
+                ->join('account_types', 'payment_receiveds.account_type', '=', 'account_types.id')
+                ->select(
+                    'payment_receiveds.id as id',
+                    'diplomats.name as diplomat',
+                    'generations.number_generation as generation',
+                    DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as student'),
+                    'payment_receiveds.date_payment as date',
+                    'payment_receiveds.observation as observation',
+                    'payment_methods.name as method',
+                    'accounts.account_name as destination',
+                    'account_types.account_type as type',
+                    'payment_receiveds.amount as amount',
+                    'payment_receiveds.discount as discount',
+                    'payment_receiveds.total as total'
+                )
+                ->whereBetween('payment_receiveds.date_payment', [$start_date, $end_date])->get();
+
+            return Datatables::of($receiveds)
+                ->addColumn('action', function ($received) {
+                    $id = $received->id;
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button></div></td>';
+                })
+                ->make(true);
+        }
+    }
+
     public function processPayment()
     {
         $diplomats = Diplomat::all();
@@ -134,6 +211,38 @@ class PaymentController extends Controller
         return json_encode($students);
     }
 
+    public function dataPayment($curp)
+    {
+        $student = DB::table('students')->where('curp', '=', $curp)->first();
+
+        if ($student) {
+            $inscription = DB::table('student_inscriptions')
+                ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
+                ->leftJoin('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
+                ->leftJoin('generations', 'student_inscriptions.generation_id', '=', 'generations.id')
+                ->leftJoin('debts', 'student_inscriptions.id', '=', 'debts.generation_id')
+                ->select(
+                    'diplomats.id as diplomat_id',
+                    'diplomats.name as diplomat_name',
+                    'generations.id as generation_id',
+                    'generations.number_generation as generation_number',
+                    'student_inscriptions.id as student_id',
+                    'students.name as name_student',
+                    'students.last_name as last_name',
+                    'students.mother_last_name as mother_last_name',
+                    'debts.amount as debt'
+                )
+                ->where('student_inscriptions.student_id', '=', $student->id)->first();
+            return json_encode($inscription);
+        } else {
+            return response()
+                ->json([
+                    'message' => 'No se encontro la CURP.',
+                    'status' => 400,
+                ], 400);
+        }
+    }
+
     public function received(StorePaymentReceived $request)
     {
         try {
@@ -159,6 +268,7 @@ class PaymentController extends Controller
             $received->amount = $request->amount;
             $received->discount = $request->discount;
             $received->total = $request->total;
+            $received->type = '1';
             $received->debt_id = $debt->id;
             $received->save();
 
@@ -209,10 +319,50 @@ class PaymentController extends Controller
     }
 
     public function voucher($id)
-    {   
+    {
         $data = PaymentReceived::find($id);
 
-        $pdf = PDF::loadView('payments.voucher',compact('data'))->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('payments.voucher', compact('data'))->setPaper('a4', 'landscape');
         return $pdf->download('comprobante-de-pago.pdf');
+    }
+
+    public function edit($id)
+    {
+        $data = PaymentReceived::find($id);
+        return response()->json($data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $payment = PaymentReceived::find($id);
+
+            $account = Account::find($payment->destination_account);
+            $account->opening_balance = $account->opening_balance - $payment->total;
+            $account->save();
+
+            $debt = Debt::find($payment->debt_id);
+            $debt->amount = $debt->amount + $payment->total;
+            $debt->save();
+
+            $payment->amount = $request->amount;
+            $payment->total = $request->amount;
+            $payment->save();
+
+            $account->opening_balance = $account->opening_balance + $payment->total;
+            $account->save();
+
+            $debt->amount = $debt->amount - $payment->total;
+            $debt->save();
+
+            DB::commit();
+
+            return response()->json(["message" => "success"]);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
     }
 }

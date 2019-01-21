@@ -24,15 +24,19 @@ class StoreStudent extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:50',
-            'last_name' => 'required|max:50',
-            'mother_last_name' => 'required|max:50',
-            'birthdate' => 'required|date',
-            'sex' => 'required',
-            'phone' => 'required|digits:10',
-            'address' => 'required',
-            'email' => 'required|email',
-            // 'profession' => 'required',
+            //'curp' => 'required',
+            // 'last_name' => 'required|max:50',
+            // 'mother_last_name' => 'required|max:50',
+            // 'birthdate' => 'required|date',
+            // 'sex' => 'required',
+            //'phone' => 'required|digits:10',
+            // 'state' => 'required',
+            // 'city' => 'required',
+            // 'address' => 'required',
+            // 'email' => 'required|email',
+            'facebook' => 'required',
+            'interested' => 'required',
+            'status' => 'required',
         ];
 
     }
@@ -47,8 +51,12 @@ class StoreStudent extends FormRequest
             'sex.required' => 'El campo genero es obligatorio.',
             'phone.required' => 'El campo teléfono es obligatorio.',
             'address.required' => 'El campo dirección es obligatorio.',
+            'state.required' => 'El campo estado de residencia es obligatorio.',
+            'city.required' => 'El campo ciudad de residencia es obligatorio.',
             'email.required' => 'El campo correo electrónico es obligatorio.',
-            'digits' => 'El teléfono debe ser de 10 digitos.'
+            'digits' => 'El teléfono debe ser de 10 digitos.',
+            'interested.required' => 'Por favor introduce el o los diplomados en el que este interesado.',
+            'status.required' => 'Selecciona un porcentaje del SEMAFORO',
         ];
     }
 }

@@ -18,6 +18,7 @@ class PaymentReceived extends Model
         'amount',
         'discount',
         'total',
+        'type',
         'debt_id'
     ];
 }

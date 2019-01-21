@@ -27,28 +27,31 @@ Procesar Pago
                 </div>
                 <form id="form">
                     <div class="form-row">
+                         <div class="form-group col-md-12">
+                           <div class="input-group">
+                            <input type="text" id="curp" class="form-control" placeholder="Por favor introduce la CURP">
+                            <div class="input-group-append">
+                            <button class="btn btn-secondary" id="searchCurp" type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            </div>
+                        </div>
+                        </div>
                         <div class="form-group col-md-3">
                             <input type="hidden" id="id">
-                            <label for="exampleInputEmail1">Selecciona Diplomado</label>
-                            <select name="diplomat_id" id="diplomat_id" class="form-control">
-                                <option value="">--- Selecciona Diplomado ---</option>
-                                @forelse ($diplomats as $diplomat)
-                                <option value="{{$diplomat->id}}">{{$diplomat->name}}</option>
-                                @empty
-                                <option value="0">No hay diplomados registrados.</option>
-                                @endforelse
-                            </select>
+                            <label for="exampleInputEmail1">Diplomado</label>
+                            <input type="hidden" class="form-control" id="diplomat_id">
+                            <input type="text" class="form-control" id="diplomat_name">
                         </div>
                         <div class="form-group col-md-3">
-                            <label for="exampleInputPassword1">Selecciona Generación</label>
-                            <select name="generation_id" id="generation_id" class="form-control">
-                                <option value="">--- Selecciona Diplomado Antes---</option>
-                            </select>
+                            <label for="exampleInputPassword1">Generación</label>
+                            <input type="hidden" class="form-control" id="generation_id">
+                            <input type="text" class="form-control" id="generation_number">
                         </div>
                         <div class="form-group col-md-3">
-                            <label for="exampleInputPassword1">Selecciona Alumno</label>
-                            <select name="student_id" id="student_id" class="form-control student_id">
-                            </select>
+                            <label for="exampleInputPassword1">Alumno</label>
+                            <input type="hidden" id="student_id">
+                            <input type="text" id="name_student" class="form-control">
                         </div>
                          <div class="form-group col-md-3">
                             <label for="exampleInputPassword1">Total para Liquidar</label>
@@ -60,7 +63,11 @@ Procesar Pago
                         </div>
                         <div class="form-group col-md-8">
                             <label for="exampleInputPassword1">Observaciones</label>
-                            <input type="text" class="form-control" id="observation">
+                            <select name="observation" id="observation" class="form-control form-control-lg">
+                                <option value="PAGO PARCIAL DE DIPLOMADO">PAGO PARCIAL DE DIPLOMADO</option>
+                                <option value="PAGO TOTAL DE DIPLOMADO">PAGO TOTAL DE DIPLOMADO</option>
+                            </select>
+                            {{-- <input type="text" class="form-control" id="observation"> --}}
                         </div>
                         <div class="form-group col-md-6">
                             <label for="exampleInputPassword1">Método de Pago</label>
@@ -89,7 +96,7 @@ Procesar Pago
                                         <thead style="background:#dce9f9;">
                                             <th>Tipo de Cuota</th>
                                             <th style="text-align:left">Monto $</th>
-                                            <th style="text-align:left">Descuento $</th>
+                                            {{-- <th style="text-align:left">Descuento $</th> --}}
                                             <th style="text-align:left">Total $</th>
                                         </thead>
                                         <tbody id="invoice">
@@ -107,9 +114,9 @@ Procesar Pago
                                                     <input type="text" class="amount form-control form-control-lg" name="amount" id="amount"
                                                         value="0" required>
                                                 </td>
-                                                <td><input type="text" class="discount form-control form-control-lg"
+                                                {{-- <td><input type="text" class="discount form-control form-control-lg"
                                                         name="discount" id="discount" value="0" required>
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     <input type="text" class="sub_total form-control form-control-lg"
                                                         name="sub_total" id="total" value="0" readOnly="true" required>
@@ -166,8 +173,9 @@ Procesar Pago
                 $('select[name="student_id"]').empty();
             }
         });
+        
 
-        $('select[name="generation_id"]').on('change', function () {
+        $('select[name="generation_id"]').on('click', function () {
             var generationID = $(this).val();
             if (generationID) {
                 $.ajax({
@@ -214,9 +222,9 @@ Procesar Pago
             }
         });
 
-        $(document).on('keyup', '.amount,.discount', function () {
+        $(document).on('keyup', '.amount', function () {
             var amount = parseFloat($(this).closest("tr").find(".amount").val());
-            var discount = parseFloat($(this).closest("tr").find(".discount").val());
+            var discount = parseFloat(0);
             $(this).closest("tr").find(".sub_total").val(amount - discount);
 
             //Show Total Amount
@@ -226,6 +234,39 @@ Procesar Pago
 
             // $("#total").val(total);
         });
+    });
+
+    $("#searchCurp").click(function () {
+        var curp = $("#curp").val();
+        var route = "/pagos/buscar/curp/" + curp;
+         if (curp) {
+                $.ajax({
+                    url: '/pagos/buscar/curp/'+ curp,
+                    type: "GET",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#preloader").css("display", "block");
+                    },
+                    success: function (data) {
+                        $("#preloader").css("display", "none");
+                        $("#diplomat_id").val(data.diplomat_id);
+                        $("#generation_id").val(data.generation_id);
+                        $("#student_id").val(data.student_id);
+                        $("#name_student").val(data.name_student+' '+data.last_name+' '+data.mother_last_name);
+                        $("#diplomat_name").val(data.diplomat_name);
+                        $("#generation_number").val('Generación: '+data.generation_number);
+                        $("#debt").val(data.debt);
+                    },
+                    error: function (data) {
+                        if (data.status === 400) {
+                            $("#preloader").css("display", "none");
+                            swal("Error!", "Estas introduciendo una curp no registrada, verifica los datos.", "error");
+                        }
+                    }
+                });
+            }else{
+                swal("Error!", "Introduce una CURP.", "error");
+            }
     });
 
      $("#paymentReceived").click(function () {
@@ -238,7 +279,7 @@ Procesar Pago
         var destination_account = $("#destination_account").val();
         var account_type = $("#account_type").val();
         var amount = $("#amount").val();
-        var discount = $("#discount").val();
+        var discount = 0;
         var total = $("#total").val();
 
         var route = "/pagos/recibir"
@@ -268,15 +309,21 @@ Procesar Pago
             },
             success: function () {
                 $("#preloader").css("display", "none");
+                // Clear Data
+                $("#curp").val('');
+                $("#diplomat_id").val('');
+                $("#generation_id").val('');
+                $("#student_id").val('');
+                $("#name_student").val('');
+                $("#diplomat_name").val('');
+                $("#generation_number").val('');
+                $("#debt").val('');
+                // End
                 $('#nameSave').val('');
                 $("#diplomat_id").val('');
                 $("#generation_id").val('');
                 $("#student_id").val('');
                 $("#date_payment").val('');
-                $("#observation").val('');
-                $("#payment_method").val('');
-                $("#destination_account").val('');
-                $("#account_type").val('');
                 $("#amount").val('0');
                 $("#discount").val('0');
                 $("#total").val('0');

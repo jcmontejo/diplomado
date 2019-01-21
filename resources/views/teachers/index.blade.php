@@ -20,7 +20,8 @@ Lista de Docentes
                 </div>
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createTeacher">Agregar
                     Nuevo Docente</a>
-                <table class="table" id="teachers">
+                <div class="table-responsive">
+                    <table class="table" id="teachers">
                     <thead>
                         <th>Nombre Docente</th>
                         <th>Apellido Paterno</th>
@@ -48,6 +49,7 @@ Lista de Docentes
                         </tr>
                     </tfoot>
                 </table>
+                </div>
             </div>
         </div>
     </div>

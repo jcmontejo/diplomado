@@ -20,8 +20,8 @@ class CreateGenerationsTable extends Migration
             $table->integer('number_students')->nullable();
             $table->integer('cost');
             $table->date('start_date');
-            $table->integer('number_payments');
-            $table->string('note')->nullable();
+            $table->string('commision');
+            $table->string('full_price');
             $table->boolean('status');
             $table->string('docent');
             $table->integer('docent_id');
