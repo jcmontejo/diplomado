@@ -1,0 +1,17 @@
+ALTAS 
+1.-Pendiente agregar Facebook: YA
+2.- Diplomado interesado YA
+3.- Recordatorio de % de prospectos
+4.- campos obligatorios : Diplomado y Facebook YA
+
+INSCRIPCIONES 
+1.- Descuento 0 al 1000 de 100 en 100 YA
+2.- Número de pagos 1-6 YA
+3.- Obligado pedir de cuanto seran los pagos YA
+4.- Agregar opciones de pago quincenal y mensual YA
+5.- Agregar a la inscripcion si es ex alumno, recursador o nuevo YA
+
+Vendedores:
+1.- Semaforo de % de estudiantes YA
+2.- Calendario para anotaciones
+ 

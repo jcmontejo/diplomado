@@ -7,7 +7,8 @@
             </div>
             <div class="modal-body">
                 <div class="col-lg-6 col-ml-12">
-                    <div id='message-error-save' class="alert alert-danger alert-dismissible fade show" role='alert' style="display: none">
+                    <div id='message-error-save' class="alert alert-danger alert-dismissible fade show" role='alert'
+                        style="display: none">
                         <strong id="error-save"></strong>
                     </div>
                     <form id="form-create">
@@ -22,7 +23,18 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="exampleInputPassword1">Contraseña de Acceso</label>
-                                <input type="password" class="form-control form-control-lg" id="passwordSave" placeholder="****************">
+                                <input type="password" class="form-control form-control-lg" id="passwordSave"
+                                    placeholder="****************">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputPassword1">Selecciona un Rol</label>
+                                <select name="roleSave" id="roleSave" class="form-control form-control-lg">
+                                    @forelse ($roles as $role)
+                                    <option value="{{$role->id}}">{{$role->name}}</option>
+                                    @empty
+                                    <option value="">No hay roles registrados.</option>
+                                    @endforelse
+                                </select>
                             </div>
                         </div>
                     </form>

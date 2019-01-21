@@ -41,12 +41,12 @@
                                 <input type="date" class="form-control form-control-lg" id="startdateSave">
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Número de Pagos</label>
-                                <input type="number" class="form-control form-control-lg" id="numberpaymentsSave">
+                                <label for="exampleInputPassword1">Importe a pagar por comisión</label>
+                                <input type="number" class="form-control form-control-lg" id="commisionSave">
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Notas</label>
-                                <input type="text" class="form-control form-control-lg" id="noteSave" placeholder="Introduce observaciones">
+                                <label for="exampleInputPassword1">Importe a pagar por FULL PRICE</label>
+                                <input type="number" class="form-control form-control-lg" id="full_priceSave">
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="exampleInputPassword1">Estatus</label>

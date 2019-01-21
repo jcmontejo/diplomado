@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Subir Documentación <i class="fa fa-spinner fa-spin"></i></h5>
+                <h5 class="modal-title">Subir Documentación</h5>
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
@@ -15,7 +15,7 @@
                             <input type="hidden" id="id">
                              <div class="form-group col-md-12">
                                 <label for="exampleInputEmail1">Alumno</label>
-                                <input type="text" id="name-student" class="form-control form-control-lg bg-info" readonly>
+                                <input type="text" id="name-student" class="form-control form-control-lg" style="font-size:30px;" readonly>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="exampleInputEmail1">Comprobante de Domicilio</label>

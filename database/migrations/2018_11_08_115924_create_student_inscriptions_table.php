@@ -18,6 +18,15 @@ class CreateStudentInscriptionsTable extends Migration
             $table->unsignedInteger('student_id');
             $table->integer('diplomat_id');
             $table->integer('generation_id');
+            $table->string('discount');
+            $table->string('final_cost');
+            $table->integer('first_payment');
+            $table->string('comments')->nullable();
+            $table->string('status')->default('Alta');
+            $table->string('amount_of_payments');
+            $table->string('periodicity');
+            $table->string('type_of_inscription');
+            $table->integer('read')->default(0);
             $table->foreign('student_id')->references('id')->on('students');
 
             $table->timestamps();

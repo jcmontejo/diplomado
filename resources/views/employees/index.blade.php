@@ -89,6 +89,7 @@ Lista de Cuentas de Usuario
         var name = $("#nameSave").val();
         var email = $("#emailSave").val();
         var password = $("#passwordSave").val();
+        var role = $("#roleSave").val();
         var route = "/usuarios/guardar"
 
         $.ajax({
@@ -101,12 +102,14 @@ Lista de Cuentas de Usuario
             data: {
                 name: name,
                 email: email,
-                password: password
+                password: password,
+                role: role
             },
             success: function () {
                 $('#nameSave').val('');
                 $('#emailSave').val('');
                 $('#passwordSave').val('');
+                $('#roleSave').val('');
                 $("#modalCreate").modal('toggle');
                 $('#message-error-save').css('display', 'none');
                 reload();

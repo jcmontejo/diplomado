@@ -9,8 +9,59 @@ Alumnos
 Lista de Alumnos
 @endsection
 @section('css')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
+<style>
+    switch {
+        display: inline-block;
+        height: 34px;
+        position: relative;
+        width: 60px;
+    }
+
+    .switch input {
+        display: none;
+    }
+
+    .slider {
+        background-color: #ccc;
+        bottom: 0;
+        cursor: pointer;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: .4s;
+    }
+
+    .slider:before {
+        background-color: #fff;
+        bottom: 4px;
+        content: "";
+        height: 26px;
+        left: 4px;
+        position: absolute;
+        transition: .4s;
+        width: 26px;
+    }
+
+    input:checked+.slider {
+        background-color: #66bb6a;
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(26px);
+    }
+
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+</style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
 @endsection
 @section('content')
 <div class="row">
@@ -22,8 +73,10 @@ Lista de Alumnos
                 <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
                     <strong>Alumno Actualizado Correctamente.</strong>
                 </div>
-                <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createStudent">Agregar
+                @can('agregar-alumno')
+                     <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createStudent">Agregar
                     Nuevo Alumno</a>
+                @endcan
                 <div class="table-responsive">
                     <table class="table" id="students">
                         <thead>
@@ -39,6 +92,7 @@ Lista de Alumnos
                             <th>Documentos</th>
                             <th>Fecha/Hora de Creación</th>
                             <th>Estatus</th>
+                            <th>Vendedor</th>
                             <th>Acciones</th>
                         </thead>
                         <tfoot>
@@ -55,6 +109,7 @@ Lista de Alumnos
                                 <th>Documentos</th>
                                 <th>Fecha/Hora de Creación</th>
                                 <th>Estatus</th>
+                                <th>Vendedor</th>
                                 <th>Acciones</th>
                             </tr>
                         </tfoot>
@@ -74,20 +129,21 @@ Lista de Alumnos
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
 <script>
     $(document).ready(function () {
         Charge();
         $('#modalDocuments').on('hidden.bs.modal', function () {
-             $("#file-address").append("");
-             $("#file-address").attr("href", "");
-             $("#file-study").append("");
-             $("#file-study").attr("href", "");
+            $("#file-address").append("");
+            $("#file-address").attr("href", "");
+            $("#file-study").append("");
+            $("#file-study").attr("href", "");
         });
         $('#professionSave').select2({
-             width: '100%',
-             placeholder: 'Selecciona una profesión',
-             allowClear: true,
-             dropdownParent: $('#modalCreate')
+            width: '100%',
+            placeholder: 'Selecciona una profesión',
+            allowClear: true,
+            dropdownParent: $('#modalCreate')
         });
 
         $('select[name="diplomat_id"]').on('change', function () {
@@ -117,6 +173,16 @@ Lista de Alumnos
         });
     });
 
+    $('#status').on('change', function () {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        if (valueSelected == 1) {
+            $("#blockDiplomat").show();
+        } else {
+            $("#blockDiplomat").hide();
+        }
+    });
+
     function reload() {
         $('#students').each(function () {
             dt = $(this).dataTable();
@@ -129,6 +195,8 @@ Lista de Alumnos
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
+            "dom": 'lBfrtip',
+            "buttons": ['csv', 'print', 'excel', 'pdf'],
             processing: true,
             serverSide: true,
             ajax: '{!! url('alumnos/datos') !!}',
@@ -170,18 +238,25 @@ Lista de Alumnos
                 },
                 {
                     data: 'documents',
-                     "render": function (data, type, row) {
-                          return (data == true) ? '<button class="btn btn-rounded btn-success mb-3"><i class="fa fa-check"></i></button>' : '<button class="btn btn-rounded btn-danger"><i class="fa fa-close"></i></button>';}
+                    "render": function (data, type, row) {
+                        return (data == true) ?
+                            'SI' :
+                            'NO';
+                    }
                 },
                 {
                     data: 'created_at',
                     name: 'created_at'
                 },
                 {
-                    data: 'status',
-                    name: 'status',
+                    data: 'now',
+                    name: 'now',
                     orderable: false,
                     searchable: false
+                },
+                {
+                  data: 'owner',
+                  name: 'owner'  
                 },
                 {
                     data: 'action',
@@ -201,34 +276,44 @@ Lista de Alumnos
         var name = $("#nameSave").val();
         var last_name = $("#lastnameSave").val();
         var mother_last_name = $("#motherlastnameSave").val();
+        var facebook = $("#facebookSave").val();
+        var interested = $("#interestedSave").val();
         var birthdate = $("#birthdateSave").val();
         var sex = $("#sexSave").val();
         var phone = $("#phoneSave").val();
         var address = $("#addressSave").val();
+        var state = $("#stateSave").val();
+        var city = $("#citySave").val();
         var email = $("#emailSave").val();
         var profession = $("#professionSave").val();
+        var status = $("#statusSave").val();
         var generation_id = $("#generationSave").val();
         // Save Files
-    
-           var file_address = $('#proofaddressSave').prop('files')[0];
-           var file_studies = $("#proofstudiesSave").prop('files')[0];
 
-            var form_data = new FormData();
-            // Files
-            form_data.append('file_address', file_address);
-            form_data.append('file_studies',file_studies);
-            // Rest of data
-            form_data.append('name', name);
-            form_data.append('last_name', last_name);
-            form_data.append('mother_last_name', mother_last_name);
-            form_data.append('birthdate', birthdate);
-            form_data.append('sex', sex);
-            form_data.append('phone', phone);
-            form_data.append('address', address);
-            form_data.append('email', email);
-            form_data.append('profession', profession);
-            form_data.append('generation_id', generation_id);
-    
+        // var file_address = $('#proofaddressSave').prop('files')[0];
+        // var file_studies = $("#proofstudiesSave").prop('files')[0];
+
+        var form_data = new FormData();
+        // Files
+        // form_data.append('file_address', file_address);
+        // form_data.append('file_studies', file_studies);
+        // Rest of data
+        form_data.append('name', name);
+        form_data.append('last_name', last_name);
+        form_data.append('mother_last_name', mother_last_name);
+        form_data.append('facebook', facebook);
+        form_data.append('interested', interested);
+        form_data.append('birthdate', birthdate);
+        form_data.append('sex', sex);
+        form_data.append('phone', phone);
+        form_data.append('address', address);
+        form_data.append('state', state);
+        form_data.append('city', city);
+        form_data.append('email', email);
+        form_data.append('profession', profession);
+        form_data.append('status', status);
+        form_data.append('generation_id', generation_id);
+
         // End
         var route = "/alumnos/guardar"
 
@@ -286,7 +371,9 @@ Lista de Alumnos
             $("#sex").val(res.sex);
             $("#phone").val(res.phone);
             $("#address").val(res.address);
+            $("#state").val(res.state);
             $("#email").val(res.email);
+            $("#status").val(res.status);
             $("#id").val(res.id);
         });
     }
@@ -300,7 +387,10 @@ Lista de Alumnos
         var sex = $("#sex").val();
         var phone = $("#phone").val();
         var address = $("#address").val();
+        var state = $("#state").val();
+        var city = $("#city").val();
         var email = $("#email").val();
+        var status = $("#status").val();
         var route = "alumnos/actualizar/" + value;
 
         $.ajax({
@@ -318,9 +408,12 @@ Lista de Alumnos
                 sex: sex,
                 phone: phone,
                 address: address,
-                email: email
+                state: state,
+                city: city,
+                email: email,
+                status: status
             },
-             beforeSend: function () {
+            beforeSend: function () {
                 $("#preloader").css("display", "block");
             },
             success: function () {
@@ -329,7 +422,7 @@ Lista de Alumnos
                 reload();
                 swal("Bien hecho!", "Has actualizado al alumno exitosamente!", "success");
             },
-             error: function (data) {
+            error: function (data) {
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
@@ -389,9 +482,9 @@ Lista de Alumnos
 
         $.get(route, function (res) {
             $("#file-address").append(res.proof_of_address);
-            $("#file-address").attr("href", "assets/files/"+res.proof_of_address);
+            $("#file-address").attr("href", "assets/files/" + res.proof_of_address);
             $("#file-study").append(res.proof_of_studies);
-            $("#file-study").attr("href", "assets/files/"+res.proof_of_studies);
+            $("#file-study").attr("href", "assets/files/" + res.proof_of_studies);
             $("#file-id").val(res.id);
         });
     }
@@ -401,9 +494,9 @@ Lista de Alumnos
         var route = "alumnos/consultar/" + btn.value;
 
         $.get(route, function (res) {
-           $("#id").val(res.id);
-           $("#name-student").val(res.name +' '+ res.last_name +' '+ res.mother_last_name);
-           console.log(res.name);
+            $("#id").val(res.id);
+            $("#name-student").val(res.name + ' ' + res.last_name + ' ' + res.mother_last_name);
+            console.log(res.name);
         });
     }
 
@@ -415,10 +508,10 @@ Lista de Alumnos
         var form_data = new FormData();
         // Files
         form_data.append('file_address', file_address);
-        form_data.append('file_studies',file_studies);
+        form_data.append('file_studies', file_studies);
         // Rest of data
         form_data.append('id', id);
-    
+
         // End
         var route = "/alumnos/subir/documentos"
 
@@ -460,8 +553,7 @@ Lista de Alumnos
         });
     })
 
-    function inscriptionStudent(btn)
-    {
+    function inscriptionStudent(btn) {
         var route = "alumnos/consultar/" + btn.value;
 
         $.get(route, function (res) {
@@ -477,11 +569,11 @@ Lista de Alumnos
         var generation_id = $("#generation_id").val();
         // Save Files
 
-            var form_data = new FormData();
-            // Rest of data
-            form_data.append('generation_id', generation_id);
-            form_data.append('student_id', student_id )
-    
+        var form_data = new FormData();
+        // Rest of data
+        form_data.append('generation_id', generation_id);
+        form_data.append('student_id', student_id)
+
         // End
         var route = "/alumnos/procesar/inscripcion"
 
@@ -523,7 +615,6 @@ Lista de Alumnos
             }
         });
     })
-
 
 </script>
 @endsection

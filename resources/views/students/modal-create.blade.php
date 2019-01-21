@@ -13,9 +13,13 @@
                     </div>
                     <form id="formStudent" enctype="multipart/form-data">
                         <div class="form-row">
+                             <div class="form-group col-md-4">
+                                <label for="exampleInputEmail1">CURP</label>
+                                <input type="text" class="form-control form-control-lg" id="curpSave" placeholder="Introduce CURP del alumno">
+                            </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputEmail1">Nombre</label>
-                                <input type="text" class="form-control form-control-lg" id="nameSave" placeholder="Introduce nombre de alumno">
+                                <input type="text" class="form-control form-control-lg" id="nameSave" placeholder="Introduce nombre del alumno">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Apellido Paterno</label>
@@ -25,6 +29,16 @@
                                 <label for="exampleInputPassword1">Apellido Materno</label>
                                 <input type="text" class="form-control form-control-lg" id="motherlastnameSave"
                                     placeholder="Introduce apellido materno">
+                            </div>
+                             <div class="form-group col-md-8">
+                                <label for="exampleInputPassword1">Facebook</label>
+                                <input type="text" class="form-control form-control-lg" id="facebookSave"
+                                    placeholder="Introduce Facebook">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputPassword1">¿En que diplomados esta interesado?</label>
+                                <input type="text" class="form-control form-control-lg" id="interestedSave"
+                                    placeholder="Introduce el o los diplomados en el que esta interesado">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Fecha de Nacimiento</label>
@@ -41,18 +55,31 @@
                                 <label for="exampleInputPassword1">Teléfono de Contacto</label>
                                 <input type="text" class="form-control form-control-lg" id="phoneSave" placeholder="Introduce teléfono de contacto">
                             </div>
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-md-12">
                                 <label for="exampleInputPassword1">Dirección</label>
                                 <input type="text" class="form-control form-control-lg" id="addressSave" placeholder="Introduce dirección de alumno">
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">Estado</label>
+                                <select name="stateSave" id="stateSave" class="form-control form-control-lg">
+
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">Ciudad</label>
+                                <select name="citySave" id="citySave" class="form-control form-control-lg">
+
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12">
                                 <label for="exampleInputPassword1">Correo Electrónico</label>
                                 <input type="email" class="form-control form-control-lg" id="emailSave" placeholder="EJ. maria@alumno.com">
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="exampleInputPassword1">Profesión</label>
                                 <select name="professionSave" id="professionSave" class="form-control form-control-lg">
-                                    <option selected="selected">INGENIERÍA EN AERONÁUTICA</option>
+                                    <option value="null">--Selecciona una profesión--</option>
+                                    <option>INGENIERÍA EN AERONÁUTICA</option>
                                     <option>ARQUITECTO</option>
                                     <option>ARQUITECTO PAISAJISTA</option>
                                     <option>ARQUITECTO URBANISTA</option>
@@ -568,10 +595,27 @@
                                     <option>LICENCIATURA EN PEDAGOGIA</option>
                                     <option>LICENCIATURA EN GESTION TURISTICA</option>
                                     <option>INGENIERO MECANICO EN MANTENIMIENTO INDUSTRIAL</option>
+                                    <option>OTRO</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputPassword1">SEMAFORO</label>
+                                <select name="" id="statusSave" class="form-control form-control-lg">
+                                  <option value="10">10%</option>
+                                  <option value="20">20%</option>
+                                  <option value="30">30%</option>
+                                  <option value="40">40%</option>
+                                  <option value="50">50%</option>
+                                  <option value="60">60%</option>
+                                  <option value="70">70%</option>
+                                  <option value="80">80%</option>
+                                  <option value="90">90%</option>
+                                  <option value="100">100%</option>
+                                  <option value="110">110%</option>
                                 </select>
                             </div>
                             <hr>
-                            <div class="form-group col-md-12">
+                            {{-- <div class="form-group col-md-12">
                                 <h5 class="modal-title">Documentación</h5>
                             </div>
 
@@ -584,20 +628,34 @@
                                 <label for="exampleInputPassword1">Comprobante de Ultimo Grado de Estudios</label>
                                 <input type="file" class="form-control form-control-lg" id="proofstudiesSave"
                                     placeholder="Introduce profesión del alumno">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <h5 class="modal-title">Matricular a Diplomado</h5>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="exampleInputPassword1">Selecciona Diplomado</label>
-                                <select name="generationSave" id="generationSave" class="form-control form-control-lg">
-                                    @forelse ($generations as $generation)
-                                    <option value="{{$generation->id}}">{{$generation->name_diplomat}}---{{$generation->number_generation}}</option>
-                                    @empty
-                                    <option>NO EXISTEN GENERACIONES REGISTRADAS</option>
-                                    @endforelse
+                            </div> --}}
+                            {{-- <div class="form-group col-md-12">
+                                <h5 class="modal-title">*Selecciona <span style="color:red;">ES PROSPECTO</span>
+                                    unicamente si el alumno aún no esta seguro de inscribirse a un diplomado.</h5>
+                            </div> --}}
+                            {{-- <div class="form-group col-md-12">
+                                <label for="exampleInputPassword1">Selecciona opción</label>
+                                <select name="status" id="status" class="form-control form-control-lg">
+                                    <option value="">---Selecciona Opción---</option>
+                                    <option value="1">YA SERA ALUMNO</option>
+                                    <option value="0">ES PROSPECTO</option>
                                 </select>
-                            </div>
+                            </div> --}}
+                            {{-- <div id="blockDiplomat" class="col-md-12">
+                                <div class="form-group col-md-12">
+                                    <h5 class="modal-title">Matricular a Diplomado</h5>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label for="exampleInputPassword1">Selecciona Diplomado</label>
+                                    <select name="generationSave" id="generationSave" class="form-control form-control-lg">
+                                        @forelse ($generations as $generation)
+                                        <option value="{{$generation->id}}">{{$generation->name_diplomat}}---{{$generation->number_generation}}</option>
+                                        @empty
+                                        <option>NO EXISTEN GENERACIONES REGISTRADAS</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>

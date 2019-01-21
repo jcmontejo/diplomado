@@ -9,8 +9,11 @@ class Generation extends Model
     protected $fillable = [
         'name_diplomat',
         'number_generation',
+        'number_students',
+        'cost',
         'start_date',
-        'number_payments',
+        'commision',
+        'full_price',
         'note',
         'status',
         'docent',
