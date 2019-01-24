@@ -142,7 +142,10 @@ Route::group(['prefix' => 'generaciones', 'middleware' => 'permission:modulo-con
     Route::get('/consultar/inscripcion/{id}', 'GenerationController@consult');
     Route::put('/marcar/leida/{id}', 'GenerationController@read');
     Route::get('/enviar/recibo/{id}', 'GenerationController@sendVoucher');
+    Route::get('/enviar/recibo/dos/{id}', 'GenerationController@sendVoucherTwo');
+
 });
+
 
 // Payments
 Route::group(['prefix' => 'pagos'], function () {

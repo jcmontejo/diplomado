@@ -110,6 +110,7 @@ Total de Ingresos
                     '$' + pageTotal + ' ( $' + total + ' total)'
                 );
             },
+
             processing: true,
             serverSide: true,
             // ajax: '{!! url('pagos/recibidos') !!}',
@@ -175,6 +176,46 @@ Total de Ingresos
             e.preventDefault();
         });
     });
+
+    function sendVoucher(btn) {
+        var id = btn.value;
+        var route = "/generaciones/enviar/recibo/dos/" + btn.value;
+        swal({
+            title: '¿Estás seguro?',
+            text: "Será enviado el recibo vía Email!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, envíar!',
+            showLoaderOnConfirm: true,
+
+            preConfirm: function () {
+                return new Promise(function (resolve) {
+
+                    $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                        })
+                        .done(function (response) {
+                            // reload();
+                            swal('Procesada!', response.message, response.status);
+                        })
+                        .fail(function () {
+                            swal('Oops...', 'Algo salió mal con la petición!', 'error ');
+                        });
+                });
+            },
+            allowOutsideClick: false
+        });
+    }
 
 </script>
 @endsection

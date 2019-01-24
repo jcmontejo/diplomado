@@ -26,6 +26,7 @@ class PaymentController extends Controller
         return view('incomes.index');
     }
 
+
     public function showPayments()
     {
         $accounts = Account::all();
@@ -66,7 +67,10 @@ class PaymentController extends Controller
             return Datatables::of($receiveds)
                 ->addColumn('action', function ($received) {
                     $id = $received->id;
-                    return '<td><div class="btn-group" role="group" aria-label="Basic example"><a href="/descargar/recibo/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-print"></i> Recibo</a></div></td>';
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="/descargar/recibo/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-print"></i> Recibo</a>
+                    <button value="' . $id . '" OnClick="sendVoucher(this);" class="btn btn-rounded btn-xs btn-dark mb-3"><i class="fa fa-envelope"></i> Enviar recibo</button>
+                    </div></td>';
                 })
                 ->make(true);
         } else {
