@@ -16,12 +16,14 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('concept');
-            $table->date('date');
-            $table->float('amount_payable', 8, 2);
+            $table->integer('number_payment');
+            $table->date('date')->nullable();
+            $table->float('amount_paid', 8, 2);
             $table->integer('student_id');
             $table->integer('generation_id');
             $table->integer('diplomat_id');
             $table->string('status')->default('PENDIENTE');
+            $table->integer('income_id')->nullable();
             $table->unsignedInteger('debt_id');
 
             $table->foreign('debt_id')->references('id')->on('debts');

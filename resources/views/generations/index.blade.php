@@ -30,8 +30,8 @@ Lista de Generaciones
                         <th>Generación</th>
                         <th>Alumnos Inscritos</th>
                         <th>Costo de Diplomado</th>
-                        <th>Importe a pagar por comisión</th>
-                        <th>Importe a pagar por FULL PRICE</th>
+                        <th>Importe a pagar por comisión (BASE</th>
+                        <th>% a pagar por FULL PRICE</th>
                         <th>Fecha/Hora de Creación</th>
                         <th>Acciones</th>
                     </thead>
@@ -124,7 +124,7 @@ Lista de Generaciones
                 {
                     data: 'full_price',
                     "render": function (data, type, row) {
-                        return '$' + data;
+                        return data+'%';
                     }
                 },
                 {

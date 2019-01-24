@@ -13,20 +13,10 @@
                     <form id="form">
                         <input type="hidden" name="id-student" id="id-student">
                         <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="exampleInputEmail1">Nombre</label>
-                                <input type="text" class="form-control form-control-lg" id="nameInscription" readonly>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="exampleInputEmail1">Apellido Paterno</label>
-                                <input type="text" class="form-control form-control-lg" id="lastnameInscription"
-                                    readonly>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="exampleInputEmail1">Apellido Materno</label>
-                                <input type="text" class="form-control form-control-lg" id="motherlastnameInscription"
-                                    readonly>
-                            </div>
+                            {{-- <div class="form-group col-md-12">
+                                <label for="exampleInputEmail1">PRECIO VENTA</label>
+                                <input style="font-size:20px;" type="number" value="0" min="0" max="12" id="price_sale" class="form-control number">
+                            </div> --}}
                             <div class="form-group col-md-8">
                                 <input type="hidden" id="id">
                                 <label for="exampleInputEmail1">Selecciona Diplomado</label>
@@ -80,7 +70,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="">Monto Primer Pago</label>
-                                <input type="number" name="first_payment" id="first_payment" class="form-control form-control-lg">
+                                <input type="number" value="0" min="0" name="first_payment" id="first_payment" class="form-control form-control-lg">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="">Periodicidad</label>

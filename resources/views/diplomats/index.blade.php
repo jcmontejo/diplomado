@@ -24,14 +24,16 @@ Lista de Diplomados
                     <thead>
                         <th>Nombre Diplomado</th>
                         <th>Clave Diplomado</th>
-                        <th>Costo Diplomado</th>
+                        <th>Costo (BASE)</th>
+                        <th>Costo Máximo (VENDEDORES)</th>
                         <th>Acciones</th>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>Nombre Diplomado</th>
                             <th>Clave Diplomado</th>
-                            <th>Costo Diplomado</th>
+                            <th>Costo (BASE)</th>
+                            <th>Costo Máximo (VENDEDORES)</th>
                             <th>Acciones</th>
                         </tr>
                     </tfoot>
@@ -77,6 +79,10 @@ Lista de Diplomados
                     data: 'cost',
                     name: 'cost'
                 },
+                 {
+                    data: 'maximum_cost',
+                    name: 'maximum_cost'
+                },
                 {
                     data: 'action',
                     name: 'action',
@@ -95,6 +101,7 @@ Lista de Diplomados
         var name = $("#nameSave").val();
         var key = $("#keySave").val();
         var cost = $("#costSave").val();
+        var maximum_cost = $("#maximum_costSave").val();
         var route = "/diplomados/guardar"
 
         $.ajax({
@@ -107,7 +114,8 @@ Lista de Diplomados
             data: {
                 name: name,
                 key: key,
-                cost: cost
+                cost: cost,
+                maximum_cost: maximum_cost
             },
              beforeSend: function () {
                 $("#preloader").css("display", "block");
@@ -143,6 +151,7 @@ Lista de Diplomados
             $("#name").val(res.name);
             $("#key").val(res.key);
             $("#cost").val(res.cost);
+            $("#maximum_cost").val(res.maximum_cost);
             $("#id").val(res.id);
         });
     }
@@ -152,6 +161,7 @@ Lista de Diplomados
         var name = $("#name").val();
         var key = $("#key").val();
         var cost = $("#cost").val();
+        var maximum_cost = $("#maximum_cost").val();
         var route = "diplomados/actualizar/" + value;
 
         $.ajax({
@@ -164,7 +174,8 @@ Lista de Diplomados
             data: {
                 name: name,
                 key: key,
-                cost
+                cost: cost,
+                maximum_cost: maximum_cost
             },
              beforeSend: function () {
                 $("#preloader").css("display", "block");

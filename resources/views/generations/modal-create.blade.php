@@ -41,11 +41,11 @@
                                 <input type="date" class="form-control form-control-lg" id="startdateSave">
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Importe a pagar por comisión</label>
+                                <label for="exampleInputPassword1">Importe a pagar por comisión (BASE)</label>
                                 <input type="number" class="form-control form-control-lg" id="commisionSave">
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Importe a pagar por FULL PRICE</label>
+                                <label for="exampleInputPassword1">% a pagar por FULL PRICE</label>
                                 <input type="number" class="form-control form-control-lg" id="full_priceSave">
                             </div>
                             <div class="form-group col-md-12">

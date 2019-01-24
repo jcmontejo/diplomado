@@ -21,6 +21,7 @@ class CreateStudentInscriptionsTable extends Migration
             $table->string('discount');
             $table->string('final_cost');
             $table->integer('first_payment');
+            $table->integer('number_of_payments');
             $table->string('comments')->nullable();
             $table->string('status')->default('Alta');
             $table->string('amount_of_payments');

@@ -138,6 +138,7 @@ Lista de Alumnos
         $('select[name="diplomat_id"]').on('change', function () {
             var diplomatID = $(this).val();
             if (diplomatID) {
+
                 $.ajax({
                     url: '/pagos/generaciones/' + diplomatID,
                     type: "GET",
@@ -155,6 +156,7 @@ Lista de Alumnos
                         });
                     }
                 });
+                
             } else {
                 $('select[name="generation_id"]').empty();
                 $('select[name="student_id"]').empty();
@@ -667,12 +669,14 @@ Lista de Alumnos
         var route = "/alumnos/consultar/" + btn.value;
 
         $.get(route, function (res) {
-            $("#nameInscription").val(res.name);
-            $("#lastnameInscription").val(res.last_name);
-            $("#motherlastnameInscription").val(res.mother_last_name);
+//$("#nameInscription").val(res.name);
+            $("#studentName").append(res.name+' '+res.last_name+' '+res.mother_last_name);
+            // $("#lastnameInscription").val(res.last_name);
+            // $("#motherlastnameInscription").val(res.mother_last_name);
             $("#id-student").val(res.id);
         });
     }
+
 
     $("#processInscription").click(function () {
         var student_id = $("#id-student").val();
@@ -736,6 +740,10 @@ Lista de Alumnos
                 if (data.status === 400) {
                      $("#preloader").css("display", "none");
                      swal("Error!", "Los datos del alumno estan incompletos, favor de completar todos los campos antes de inscribir.", "error");
+                }
+                if (data.status === 406) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Número de pago procesado anteriormente, seleccione otro número de pago.", "error");
                 }
                 $("#modalInscription").modal('toggle');
                 $("#preloader").css("display", "none");

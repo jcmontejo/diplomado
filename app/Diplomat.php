@@ -9,6 +9,7 @@ class Diplomat extends Model
     protected $fillable = [
         'name',
         'key',
-        'cost'
+        'cost',
+        'maximum_cost'
     ];
 }

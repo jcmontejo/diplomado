@@ -8,6 +8,7 @@ use App\Debt;
 use App\Diplomat;
 use App\Generation;
 use App\Http\Requests\StorePaymentReceived;
+use App\Payment;
 use App\PaymentMethod;
 use App\PaymentReceived;
 use App\StudentInscription;
@@ -256,6 +257,17 @@ class PaymentController extends Controller
                 ->where('status', '=', 'ACTIVA')
                 ->first();
 
+            if ($this->checkNumberPayment($request->number_payment, $debt->id)) {
+                $number_payment = $request->number_payment;
+            } else {
+                DB::rollBack();
+                return response()
+                    ->json([
+                        'message' => 'Pagado ya procesado antes.',
+                        'status' => 406,
+                    ], 406);
+            }
+
             $received = new PaymentReceived();
             $received->diplomat_id = $diplomat->id;
             $received->generation_id = $generation->id;
@@ -271,6 +283,18 @@ class PaymentController extends Controller
             $received->type = '1';
             $received->debt_id = $debt->id;
             $received->save();
+
+            $payment_process = Payment::where('debt_id', '=', $debt->id)
+                ->where('number_payment', '=', $number_payment)
+                ->first();
+
+            if ($payment_process) {
+                $payment_process->amount_paid = $received->amount;
+                $payment_process->date = $received->date_payment;
+                $payment_process->status = 'PAGADO';
+                $payment_process->income_id = $received->id;
+                $payment_process->save();
+            }
 
             if ($this->adjustDebt($debt->id, $received->total)) {
                 $this->sumAccount($received->destination_account, $received->total);
@@ -316,6 +340,20 @@ class PaymentController extends Controller
         $account->save();
 
         return true;
+    }
+
+    public function checkNumberPayment($number_payment, $debt)
+    {
+        $payment_process = Payment::where('debt_id', '=', $debt)
+            ->where('number_payment', '=', $number_payment)
+            ->where('status', '=', 'PENDIENTE')
+            ->first();
+
+        if ($payment_process) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function voucher($id)
