@@ -171,6 +171,7 @@ class GenerationController extends Controller
             $id = Input::get('id');
             $inscription = StudentInscription::find($id);
             $debt = Debt::where('generation_id', '=', $id)->first();
+            $student = Student::find($inscription->student_id);
             $data = DB::table('payment_receiveds')->where([
                 ['debt_id', '=', $debt->id],
                 ['type', '=', '0'],
@@ -178,7 +179,31 @@ class GenerationController extends Controller
 
             //$pdf = PDF::loadView('pdf.voucher');
             $pdf = PDF::loadView('payments.voucher', compact('data'))->setPaper('a4', 'landscape');
-            $message->to('jncrlsmontejo@gmail.com', 'Estudiante')->subject('Comprobante de pago | SERendipity');
+            $message->to($student->email, 'Estudiante')->subject('Comprobante de pago | SERendipity');
+            $message->from('serendipity@gmail.com', 'Administración');
+            $message->attachData($pdf->output(), 'comprobante.pdf');
+        });
+
+        return response()->json(["message" => "success"]);
+    }
+    
+    public function sendVoucherTwo($id)
+    {
+        $info = ['info' => 'test'];
+
+        Mail::send(['text' => 'mail'], $info, function ($message) {
+            $id = Input::get('id');
+
+            $data = DB::table('payment_receiveds')->where([
+                ['ID', '=', $id],
+            ])->first();
+
+            $student = Student::find($data->student_id);
+
+
+            //$pdf = PDF::loadView('pdf.voucher');
+            $pdf = PDF::loadView('payments.voucher', compact('data'))->setPaper('a4', 'landscape');
+            $message->to($student->email, 'Estudiante')->subject('Comprobante de pago | SERendipity');
             $message->from('serendipity@gmail.com', 'Administración');
             $message->attachData($pdf->output(), 'comprobante.pdf');
         });
