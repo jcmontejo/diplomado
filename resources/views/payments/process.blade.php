@@ -61,13 +61,23 @@ Procesar Pago
                             <label for="exampleInputPassword1">Fecha de Pago</label>
                             <input type="date" class="form-control" id="date_payment">
                         </div>
-                        <div class="form-group col-md-8">
+                        <div class="form-group col-md-4">
                             <label for="exampleInputPassword1">Observaciones</label>
                             <select name="observation" id="observation" class="form-control form-control-lg">
                                 <option value="PAGO PARCIAL DE DIPLOMADO">PAGO PARCIAL DE DIPLOMADO</option>
                                 <option value="PAGO TOTAL DE DIPLOMADO">PAGO TOTAL DE DIPLOMADO</option>
                             </select>
-                            {{-- <input type="text" class="form-control" id="observation"> --}}
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="exampleInputPassword1">Número de Pago</label>
+                            <select name="number_payment" id="number_payment" class="form-control form-control-lg">
+                                <option value="1">UNO</option>
+                                <option value="2">DOS</option>
+                                <option value="3">TRES</option>
+                                <option value="4">CUATRO</option>
+                                <option value="5">CINCO</option>
+                                <option value="6">SEIS</option>
+                            </select>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="exampleInputPassword1">Método de Pago</label>
@@ -275,6 +285,7 @@ Procesar Pago
         var student_id = $("#student_id").val();
         var date_payment = $("#date_payment").val();
         var observation = $("#observation").val();
+        var number_payment = $("#number_payment").val();
         var payment_method = $("#payment_method").val();
         var destination_account = $("#destination_account").val();
         var account_type = $("#account_type").val();
@@ -297,6 +308,7 @@ Procesar Pago
                 student_id: student_id,
                 date_payment: date_payment,
                 observation: observation,
+                number_payment: number_payment,
                 payment_method: payment_method,
                 destination_account: destination_account,
                 account_type: account_type,
@@ -338,6 +350,10 @@ Procesar Pago
                 if (data.status === 400) {
                      $("#preloader").css("display", "none");
                      swal("Error!", "Estas introduciendo un monto mayor al adeudo del alumno.", "error");
+                }
+                if (data.status === 406) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Número de pago procesado anteriormente, seleccione otro número de pago.", "error");
                 }
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);

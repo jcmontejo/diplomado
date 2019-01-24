@@ -18,6 +18,7 @@ class CreateDiplomatsTable extends Migration
             $table->string('name',250);
             $table->string('key',50);
             $table->integer('cost');
+            $table->integer('maximum_cost');
             $table->timestamps();
         });
     }

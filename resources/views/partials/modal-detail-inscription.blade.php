@@ -36,9 +36,10 @@
                                             <table border="0" cellspacing="0" cellpadding="0">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-right">DIPLOMADO</th>
+                                                    <th class="text-right">DIPLOMADO/GENERACIÓN</th>
                                                     <th class="text-right">DESCUENTO APLICADO</th>
                                                     <th class="text-right">COSTO FINAL</th>
+                                                    <th class="text-right">NÚMERO DE PAGOS</th>
                                                     <th class="text-right">IMPORTE DE INSCRIPCIÓN</th>
                                                 </tr>
                                             </thead>
@@ -47,6 +48,7 @@
                                                     <td class="no" id="diplomat"></td>
                                                     <td class="unit" id="discount"></td>
                                                     <td class="unit" id="final_cost"></td>
+                                                    <td class="unit" id="number_of_payments"></td>
                                                     <td class="total" id="payment"></td>
                                                 </tr>
 

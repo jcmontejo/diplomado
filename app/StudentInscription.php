@@ -17,6 +17,7 @@ class StudentInscription extends Model
         'discount',
         'final_cost',
         'first_payment',
+        'number_of_payments',
         'comments',
         'status',
         'amount_of_payments',

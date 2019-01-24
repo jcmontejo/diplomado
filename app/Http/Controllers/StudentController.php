@@ -374,7 +374,8 @@ class StudentController extends Controller
                     $inscription->diplomat_id = $generation->diplomat_id;
                     $inscription->generation_id = $generation->id;
                     $inscription->discount = $request->discount;
-                    $inscription->final_cost = $diplomat->cost - $request->discount;
+                    $inscription->final_cost = $diplomat->maximum_cost - $request->discount;
+                    $inscription->number_of_payments = $request->number_payments;
                     $inscription->first_payment = $request->first_payment;
                     $inscription->comments = $request->comments;
                     $inscription->amount_of_payments = $request->amount_of_payments;
@@ -406,8 +407,9 @@ class StudentController extends Controller
 
                         $payment = new Payment();
                         $payment->concept = 'COLEGIATURA';
+                        $payment->number_payment = $i;
                         $payment->date = $datePayment[$i];
-                        $payment->amount_payable = $amount;
+                        $payment->amount_paid = 0;
                         $payment->student_id = $student->id;
                         $payment->generation_id = $generation->id;
                         $payment->diplomat_id = $diplomat->id;
@@ -418,7 +420,7 @@ class StudentController extends Controller
                     $this->received($diplomat->id, $generation->id, $inscription->id, $request->first_payment, $request->account, $request->payment_method, $request->account_type);
 
                     $this->incentive($inscription->id, $generation->id, $student->id, $inscription->discount);
-                    $inscription->notify(new NEWInscription($inscription));
+                    //$inscription->notify(new NEWInscription($inscription));
                     DB::commit();
 
                     return response()->json([
@@ -516,12 +518,19 @@ class StudentController extends Controller
     {
         $student = Student::find($studentID);
         $generation = Generation::find($generationID);
+        $inscription = StudentInscription::find($inscriptionID);
 
         $incentive = new Incentive();
-        $incentive->commission = $generation->commision;
-        if ($discount <= 500) {
-            $incentive->full_price = $generation->full_price;
-        } else {
+        if ($inscription->final_cost >= $generation->cost) {
+            $incentive->commission = $generation->commision;
+        }else {
+            $incentive->commission = '0';
+        }
+        if ($inscription->final_cost >= $generation->cost) {
+            $extra = $inscription->final_cost - $generation->cost;
+            $porcent = $generation->full_price / 100;
+            $incentive->full_price = round($extra * $porcent,2);
+        }else {
             $incentive->full_price = '0';
         }
         $incentive->student_inscription_id = $inscriptionID;

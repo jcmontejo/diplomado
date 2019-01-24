@@ -153,6 +153,7 @@ $todos = DB::table('todos')->where([
     function ShowInscriptionRecent(btn) {
         var route = "/generaciones/consultar/inscripcion/" + btn.value;
 
+
         $.get(route, function (res) {
             $("#student").append(res.full_name);
             $("#curp").append(res.curp);
@@ -160,6 +161,7 @@ $todos = DB::table('todos')->where([
             $("#diplomat").append(res.name_diplomat+' '+res.generation);
             $("#discount").append('$'+res.discount);
             $("#final_cost").append('$'+res.final_cost);
+            $("#number_of_payments").append('<h3 style="color:black;">'+res.number_of_payments+'</h3>');
             $("#payment").append('$'+res.payment);
             $("#idInscription").val(res.id);
         });
@@ -173,6 +175,7 @@ $todos = DB::table('todos')->where([
             $("#diplomat").html("");
             $("#discount").html("");
             $("#final_cost").html("");
+            $("#number_of_payments").html("");
             $("#payment").html("");
             $("#idInscription").val("");
     }

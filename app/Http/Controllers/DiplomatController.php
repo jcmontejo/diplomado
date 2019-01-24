@@ -16,7 +16,7 @@ class DiplomatController extends Controller
 
     public function dataDiplomats()
     {
-        $diplomats = Diplomat::select(['id', 'name', 'key', 'cost']);
+        $diplomats = Diplomat::select(['id', 'name', 'key', 'cost', 'maximum_cost']);
 
         return Datatables::of($diplomats)
             ->addColumn('action', function ($diplomat) {
