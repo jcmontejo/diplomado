@@ -195,7 +195,7 @@ class GenerationController extends Controller
             $id = Input::get('id');
 
             $data = DB::table('payment_receiveds')->where([
-                ['ID', '=', $id],
+                ['id', '=', $id],
             ])->first();
 
             $student = Student::find($data->student_id);
