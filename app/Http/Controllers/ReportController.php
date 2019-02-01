@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use DB;
 use Yajra\Datatables\Datatables;
+use Auth;
+use App\Student;
+use App\Debt;
 
 class ReportController extends Controller
 {
@@ -83,6 +86,60 @@ class ReportController extends Controller
                 </td>';
             })
             ->make(true);
+    }
+
+    public function showProspects()
+    {
+        return view('reports.prospects');
+    }
+
+    public function dataProspects()
+    {
+        $user = Auth::user();
+        if ($user->hasRole('Vendedor')) {
+            $students = Student::where([
+                ['user_id', '=', $user->id],
+            ])->select([
+                'id', 
+                'curp', 
+                'enrollment', 
+                DB::raw('CONCAT(name," ",last_name," ",mother_last_name) as name'),
+                'birthdate', 
+                'sex', 
+                'phone', 
+                'address', 
+                'status',
+                'email', 
+                'profession', 
+                'documents', 
+                'user_id', 
+                'created_at']);
+        } else {
+            $students = Student::where('status', '=', 1)->select(['id', 'curp', 'enrollment', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at']);
+        }
+
+        return Datatables::of($students)
+            ->addColumn('now', function ($student) {
+                $id = $student->id;
+
+                $debts = DB::table('debts')->where([
+                    ['status', '=', 'ACTIVA'],
+                    ['student_id', '=', $id],
+                ])->count();
+
+                if ($debts) {
+                    return 'INSCRITO';
+                } else {
+                    return 'NO INSCRITO';
+                }
+            })
+             ->setRowClass(function ($student) {
+                if ($student->status === '1') {
+                    return 'alert-success';
+                }else {
+                    return 'alert-danger';
+                }
+            })->make(true);
     }
 
 }

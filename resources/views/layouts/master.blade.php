@@ -344,6 +344,7 @@ overflow-y: auto;
                                 <ul class="collapse">
                                     <li><a href="{{url('/pagos/ingresos')}}">Ingresos</a></li>
                                     <li><a href="{{url('/gastos')}}">Egresos</a></li>
+                                    <li><a href="{{url('/comisiones')}}">Comisiones</a></li>
                                     <li><a href="{{url('/metodos-de-pago')}}">Metodos de Pago</a></li>
                                 </ul>
                                 @endcan
@@ -383,10 +384,14 @@ overflow-y: auto;
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-line-chart"></i>
                                     <span>Reportes</span></a>
                                 <ul class="collapse">
+                                     @if (Auth::user()->hasRole('Vendedor'))
+                                    <li><a href="{{url('/inicio/reporte/prospectos')}}">Reporte de Prospectos (Área de ventas)</a></li>    
+                                    @else
                                     <li><a href="{{url('/pagos/ingresos')}}">Reporte de Ingresos</a></li>
                                     <li><a href="{{url('/gastos')}}">Reporte de Egresos</a></li>
                                     <li><a href="{{url('/reportes/adeudos')}}">Reporte de Adeudos</a></li>
                                     <li><a href="{{url('/reportes/no-documentos')}}">Reporte de Estudiantes Faltantes de Documentación</a></li>
+                                    @endif
                                 </ul>
                                 @endcan
                             </li>

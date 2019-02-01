@@ -22,6 +22,9 @@ Route::get('/descargar/recibo/{id}', 'PaymentController@voucher');
 Route::get('/inicio/semaforo/vendedor', 'HomeController@traffic');
 Route::get('/inicio/comisiones/pendientes', 'HomeController@commisionsDebt');
 Route::get('/inicio/comisiones/pagadas', 'HomeController@commisionsPayment');
+Route::get('/inicio/reporte/prospectos', 'ReportController@showProspects');
+Route::get('/inicio/datos/prospectos', 'ReportController@dataProspects');
+
 
 
 // Users
