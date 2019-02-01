@@ -55,7 +55,11 @@ class GenerationController extends Controller
         return Datatables::of($generations)
             ->addColumn('action', function ($generation) {
                 $id = $generation->id;
-                return '<td><div class="btn-group" role="group" aria-label="Basic example"><a href="generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a><button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></div></td>';
+                return '<td><div class="btn-group" role="group" aria-label="Basic example">
+                <a href="generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a>
+                <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
+                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
+                </div></td>';
             })
             ->make(true);
     }
@@ -71,6 +75,8 @@ class GenerationController extends Controller
             ->select(
                 DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
                 'students.email as email',
+                'students.enrollment',
+                'students.curp',
                 'students.phone as phone',
                 'students.documents as documents',
                 DB::raw('CONCAT(student_inscriptions.number_of_payments," PAGOS DE ",student_inscriptions.amount_of_payments) as observations'),
@@ -96,6 +102,7 @@ class GenerationController extends Controller
 
         return view('generations.students', compact('students', 'generation', 'cost', 'debt_global'));
         // return $students;
+
     }
 
     public function recentsInscription()
@@ -300,7 +307,7 @@ class GenerationController extends Controller
         return response()->json($generation);
     }
 
-    public function update(StoreGeneration $request, $id)
+    public function update(Request $request, $id)
     {
         $generation = Generation::find($id);
         $generation->fill($request->all());

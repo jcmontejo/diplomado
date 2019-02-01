@@ -80,6 +80,8 @@ Lista de Alumnos
                 <div class="table-responsive">
                     <table class="table" id="students">
                         <thead>
+                            <th>Curp</th>
+                            <th>Matricula</th>
                             <th>Nombre Alumno</th>
                             <th>Apellido Paterno</th>
                             <th>Apellido Materno</th>
@@ -126,6 +128,7 @@ Lista de Alumnos
 @include('students.modal-documents')
 @include('students.modal-inscription')
 @endsection
+
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
@@ -138,12 +141,6 @@ Lista de Alumnos
             $("#file-address").attr("href", "");
             $("#file-study").append("");
             $("#file-study").attr("href", "");
-        });
-        $('#professionSave').select2({
-            width: '100%',
-            placeholder: 'Selecciona una profesión',
-            allowClear: true,
-            dropdownParent: $('#modalCreate')
         });
 
         $('select[name="diplomat_id"]').on('change', function () {
@@ -200,7 +197,16 @@ Lista de Alumnos
             processing: true,
             serverSide: true,
             ajax: '{!! url('alumnos/datos') !!}',
-            columns: [{
+            columns: [
+                {
+                    data: 'curp',
+                    name: 'curp'
+                },
+                {
+                    data: 'enrollment',
+                    name: 'enrollment'
+                },
+                {
                     data: 'name',
                     name: 'name'
                 },
@@ -363,23 +369,29 @@ Lista de Alumnos
     function Show(btn) {
         var route = "alumnos/editar/" + btn.value;
 
+
         $.get(route, function (res) {
+            $("#curp").val(res.curp);
             $("#name").val(res.name);
             $("#lastname").val(res.last_name);
             $("#motherlastname").val(res.mother_last_name);
             $("#birthdate").val(res.birthdate);
             $("#sex").val(res.sex);
             $("#phone").val(res.phone);
+            $("#facebook").val(res.facebook);
             $("#address").val(res.address);
             $("#state").val(res.state);
+            $("#city").val(res.city);
             $("#email").val(res.email);
             $("#status").val(res.status);
+            $("#profession").val(res.profession);
             $("#id").val(res.id);
         });
     }
 
     $("#updateStudent").click(function () {
         var value = $("#id").val();
+        var curp = $("#curp").val();
         var name = $("#name").val();
         var last_name = $("#lastname").val();
         var mother_last_name = $("#motherlastname").val();
@@ -391,7 +403,8 @@ Lista de Alumnos
         var city = $("#city").val();
         var email = $("#email").val();
         var status = $("#status").val();
-        var route = "alumnos/actualizar/" + value;
+        var profession = $("#profession").val();
+        var route = "/alumnos/actualizar/" + value;
 
         $.ajax({
             url: route,
@@ -401,6 +414,7 @@ Lista de Alumnos
             type: 'PUT',
             dataType: 'json',
             data: {
+                curp: curp,
                 name: name,
                 last_name: last_name,
                 mother_last_name: mother_last_name,
@@ -418,7 +432,7 @@ Lista de Alumnos
             },
             success: function () {
                 $("#preloader").css("display", "none");
-                $("#modalEdit").modal('toggle');
+                $("#modalEdit .close").click();
                 reload();
                 swal("Bien hecho!", "Has actualizado al alumno exitosamente!", "success");
             },

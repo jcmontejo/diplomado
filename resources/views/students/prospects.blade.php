@@ -180,6 +180,7 @@ Lista de Alumnos
             dt.fnDraw();
         })
     }
+    
 
     function Charge() {
         $('#students').DataTable({
@@ -191,6 +192,7 @@ Lista de Alumnos
             ajax: '{!! url('alumnos/datos/prospectos') !!}',
             "order": [[ 9, "dsc" ]],
             columns: [
+                
                 {
                     data: 'enrollment',
                     name: 'enrollment'

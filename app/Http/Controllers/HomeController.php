@@ -37,6 +37,7 @@ class HomeController extends Controller
                 ->where([
                     ['user_id', '=', $user->id],
                     ['status', '!=', '1'],
+                    ['keep_going', '=', '1'],
                 ])->get();
         } else {
             $students = Student::select(['id', 'color', 'name', 'last_name', 'mother_last_name', 'facebook', 'interested', 'status', 'birthdate', 'sex', 'phone', 'state', 'city', 'address', 'email', 'profession', 'documents', 'status', 'user_id', 'created_at'])

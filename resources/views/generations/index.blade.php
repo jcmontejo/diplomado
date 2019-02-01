@@ -84,6 +84,7 @@ Lista de Generaciones
         $('#modalStudents').modal('show');
     }
 
+
     function Charge() {
         $('#generations').DataTable({
             "language": {
@@ -210,23 +211,19 @@ Lista de Generaciones
         var route = "generaciones/editar/" + btn.value;
 
         $.get(route, function (res) {
-            $("#namediplomat").val(res.name_diplomat);
-            $("#numbergeneration").val(res.number_generation);
-            $("#numberpayments").val(res.number_payments);
-            $("#note").val(res.note);
-            $("#status").val(res.status);
-            $("#id").val(res.id);
+            $("#dateEdit").val(res.start_date);
+            $("#commisionEdit").val(res.commision);
+            $("#full_priceEdit").val(res.full_price);
+            $("#idEdit").val(res.id);
         });
     }
 
     $("#updateGeneration").click(function () {
-        var value = $("#id").val();
-        var name_diplomat = $("#namediplomat").val();
-        var number_generation = $("#numbergeneration").val();
-        var number_payments = $("#numberpayments").val();
-        var note = $("#note").val();
-        var status = $("#status").val();
-        var route = "generaciones/actualizar/" + value;
+        var value = $("#idEdit").val();
+        var start_date = $("#dateEdit").val();
+        var commission = $("#commisionEdit").val();
+        var full_price = $("#full_priceEdit").val();
+        var route = "/generaciones/actualizar/" + value;
 
         $.ajax({
             url: route,
@@ -236,14 +233,12 @@ Lista de Generaciones
             type: 'PUT',
             dataType: 'json',
             data: {
-                name_diplomat: name_diplomat,
-                number_generation: number_generation,
-                number_payments: number_payments,
-                note: note,
-                status: status
+                start_date: start_date,
+                commission: commission,
+                full_price: full_price
             },
             success: function () {
-                $("#modalEdit").modal('toggle');
+                $("#modalEdit .close").click();
                 reload();
                 swal("Bien hecho!", "Has actualizado la generación exitosamente!", "success");
             }

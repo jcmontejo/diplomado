@@ -9,35 +9,18 @@
                 <div class="col-lg-6 col-ml-12">
                     <form id="form">
                         <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="exampleInputEmail1">Nombre Diplomado</label>
-                                <input type="hidden" id="id">
-                                <select class="form-control form-control-lg" name="namediplomat" id="namediplomat">
-                                    @forelse ($diplomats as $diplomat)
-                                    <option value="{{$diplomat->id}}">{{$diplomat->name}}</option>
-                                    @empty
-                                    <option value="0">No hay diplomados registrados.</option>
-                                    @endforelse
-                                </select>
+                            <div class="form-group col-md-4">
+                                <label for="exampleInputEmail1">Fecha de Inicio</label>
+                                <input type="hidden" id="idEdit">
+                                <input type="date" name="dateEdit" id="dateEdit" class="form-control form-control-lg">
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Número de Generación</label>
-                                <input type="number" class="form-control form-control-lg" id="numbergeneration">
+                            <div class="form-group col-md-4">
+                                <label for="exampleInputPassword1">Importe a pagar por comisión (BASE)</label>
+                                <input type="number" class="form-control form-control-lg" id="commisionEdit">
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Número de Pagos</label>
-                                <input type="number" class="form-control form-control-lg" id="numberpayments">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Notas</label>
-                                <input type="text" class="form-control form-control-lg" id="note" placeholder="Introduce observaciones">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Estatus</label>
-                                <select class="form-control form-control-lg" name="statusSave" id="status">
-                                    <option value="1">ACTIVO</option>
-                                    <option value="0">INACTIVO</option>
-                                </select>
+                            <div class="form-group col-md-4">
+                                <label for="exampleInputPassword1">% a pagar por FULL PRICE</label>
+                                <input type="number" class="form-control form-control-lg" id="full_priceEdit">
                             </div>
                         </div>
                     </form>
