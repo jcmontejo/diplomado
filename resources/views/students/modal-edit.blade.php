@@ -45,6 +45,10 @@
                                 <label for="exampleInputPassword1">Teléfono de Contacto</label>
                                 <input type="text" class="form-control form-control-lg" id="phone" placeholder="Introduce teléfono de contacto">
                             </div>
+                            <div class="form-group col-md-8">
+                                <label for="exampleInputPassword1">Facebook</label>
+                                <input type="text" class="form-control form-control-lg" id="facebook" placeholder="Introduce teléfono de contacto">
+                            </div>
                             <div class="form-group col-md-12">
                                 <label for="exampleInputPassword1">Dirección</label>
                                 <input type="text" class="form-control form-control-lg" id="address" placeholder="Introduce dirección de alumno">

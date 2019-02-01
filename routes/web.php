@@ -128,6 +128,7 @@ Route::group(['prefix' => 'generaciones', 'middleware' => 'permission:modulo-con
     Route::put('/actualizar/{id}', 'GenerationController@update');
     Route::delete('eliminar/{id}', 'GenerationController@destroy');
 
+    
     Route::get('/alumnos/buscar', 'GenerationController@findStudent');
     Route::get('/alumnos/inscritos/{id}', 'GenerationController@studentsInscription');
     Route::get('/alumnos/{id}', 'GenerationController@students');

@@ -39,6 +39,8 @@ Total de Ingresos
                             <th>Diplomado</th>
                             <th>Generación</th>
                             <th>Alumno</th>
+                            <th>Matricula</th>
+                            <th>CURP</th>
                             <th>Fecha de Pago</th>
                             <th>Observaciones</th>
                             <th>Método de Pago</th>
@@ -87,6 +89,14 @@ Total de Ingresos
                 {
                     data: 'student',
                     name: 'student'
+                },
+                {
+                    data: 'enrollment',
+                    name: 'enrollment'
+                },
+                {
+                    data: 'curp',
+                    name: 'curp'
                 },
                 {
                     data: 'date',

@@ -49,6 +49,7 @@ class StudentController extends Controller
         return view('students.prospects', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types'));
     }
 
+
     public function dataProspects()
     {
         $user = Auth::user();
@@ -57,10 +58,12 @@ class StudentController extends Controller
                 ->where([
                     ['user_id', '=', $user->id],
                     ['status', '!=', '1'],
+                    ['keep_going', '=', '1'],
                 ])->get();
         } else {
-            $students = Student::select(['id', 'color', 'name', 'last_name', 'mother_last_name', 'facebook', 'interested', 'status', 'birthdate', 'sex', 'phone', 'state', 'city', 'address', 'email', 'profession', 'documents', 'status', 'user_id', 'created_at'])
-                ->where('status', '!=', '1');
+            $students = Student::select(['id', 'color', 'enrollment', 'curp', 'name', 'last_name', 'mother_last_name', 'facebook', 'interested', 'status', 'birthdate', 'sex', 'phone', 'state', 'city', 'address', 'email', 'profession', 'documents', 'status', 'user_id', 'created_at'])
+                ->where('status', '!=', '1')
+                ->where('keep_going', '=', '1');
         }
 
         return Datatables::of($students)
@@ -77,6 +80,7 @@ class StudentController extends Controller
                 if ($student->status >= 100) {
                     return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button></td>
                     <button class="btn btn-rounded btn-xs btn-secondary mb-3" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fa fa-pencil"></i> Inscribir</button>
+                    <button class="btn btn-rounded btn-xs btn-dark mb-3" value="' . $id . '" OnClick="downStudent(this);"><i class="fa fa-trash"></i>Descartar</button>
                     </div>
                     </td>';
                 } elseif ($student->keep_going === 1) {
@@ -112,9 +116,9 @@ class StudentController extends Controller
             $students = Student::where([
                 ['user_id', '=', $user->id],
                 ['status', '=', '1'],
-            ])->select(['id', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at']);
+            ])->select(['id', 'curp', 'enrollment', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at']);
         } else {
-            $students = Student::where('status', '=', 1)->select(['id', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at']);
+            $students = Student::where('status', '=', 1)->select(['id', 'curp', 'enrollment', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at']);
         }
 
         return Datatables::of($students)
@@ -143,11 +147,20 @@ class StudentController extends Controller
             })
             ->addColumn('action', function ($student) {
                 $id = $student->id;
+                $userNow = Auth::user();
 
-                return '<td><div class="btn-group" role="group" aria-label="Basic example">
+                if ($userNow->hasRole('Vendedor')) {
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example">
                 <button class="btn btn-rounded btn-xs btn-warning mb-3" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fa fa-pencil"></i> Inscribir</button>
                 </div>
                 </td>';
+                } else {
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example">
+                <button class="btn btn-rounded btn-xs btn-warning mb-3" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fa fa-pencil"></i> Inscribir</button>
+                <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
+                </div>
+                </td>';
+                }
             })
             ->make(true);
     }
@@ -523,14 +536,14 @@ class StudentController extends Controller
         $incentive = new Incentive();
         if ($inscription->final_cost >= $generation->cost) {
             $incentive->commission = $generation->commision;
-        }else {
+        } else {
             $incentive->commission = '0';
         }
         if ($inscription->final_cost >= $generation->cost) {
             $extra = $inscription->final_cost - $generation->cost;
             $porcent = $generation->full_price / 100;
-            $incentive->full_price = round($extra * $porcent,2);
-        }else {
+            $incentive->full_price = round($extra * $porcent, 2);
+        } else {
             $incentive->full_price = '0';
         }
         $incentive->student_inscription_id = $inscriptionID;

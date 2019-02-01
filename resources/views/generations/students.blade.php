@@ -64,6 +64,8 @@ Lista de Alumnos
                                     <th>NP</th>
                                     <th>ESTATUS</th>
                                     <th>NOMBRE DEL ALUMNO</th>
+                                    <th>MATRICULA</th>
+                                    <th>CURP</th>
                                     <th>EMAIL</th>
                                     <th>TELÉFONO</th>
                                     <th>DOCUMENTOS</th>
@@ -118,6 +120,8 @@ Lista de Alumnos
                                         <td>{{$indexKey+1}}</td>
                                         <td>{{$student->status}}</td>
                                         <td>{{$student->full_name}}</td>
+                                        <td>{{$student->enrollment}}</td>
+                                        <td>{{$student->curp}}</td>
                                         <td>{{$student->email}}</td>
                                         <td>{{$student->phone}}</td>
                                         <td>{{$student->documents}}</td>
@@ -224,6 +228,8 @@ Lista de Alumnos
                                     <th>NP</th>
                                     <th>ESTATUS</th>
                                     <th>NOMBRE DEL ALUMNO</th>
+                                    <th>MATRICULA</th>
+                                    <th>CURP</th>
                                     <th>EMAIL</th>
                                     <th>TELÉFONO</th>
                                     <th>DOCUMENTOS</th>
@@ -250,6 +256,8 @@ Lista de Alumnos
                                         <td>{{$indexKey+1}}</td>
                                         <td>{{$student->status}}</td>
                                         <td>{{$student->full_name}}</td>
+                                        <td>{{$student->enrollment}}</td>
+                                        <td>{{$student->curp}}</td>
                                         <td>{{$student->email}}</td>
                                         <td>{{$student->phone}}</td>
                                         <td>{{$student->documents}}</td>
@@ -322,6 +330,8 @@ Lista de Alumnos
                                     <th>NP</th>
                                     <th>ESTATUS</th>
                                     <th>NOMBRE DEL ALUMNO</th>
+                                    <th>MATRICULA</th>
+                                    <th>CURP</th>
                                     <th>EMAIL</th>
                                     <th>TELÉFONO</th>
                                     <th>DOCUMENTOS</th>
@@ -348,6 +358,8 @@ Lista de Alumnos
                                         <td>{{$indexKey+1}}</td>
                                         <td>{{$student->status}}</td>
                                         <td>{{$student->full_name}}</td>
+                                        <td>{{$student->enrollment}}</td>
+                                        <td>{{$student->curp}}</td>
                                         <td>{{$student->email}}</td>
                                         <td>{{$student->phone}}</td>
                                         <td>{{$student->documents}}</td>
@@ -420,6 +432,8 @@ Lista de Alumnos
                                     <th>NP</th>
                                     <th>ESTATUS</th>
                                     <th>NOMBRE DEL ALUMNO</th>
+                                    <th>MATRICULA</th>
+                                    <th>CURP</th>
                                     <th>EMAIL</th>
                                     <th>TELÉFONO</th>
                                     <th>DOCUMENTOS</th>
@@ -446,6 +460,8 @@ Lista de Alumnos
                                         <td>{{$indexKey+1}}</td>
                                         <td>{{$student->status}}</td>
                                         <td>{{$student->full_name}}</td>
+                                        <td>{{$student->enrollment}}</td>
+                                        <td>{{$student->curp}}</td>
                                         <td>{{$student->email}}</td>
                                         <td>{{$student->phone}}</td>
                                         <td>{{$student->documents}}</td>
@@ -518,6 +534,8 @@ Lista de Alumnos
                                     <th>NP</th>
                                     <th>ESTATUS</th>
                                     <th>NOMBRE DEL ALUMNO</th>
+                                    <th>MATRICULA</th>
+                                    <th>CURP</th>
                                     <th>EMAIL</th>
                                     <th>TELÉFONO</th>
                                     <th>DOCUMENTOS</th>
@@ -544,6 +562,8 @@ Lista de Alumnos
                                         <td>{{$indexKey+1}}</td>
                                         <td>{{$student->status}}</td>
                                         <td>{{$student->full_name}}</td>
+                                        <td>{{$student->enrollment}}</td>
+                                        <td>{{$student->curp}}</td>
                                         <td>{{$student->email}}</td>
                                         <td>{{$student->phone}}</td>
                                         <td>{{$student->documents}}</td>
@@ -616,6 +636,8 @@ Lista de Alumnos
                                     <th>NP</th>
                                     <th>ESTATUS</th>
                                     <th>NOMBRE DEL ALUMNO</th>
+                                    <th>MATRICULA</th>
+                                    <th>CURP</th>
                                     <th>EMAIL</th>
                                     <th>TELÉFONO</th>
                                     <th>DOCUMENTOS</th>
@@ -642,6 +664,8 @@ Lista de Alumnos
                                         <td>{{$indexKey+1}}</td>
                                         <td>{{$student->status}}</td>
                                         <td>{{$student->full_name}}</td>
+                                        <td>{{$student->enrollment}}</td>
+                                        <td>{{$student->curp}}</td>
                                         <td>{{$student->email}}</td>
                                         <td>{{$student->phone}}</td>
                                         <td>{{$student->documents}}</td>
@@ -714,6 +738,8 @@ Lista de Alumnos
                                     <th>NP</th>
                                     <th>ESTATUS</th>
                                     <th>NOMBRE DEL ALUMNO</th>
+                                    <th>MATRICULA</th>
+                                    <th>CURP</th>
                                     <th>EMAIL</th>
                                     <th>TELÉFONO</th>
                                     <th>DOCUMENTOS</th>
@@ -740,6 +766,8 @@ Lista de Alumnos
                                         <td>{{$indexKey+1}}</td>
                                         <td>{{$student->status}}</td>
                                         <td>{{$student->full_name}}</td>
+                                        <td>{{$student->enrollment}}</td>
+                                        <td>{{$student->curp}}</td>
                                         <td>{{$student->email}}</td>
                                         <td>{{$student->phone}}</td>
                                         <td>{{$student->documents}}</td>
