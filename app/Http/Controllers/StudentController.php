@@ -62,8 +62,10 @@ class StudentController extends Controller
                 ])->get();
         } else {
             $students = Student::select(['id', 'color', 'enrollment', 'curp', 'name', 'last_name', 'mother_last_name', 'facebook', 'interested', 'status', 'birthdate', 'sex', 'phone', 'state', 'city', 'address', 'email', 'profession', 'documents', 'status', 'user_id', 'created_at'])
-                ->where('status', '!=', '1')
-                ->where('keep_going', '=', '1');
+                ->where([
+                    ['status', '!=', '1'],
+                    ['keep_going', '=', '1'],
+                ])->get();
         }
 
         return Datatables::of($students)

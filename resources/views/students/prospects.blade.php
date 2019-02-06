@@ -361,6 +361,8 @@ Lista de Alumnos
                 $('#birthdateSave').val('');
                 //$('#sexSave').val('');
                 $('#phoneSave').val('');
+                $('#stateSave').val('');
+                $('#citySave').val('');
                 $('#addressSave').val('');
                 $('#emailSave').val('');
                 $("#modalCreate").modal('toggle');
