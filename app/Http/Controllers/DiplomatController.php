@@ -14,6 +14,7 @@ class DiplomatController extends Controller
         return view('diplomats.index');
     }
 
+    
     public function dataDiplomats()
     {
         $diplomats = Diplomat::select(['id', 'name', 'key', 'cost', 'maximum_cost']);
