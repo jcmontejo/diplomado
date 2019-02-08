@@ -91,7 +91,7 @@ class GenerationController extends Controller
             ->get();
 
         $cost = DB::table('student_inscriptions')
-             ->where('student_inscriptions.generation_id', '=', $id)
+            ->where('student_inscriptions.generation_id', '=', $id)
             ->sum('final_cost');
 
         $debt_global = DB::table('student_inscriptions')
@@ -193,7 +193,7 @@ class GenerationController extends Controller
 
         return response()->json(["message" => "success"]);
     }
-    
+
     public function sendVoucherTwo($id)
     {
         $info = ['info' => 'test'];
@@ -206,7 +206,6 @@ class GenerationController extends Controller
             ])->first();
 
             $student = Student::find($data->student_id);
-
 
             //$pdf = PDF::loadView('pdf.voucher');
             $pdf = PDF::loadView('payments.voucher', compact('data'))->setPaper('a4', 'landscape');
@@ -317,11 +316,15 @@ class GenerationController extends Controller
 
     public function destroy($id)
     {
-        Generation::find($id)->delete();
-
-        return response()->json([
-            'success' => 'Record has been deleted successfully!',
-        ]);
+        $generation = Generation::find($id);
+        if ($generation->number_students = 0) {
+            Generation::find($id)->delete();
+            return response()->json([
+                'success' => 'Record has been deleted successfully!',
+            ]);
+        }else {
+            return error;
+        }
     }
 
     public function down($id, Request $request)
