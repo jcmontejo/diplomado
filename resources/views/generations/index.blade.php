@@ -277,7 +277,7 @@ Lista de Generaciones
                             swal('Eliminado!', response.message, response.status);
                         })
                         .fail(function () {
-                            swal('Oops...', 'Algo salió mal con la petición!', 'error ');
+                            swal('Oops...', 'Algo salió mal con la petición, contacta a sistemas!', 'error ');
                         });
                 });
             },

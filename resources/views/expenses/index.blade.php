@@ -138,6 +138,9 @@ Lista de Gastos
                 swal("Bien hecho!", "Has registrado un nuevo gasto!", "success");
             },
             error: function (data) {
+                if (data.status == 406) {
+                    swal("Error!", "Saldo insuficiente!", "error");
+                }
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
