@@ -116,6 +116,7 @@ Lista de Alumnos
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
 <script src="{{asset('/js/municipios.js')}}"></script>
 <script src="{{asset('/js/select_estados.js')}}"></script>
 <script src="{{asset('/js/select_estados_2.js')}}"></script>
@@ -187,6 +188,8 @@ Lista de Alumnos
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
+            "dom": 'lBfrtip',
+            "buttons": ['csv', 'print', 'excel', 'pdf'],
             processing: true,
             serverSide: true,
             ajax: '{!! url('alumnos/datos/prospectos') !!}',
