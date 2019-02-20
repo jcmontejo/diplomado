@@ -24,6 +24,7 @@ class EditStudent extends FormRequest
     public function rules()
     {
         return [
+            'curp' => 'required',
             'name' => 'required|max:50',
             'last_name' => 'required|max:50',
             'mother_last_name' => 'required|max:50',
@@ -43,6 +44,7 @@ class EditStudent extends FormRequest
     public function messages()
     {
         return [
+            'curp.required' => 'El campo curp es obligatorio.',
             'name.required' => 'El campo nombre es obligatorio.',
             'last_name.required' => 'El campo apellido paterno es obligatorio.',
             'mother_last_name.required' => 'El campo apellido materno es obligatorio.',
