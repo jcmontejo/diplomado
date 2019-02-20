@@ -397,6 +397,7 @@ Lista de Alumnos
     function Show(btn) {
         var route = "/alumnos/editar/" + btn.value;
 
+
         $.get(route, function (res) {
             $("#curp").val(res.curp);
             $("#name").val(res.name);
@@ -405,6 +406,7 @@ Lista de Alumnos
             $("#birthdate").val(res.birthdate);
             $("#sex").val(res.sex);
             $("#phone").val(res.phone);
+            $("#facebook").val(res.facebook);
             $("#address").val(res.address);
             $("#state").val(res.state);
             $("#city").val(res.city);
@@ -470,6 +472,14 @@ Lista de Alumnos
                 swal("Bien hecho!", "Has actualizado al alumno exitosamente!", "success");
             },
             error: function (data) {
+                if (data.status === 500) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Estas introduciendo una CURP incorrecta, favor de verificar.", "error");
+                }
+                if (data.status === 400) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Ya existe un registro con la misma CURP.", "error");
+                }
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
