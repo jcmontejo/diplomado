@@ -628,6 +628,7 @@ class StudentController extends Controller
                     $student = Student::find($request->student_id);
                     $student->status = 1;
                     $student->save();
+
                     $generation = Generation::find($request->generation_id);
                     $diplomat = Diplomat::find($generation->diplomat_id);
 
@@ -651,13 +652,13 @@ class StudentController extends Controller
 
                     // Add Debt and Payments to student
                     $date = new Carbon($generation->start_date);
-                    $sum_first_payment = $inscription->first_payment + $request->discount;
-                    $discount = $inscription->final_cost - $sum_first_payment;
+                    $sum_first_payment = $inscription->discount + $inscription->first_payment;
+                    $discount = $inscription->final_cost - $inscription->first_payment;
 
-                    $amount = ($discount / $request->number_payments);
+                    //$amount = ($discount / $request->number_payments);
 
                     $debt = new Debt();
-                    $debt->amount = $discount;
+                    $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
                     $debt->student_id = $student->id;
                     $debt->generation_id = $inscription->id;
                     $debt->save();
@@ -681,7 +682,26 @@ class StudentController extends Controller
                         $payment->debt_id = $debt->id;
                         $payment->save();
                     }
-                    $this->received($diplomat->id, $generation->id, $inscription->id, $request->first_payment, $request->account, $request->payment_method, $request->account_type);
+
+                    $mytime = Carbon::now();
+
+                    $received = new PaymentReceived();
+                    $received->diplomat_id = $diplomat->id;
+                    $received->generation_id = $generation->id;
+                    $received->student_id = $inscription->student_id;
+                    $received->date_payment = $mytime->toDateTimeString();
+                    $received->observation = 'NULL';
+                    $received->payment_method = $request->payment_method;
+                    $received->destination_account = $request->account;
+                    $received->account_type = $request->account_type;
+                    $received->amount = $inscription->first_payment;
+                    $received->discount = 0;
+                    $received->total = $inscription->first_payment;
+                    $received->type = 0;
+                    $received->debt_id = $debt->id;
+                    $received->save();
+
+                    // $this->received($diplomat->id, $generation->id, $inscription->id, $request->first_payment, $request->account, $request->payment_method, $request->account_type);
 
                     $this->incentive($inscription->id, $generation->id, $student->id, $inscription->discount);
                     //$inscription->notify(new NEWInscription($inscription));
@@ -689,6 +709,9 @@ class StudentController extends Controller
 
                     return response()->json([
                         "message" => "success",
+                        $sum_first_payment,
+                        $discount,
+                        $debt,
                     ]);
 
                 } else {
