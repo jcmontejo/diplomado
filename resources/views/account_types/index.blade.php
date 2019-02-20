@@ -20,7 +20,8 @@ Lista de Cuotas
                 </div>
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createAccountType">Agregar
                     Nueva Cuota</a>
-                <table class="table" id="accounts">
+               <div class="table-responsive">
+                    <table class="table" id="accounts">
                     <thead>
                         <th>Nombre Cuota</th>
                         <th>Código de Cuota</th>
@@ -36,6 +37,7 @@ Lista de Cuotas
                         </tr>
                     </tfoot>
                 </table>
+               </div>
             </div>
         </div>
     </div>

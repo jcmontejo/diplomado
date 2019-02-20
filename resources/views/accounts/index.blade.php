@@ -20,7 +20,8 @@ Lista de Cuentas Bancarias
                 </div>
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createAccount">Agregar
                     Nueva Cuenta</a>
-                <table class="table" id="accounts">
+                <div class="table-responsive">
+                    <table class="table" id="accounts">
                     <thead>
                         <th>Nombre Cuenta</th>
                         <th>Saldo</th>
@@ -36,6 +37,7 @@ Lista de Cuentas Bancarias
                         </tr>
                     </tfoot>
                 </table>
+                </div>
             </div>
         </div>
     </div>

@@ -20,7 +20,8 @@ Lista de Cuentas de Usuario
                 </div>
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createEmploye">Agregar
                     Nueva Cuenta de Usuario</a>
-                <table class="table" id="employees">
+                <div class="table-responsive">
+                    <table class="table" id="employees">
                     <thead>
                         <th>Nombre de Usuario</th>
                         <th>Correo Electrónico</th>
@@ -34,6 +35,7 @@ Lista de Cuentas de Usuario
                         </tr>
                     </tfoot>
                 </table>
+                </div>
             </div>
         </div>
     </div>
