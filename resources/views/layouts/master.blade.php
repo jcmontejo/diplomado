@@ -671,6 +671,7 @@ overflow-y: auto;
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="{{asset('/datatables/buttons.server-side.js')}}"></script>
     <script src="{{asset('/datatables/dataTables.buttons.js')}}"></script>
+    
     {{-- SummerNote --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
