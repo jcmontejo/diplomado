@@ -22,7 +22,8 @@ Todas las comisiones
                     <strong>Método Actualizada Correctamente.</strong>
                 </div>
                 <div class="table-responsive">
-                    <table class="table" id="incentives">
+                    <div class="table-responsive">
+                        <table class="table" id="incentives">
                         <thead>
                             <th>Comisión</th>
                             <th>FULL PRICE</th>
@@ -32,6 +33,7 @@ Todas las comisiones
                             <th>Acciones</th>
                         </thead>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>

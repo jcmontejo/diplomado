@@ -34,7 +34,8 @@ Total de Ingresos
                         <button type="submit" id="dateSearch" name="dateSearch" class="btn btn-primary mb-2">Filtrar</button>
                     </form>
                     <hr>
-                    <table class="table" id="receiveds">
+                    <div class="table-responsive">
+                        <table class="table" id="receiveds">
                         <thead>
                             <th>Diplomado</th>
                             <th>Generación</th>
@@ -58,6 +59,7 @@ Total de Ingresos
                             </tr>
                         </tfoot>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>

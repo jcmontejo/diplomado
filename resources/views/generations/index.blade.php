@@ -23,7 +23,8 @@ Lista de Generaciones
                 </div>
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createGeneration">Agregar
                     Nueva Generación</a>
-                <table class="table" id="generations">
+               <div class="table-responsive">
+                    <table class="table" id="generations">
                     <thead>
                         <th>Nombre Diplomado</th>
                         <th>Docente</th>
@@ -49,6 +50,7 @@ Lista de Generaciones
                         </tr>
                     </tfoot>
                 </table>
+               </div>
             </div>
         </div>
     </div>

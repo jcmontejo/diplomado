@@ -20,7 +20,8 @@ Lista de Métodos de Pago
                 </div>
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createMethod">Agregar
                     Nuevo Método de Pago</a>
-                <table class="table" id="methods">
+                <div class="table-responsive">
+                    <table class="table" id="methods">
                     <thead>
                         <th>Nombre de Método de Pago</th>
                         <th>Acciones</th>
@@ -32,6 +33,7 @@ Lista de Métodos de Pago
                         </tr>
                     </tfoot>
                 </table>
+                </div>
             </div>
         </div>
     </div>

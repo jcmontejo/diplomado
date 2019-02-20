@@ -17,7 +17,8 @@ Lista de Gastos
                 <h4 class="header-title">Lista De Gastos</h4>
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createExpense">Agregar
                     Nuevo Gasto</a>
-                <table class="table" id="expenses">
+                <div class="table-responsive">
+                    <table class="table" id="expenses">
                     <thead>
                         <th>Concepto</th>
                         <th>Monto</th>
@@ -33,6 +34,7 @@ Lista de Gastos
                         </tr>
                     </tfoot>
                 </table>
+                </div>
             </div>
         </div>
     </div>
