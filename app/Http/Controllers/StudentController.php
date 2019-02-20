@@ -49,7 +49,6 @@ class StudentController extends Controller
         return view('students.prospects', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types'));
     }
 
-
     public function dataProspects()
     {
         $user = Auth::user();
@@ -78,22 +77,30 @@ class StudentController extends Controller
 
             })
             ->addColumn('action', function ($student) {
-                $id = $student->id;
-                if ($student->status >= 100) {
-                    return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button></td>
+
+                if (Auth::user()->hasRole('Vendedor')) {
+                    $id = $student->id;
+                    if ($student->status >= 100) {
+                        return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button></td>
                     <button class="btn btn-rounded btn-xs btn-secondary mb-3" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fa fa-pencil"></i> Inscribir</button>
                     <button class="btn btn-rounded btn-xs btn-dark mb-3" value="' . $id . '" OnClick="downStudent(this);"><i class="fa fa-trash"></i>Descartar</button>
                     </div>
                     </td>';
-                } elseif ($student->keep_going === 1) {
-                    return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button></td>
+                    } elseif ($student->keep_going === 1) {
+                        return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button></td>
                     <button class="btn btn-rounded btn-xs btn-default mb-3" value="' . $id . '" OnClick="trafficStudent(this);" data-toggle="modal" data-target="#modalTraffic"><i class="fa fa-wrench"></i> Modificar Semaforo</button>
                     <button class="btn btn-rounded btn-xs btn-dark mb-3" value="' . $id . '" OnClick="downStudent(this);"><i class="fa fa-trash"></i>Descartar</button>
                     </div>
                     </td>';
+                    } else {
+                        return '<td>
+                    <h4>PROSPECTO DESCARTADO</h4>
+                    </td>';
+                    }
+
                 } else {
                     return '<td>
-                    <h4>PROSPECTO DESCARTADO</h4>
+                    <h4>---</h4>
                     </td>';
                 }
             })
@@ -196,71 +203,149 @@ class StudentController extends Controller
 
                 $number = Student::max('id') + 1;
 
-                $student = new Student();
-                $student->enrollment = '000000' . $number;
-                $student->curp = $request->curp;
-                $student->name = $request->name;
-                $student->last_name = $request->last_name;
-                $student->mother_last_name = $request->mother_last_name;
-                $student->facebook = $request->facebook;
-                $student->interested = $request->interested;
-                $student->birthdate = $request->birthdate;
-                $student->sex = $request->sex;
-                $student->phone = $request->phone;
-                $student->address = $request->address;
-                $student->state = $request->state;
-                $student->city = $request->city;
-                $student->email = $request->email;
-                $student->profession = $request->profession;
-                $student->status = $request->status;
-                if ($student->status <= 30) {
-                    $student->color = 'red';
-                } elseif ($student->status >= 40 and $student->status <= 80) {
-                    $student->color = 'yellow';
-                } elseif ($student->status >= 90) {
-                    $student->color = 'green';
+                if ($this->validate_curp($request->curp)) {
+                    if ($this->if_exist_student($request->curp)) {
+                        DB::rollBack();
+
+                        return response()
+                            ->json([
+                                'message' => 'Ya existe un registro con la misma CURP.',
+                                'status' => 400,
+                            ], 400);
+
+                    } else {
+                        $student = new Student();
+                        $student->enrollment = '000000' . $number;
+                        $student->curp = $request->curp;
+                        $student->name = $request->name;
+                        $student->last_name = $request->last_name;
+                        $student->mother_last_name = $request->mother_last_name;
+                        $student->facebook = $request->facebook;
+                        $student->interested = $request->interested;
+                        $student->birthdate = $request->birthdate;
+                        $student->sex = $request->sex;
+                        $student->phone = $request->phone;
+                        $student->address = $request->address;
+                        $student->state = $request->state;
+                        $student->city = $request->city;
+                        $student->email = $request->email;
+                        $student->profession = $request->profession;
+                        $student->status = $request->status;
+                        if ($student->status <= 30) {
+                            $student->color = 'red';
+                        } elseif ($student->status >= 40 and $student->status <= 80) {
+                            $student->color = 'yellow';
+                        } elseif ($student->status >= 90) {
+                            $student->color = 'green';
+                        }
+                        $student->user_id = $user->id;
+                        $student->save();
+
+                        if ($request->hasFile('file_address')) {
+                            $extension = $request->file('file_address');
+                            $extension = $request->file('file_address')->getClientOriginalExtension(); // getting excel extension
+                            $dir = 'assets/files/';
+                            $proof_of_address = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension;
+                            $request->file('file_address')->move($dir, $proof_of_address);
+
+                            // Save Document
+                            $document = new Document();
+                            $document->proof_of_address = $proof_of_address;
+                            $document->student_id = $student->id;
+                            $document->save();
+
+                            // add document to student
+                            $student->documents = 1;
+                            $student->save();
+                        }
+
+                        if ($request->hasFile('file_studies')) {
+                            $extension_study = $request->file('file_studies');
+                            $extension_study = $request->file('file_studies')->getClientOriginalExtension(); // getting excel extension
+                            $dir_study = 'assets/files/';
+                            $proof_of_studies = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension_study;
+                            $request->file('file_studies')->move($dir_study, $proof_of_studies);
+
+                            // Save Document
+                            $document->proof_of_studies = $proof_of_studies;
+                            $document->save();
+                        }
+                        DB::commit();
+
+                        return response()->json([
+                            "message" => "success",
+                        ]);
+
+                    }
+                } else {
+                    DB::rollBack();
+
+                    return response()
+                        ->json([
+                            'message' => 'CURP incorrecta, verifica.',
+                            'status' => 500,
+                        ], 500);
                 }
-                $student->user_id = $user->id;
-                $student->save();
-
-                if ($request->hasFile('file_address')) {
-                    $extension = $request->file('file_address');
-                    $extension = $request->file('file_address')->getClientOriginalExtension(); // getting excel extension
-                    $dir = 'assets/files/';
-                    $proof_of_address = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension;
-                    $request->file('file_address')->move($dir, $proof_of_address);
-
-                    // Save Document
-                    $document = new Document();
-                    $document->proof_of_address = $proof_of_address;
-                    $document->student_id = $student->id;
-                    $document->save();
-
-                    // add document to student
-                    $student->documents = 1;
-                    $student->save();
-                }
-
-                if ($request->hasFile('file_studies')) {
-                    $extension_study = $request->file('file_studies');
-                    $extension_study = $request->file('file_studies')->getClientOriginalExtension(); // getting excel extension
-                    $dir_study = 'assets/files/';
-                    $proof_of_studies = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension_study;
-                    $request->file('file_studies')->move($dir_study, $proof_of_studies);
-
-                    // Save Document
-                    $document->proof_of_studies = $proof_of_studies;
-                    $document->save();
-                }
-                DB::commit();
-
-                return response()->json([
-                    "message" => "success",
-                ]);
             }
         } catch (Exception $e) {
             DB::rollBack();
         }
+    }
+
+    public function validate_curp($valor)
+    {
+        if (strlen($valor) == 18) {
+            $letras = substr($valor, 0, 4);
+            $numeros = substr($valor, 4, 6);
+            $sexo = substr($valor, 10, 1);
+            $mxState = substr($valor, 11, 2);
+            $letras2 = substr($valor, 13, 3);
+            $homoclave = substr($valor, 16, 2);
+            if (ctype_alpha($letras) && ctype_alpha($letras2) && ctype_digit($numeros) && ctype_digit($homoclave) or ctype_alnum($homoclave) && $this->is_mx_state($mxState) && $this->is_sexo_curp($sexo)) {
+                return true;
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    public function if_exist_student($curp)
+    {
+        $student = DB::table('students')
+            ->where('curp', '=', $curp)
+            ->first();
+
+        if ($student) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function is_mx_state($state)
+    {
+        $mxStates = [
+            'AS', 'BS', 'CL', 'CS', 'DF', 'GT',
+            'HG', 'MC', 'MS', 'NL', 'PL', 'QR',
+            'SL', 'TC', 'TL', 'YN', 'NE', 'BC',
+            'CC', 'CM', 'CH', 'DG', 'GR', 'JC',
+            'MN', 'NT', 'OC', 'QT', 'SP', 'SR',
+            'TS', 'VZ', 'ZS',
+        ];
+        if (in_array(strtoupper($state), $mxStates)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function is_sexo_curp($sexo)
+    {
+        $sexoCurp = ['H', 'M'];
+        if (in_array(strtoupper($sexo), $sexoCurp)) {
+            return true;
+        }
+        return false;
     }
 
     public function edit($id)
