@@ -192,8 +192,10 @@ Lista de Alumnos
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "Todos"]],
+            "pageLength": 25,
             "dom": 'lBfrtip',
-            "buttons": ['csv', 'print', 'excel', 'pdf'],
+            "buttons": ['excel', 'pdf'],
             processing: true,
             serverSide: true,
             ajax: '{!! url('alumnos/datos') !!}',
