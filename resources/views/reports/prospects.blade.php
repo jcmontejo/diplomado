@@ -57,11 +57,13 @@ Reporte de Prospectos
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "Todos"]],
+            "pageLength": 25,
             processing: true,
             serverSide: true,
             ajax: '/inicio/datos/prospectos',
             "dom": 'lBfrtip',
-            "buttons": ['csv', 'print', 'excel', 'pdf'],
+            "buttons": ['excel', 'pdf'],
             columns: [{
                     data: 'enrollment',
                     name: 'enrollment'

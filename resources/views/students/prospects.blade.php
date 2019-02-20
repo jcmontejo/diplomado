@@ -73,8 +73,10 @@ Lista de Alumnos
                 <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
                     <strong>Alumno Actualizado Correctamente.</strong>
                 </div>
+                @role('Vendedor')
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createStudent">Agregar
                     Nuevo Alumno</a>
+                @endrole
                 <div class="table-responsive">
                     <table class="table" id="students">
                         <thead>
@@ -119,6 +121,16 @@ Lista de Alumnos
 <script src="{{asset('/js/municipios.js')}}"></script>
 <script src="{{asset('/js/select_estados.js')}}"></script>
 <script src="{{asset('/js/select_estados_2.js')}}"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js
+"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js
+"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js
+"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js
+"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js
+"></script>
 <script>
     $(document).ready(function () {
         Charge();
@@ -187,8 +199,10 @@ Lista de Alumnos
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "Todos"]],
+            "pageLength": 25,
             "dom": 'lBfrtip',
-            "buttons": ['csv', 'print', 'excel', 'pdf'],
+            "buttons": ['excel', 'pdf'],
             processing: true,
             serverSide: true,
             ajax: '{!! url('alumnos/datos/prospectos') !!}',
