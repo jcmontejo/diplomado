@@ -165,7 +165,7 @@ class StudentController extends Controller
                 </td>';
                 } else {
                     return '<td><div class="btn-group" role="group" aria-label="Basic example">
-                <button class="btn btn-rounded btn-xs btn-warning mb-3" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fa fa-pencil"></i> Inscribir</button>
+                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
                 <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
                 </div>
                 </td>';
@@ -420,14 +420,6 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
-    // public function update(EditStudent $request, $id)
-    // {
-    //     $student = Student::find($id);
-    //     $student->fill($request->all());
-    //     $student->save();
-    //     return response()->json(["message" => "success"]);
-    // }
-
     public function update(EditStudent $request, $id)
     {
         try {
@@ -536,15 +528,37 @@ class StudentController extends Controller
 
     public function destroy($id)
     {
-        Student::find($id)->delete();
+        try {
+            DB::beginTransaction();
 
-        return response()->json([
-            'success' => 'Record has been deleted successfully!',
-        ]);
+            $payments = DB::table('payments')
+                ->where('student_id', '=', $id)->delete();
+
+            $payment_receiveds = DB::table('payment_receiveds')
+                ->where('student_id', '=', $id)->delete();
+
+            $debts = DB::table('debts')
+                ->where('student_id', '=', $id)->delete();
+
+            $student_inscriptions = DB::table('student_inscriptions')
+                ->where('student_id', '=', $id)->delete();
+
+            Student::find($id)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => 'Record has been deleted successfully!',
+            ]);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
     }
 
     public function Documents($id)
     {
+
         $document = Student::find($id)->document;
 
         return response()->json($document);
