@@ -200,7 +200,7 @@ Lista de Alumnos
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="14"></td>
+                                        <td colspan="16"></td>
                                         <td style="text-align: center;">
                                             <h4 class="float-left">TOTALES</h4>
                                         </td>
