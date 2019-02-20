@@ -651,7 +651,8 @@ class StudentController extends Controller
 
                     // Add Debt and Payments to student
                     $date = new Carbon($generation->start_date);
-                    $discount = $diplomat->cost - $request->discount;
+                    $sum_first_payment = $inscription->first_payment + $request->discount;
+                    $discount = $inscription->final_cost - $sum_first_payment;
 
                     $amount = ($discount / $request->number_payments);
 
