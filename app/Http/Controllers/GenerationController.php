@@ -89,6 +89,7 @@ class GenerationController extends Controller
                 'debts.id as debt_id'
             )
             ->get();
+            
 
         $cost = DB::table('student_inscriptions')
             ->where('student_inscriptions.generation_id', '=', $id)
