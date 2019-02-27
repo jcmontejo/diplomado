@@ -163,12 +163,18 @@ class StudentController extends Controller
                 <button class="btn btn-rounded btn-xs btn-warning mb-3" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fa fa-pencil"></i> Inscribir</button>
                 </div>
                 </td>';
-                } else {
+                } elseif($userNow->hasRole('Administrador')) {
                     return '<td><div class="btn-group" role="group" aria-label="Basic example">
                 <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
                 <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
                 </div>
                 </td>';
+                }
+                else{
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example">
+                    <button class="btn btn-warning">Sin privilegios</button>
+                </td>';
+
                 }
             })
             ->make(true);
