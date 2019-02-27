@@ -90,6 +90,7 @@ class GenerationController extends Controller
             )
             ->get();
 
+            
         // $cost = DB::table('student_inscriptions')
         //     ->where('student_inscriptions.generation_id', '=', $id)
         //     ->sum('final_cost');

@@ -171,7 +171,7 @@ Lista de Alumnos
                                             @endif
                                         </td>
                                         <td>${{number_format($student->final_cost,2)}}</td>
-                                        <td>${{number_format(($student->final_cost - $student->total_debt) + $student->discount,2)}}</td>
+                                        <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                                         <td>${{number_format($student->total_debt,2 )}}</td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -273,7 +273,7 @@ Lista de Alumnos
                                             @endif
                                         </td>
                                         <td>${{number_format($student->final_cost,2)}}</td>
-                                        <td>${{number_format(($student->final_cost - $student->total_debt) + $student->discount,2)}}</td>
+                                        <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                                         <td>${{number_format($student->total_debt,2 )}}</td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -375,7 +375,7 @@ Lista de Alumnos
                                             @endif
                                         </td>
                                         <td>${{number_format($student->final_cost,2)}}</td>
-                                        <td>${{number_format(($student->final_cost - $student->total_debt) + $student->discount,2)}}</td>
+                                        <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                                         <td>${{number_format($student->total_debt,2 )}}</td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -477,7 +477,7 @@ Lista de Alumnos
                                             @endif
                                         </td>
                                         <td>${{number_format($student->final_cost,2)}}</td>
-                                        <td>${{number_format(($student->final_cost - $student->total_debt) + $student->discount,2)}}</td>
+                                        <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                                         <td>${{number_format($student->total_debt,2 )}}</td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -579,7 +579,7 @@ Lista de Alumnos
                                             @endif
                                         </td>
                                         <td>${{number_format($student->final_cost,2)}}</td>
-                                        <td>${{number_format(($student->final_cost - $student->total_debt) + $student->discount,2)}}</td>
+                                        <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                                         <td>${{number_format($student->total_debt,2 )}}</td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -681,7 +681,7 @@ Lista de Alumnos
                                             @endif
                                         </td>
                                         <td>${{number_format($student->final_cost,2)}}</td>
-                                        <td>${{number_format(($student->final_cost - $student->total_debt) + $student->discount,2)}}</td>
+                                        <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                                         <td>${{number_format($student->total_debt,2 )}}</td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -783,7 +783,7 @@ Lista de Alumnos
                                             @endif
                                         </td>
                                         <td>${{number_format($student->final_cost,2)}}</td>
-                                        <td>${{number_format(($student->final_cost - $student->total_debt) + $student->discount,2)}}</td>
+                                        <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                                         <td>${{number_format($student->total_debt,2 )}}</td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
