@@ -89,7 +89,10 @@ class GenerationController extends Controller
                 'debts.id as debt_id'
             )
             ->get();
-            
+
+        // $cost = DB::table('student_inscriptions')
+        //     ->where('student_inscriptions.generation_id', '=', $id)
+        //     ->sum('final_cost');
 
         $cost = DB::table('student_inscriptions')
             ->where('student_inscriptions.generation_id', '=', $id)
@@ -323,7 +326,7 @@ class GenerationController extends Controller
             return response()->json([
                 'success' => 'Record has been deleted successfully!',
             ]);
-        }else {
+        } else {
             return error;
         }
     }

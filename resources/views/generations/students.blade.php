@@ -198,6 +198,7 @@ Lista de Alumnos
                                     </tr>
                                     @endforeach
                                 </tbody>
+                                
                                 <tfoot>
                                     <tr>
                                         <td colspan="16"></td>

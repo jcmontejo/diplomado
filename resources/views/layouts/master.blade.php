@@ -302,9 +302,13 @@ overflow-y: auto;
                                 @can('modulo-alumnos')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-id-badge"></i><span>Alumnos</span></a>
                                 <ul class="collapse {{ Request::url()== url('/alumnos') ? 'in' : '' }}">
+                                    @if (Auth::user()->hasRole('Control Escolar'))
+                                    <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a href="{{url('/alumnos')}}">Estudiantes</a></li>
+                                    @else
                                     <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a href="{{url('/alumnos')}}">Estudiantes</a></li>
                                     <li class="{{ Request::url()== url('/alumnos/prospectos') ? 'active' : '' }}"><a
                                             href="{{url('/alumnos/prospectos')}}">Seguimiento de Prospectos</a></li>
+                                    @endif
                                 </ul>
                                 @endcan
                             </li>
@@ -384,13 +388,15 @@ overflow-y: auto;
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-line-chart"></i>
                                     <span>Reportes</span></a>
                                 <ul class="collapse">
-                                     @if (Auth::user()->hasRole('Vendedor'))
-                                    <li><a href="{{url('/inicio/reporte/prospectos')}}">Reporte de Prospectos (Área de ventas)</a></li>    
+                                    @if (Auth::user()->hasRole('Vendedor'))
+                                    <li><a href="{{url('/inicio/reporte/prospectos')}}">Reporte de Prospectos (Área de
+                                            ventas)</a></li>
                                     @else
                                     <li><a href="{{url('/pagos/ingresos')}}">Reporte de Ingresos</a></li>
                                     <li><a href="{{url('/gastos')}}">Reporte de Egresos</a></li>
                                     <li><a href="{{url('/reportes/adeudos')}}">Reporte de Adeudos</a></li>
-                                    <li><a href="{{url('/reportes/no-documentos')}}">Reporte de Estudiantes Faltantes de Documentación</a></li>
+                                    <li><a href="{{url('/reportes/no-documentos')}}">Reporte de Estudiantes Faltantes
+                                            de Documentación</a></li>
                                     @endif
                                 </ul>
                                 @endcan
@@ -671,7 +677,7 @@ overflow-y: auto;
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="{{asset('/datatables/buttons.server-side.js')}}"></script>
     <script src="{{asset('/datatables/dataTables.buttons.js')}}"></script>
-    
+
     {{-- SummerNote --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>

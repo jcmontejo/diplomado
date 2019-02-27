@@ -231,6 +231,21 @@ Route::group(['prefix' => 'reportes'], function () {
     Route::get('/estudiantes/no-documentos', 'ReportController@noDocuments');
 });
 
+// Campaings
+Route::group(['prefix' => 'campanias'], function () {
+    Route::get('/', 'CampaingController@index');
+    Route::get('/datos', 'CampaingController@dataCampaings')->name('campaings.data');
+    Route::get('/crear', 'CampaingController@create');
+    Route::post('/guardar', 'CampaingController@store');
+    Route::get('/editar/{id}', 'CampaingController@edit');
+    Route::put('/actualizar/{id}', 'CampaingController@update');
+    Route::delete('eliminar/{id}', 'CampaingController@destroy');
+
+    Route::get('/estudiantes', 'CampaingController@dataStudents')->name('campaings.students');
+    Route::get('/agregar/estudiantes', 'CampaingController@addStudents')->name('campaings.massadd');
+});
+
+
 
 
 

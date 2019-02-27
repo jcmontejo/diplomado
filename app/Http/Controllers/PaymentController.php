@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use PDF;
 use Yajra\Datatables\Datatables;
+use Auth;
 
 class PaymentController extends Controller
 {
@@ -25,7 +26,6 @@ class PaymentController extends Controller
     {
         return view('incomes.index');
     }
-
 
     public function showPayments()
     {
@@ -69,10 +69,16 @@ class PaymentController extends Controller
             return Datatables::of($receiveds)
                 ->addColumn('action', function ($received) {
                     $id = $received->id;
-                    return '<td><div class="btn-group" role="group" aria-label="Basic example">
+                    if (Auth::user()->hasRole('Control Escolar')) {
+                        return '<td><div class="btn-group" role="group" aria-label="Basic example">
+                    <button class="btn btn-warning">Sin privilegios</button>
+                    </div></td>';
+                    } else {
+                        return '<td><div class="btn-group" role="group" aria-label="Basic example">
                     <a href="/descargar/recibo/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-print"></i> Recibo</a>
                     <button value="' . $id . '" OnClick="sendVoucher(this);" class="btn btn-rounded btn-xs btn-dark mb-3"><i class="fa fa-envelope"></i> Enviar recibo</button>
                     </div></td>';
+                    }
                 })
                 ->make(true);
         } else {
