@@ -125,6 +125,7 @@ Total de Ingresos
                     d.second = $('input[name=second]').val();
                 }
             },
+            
             columns: [{
                     data: 'diplomat',
                     name: 'diplomat'
