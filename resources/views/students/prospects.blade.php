@@ -452,6 +452,7 @@ Lista de Alumnos
         var state = $("#state").val();
         var city = $("#city").val();
         var profession = $("#profession").val();
+        var facebook = $('#facebook').val();
         var email = $("#email").val();
         var route = "/alumnos/actualizar/" + value;
 
@@ -474,6 +475,7 @@ Lista de Alumnos
                 state: state,
                 city: city,
                 profession: profession,
+                facebook: facebook,
                 email: email
             },
             beforeSend: function () {

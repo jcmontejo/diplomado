@@ -419,6 +419,7 @@ class StudentController extends Controller
         }
         return false;
     }
+    
 
     public function edit($id)
     {
@@ -451,7 +452,7 @@ class StudentController extends Controller
                             $student->last_name = $request->last_name;
                             $student->mother_last_name = $request->mother_last_name;
                             $student->facebook = $request->facebook;
-                            $student->interested = $request->interested;
+                            // $student->interested = $request->interested;
                             $student->birthdate = $request->birthdate;
                             $student->sex = $request->sex;
                             $student->phone = $request->phone;
@@ -484,7 +485,7 @@ class StudentController extends Controller
                     $student->last_name = $request->last_name;
                     $student->mother_last_name = $request->mother_last_name;
                     $student->facebook = $request->facebook;
-                    $student->interested = $request->interested;
+                    // $student->interested = $request->interested;
                     $student->birthdate = $request->birthdate;
                     $student->sex = $request->sex;
                     $student->phone = $request->phone;

@@ -406,6 +406,7 @@ Lista de Alumnos
         var email = $("#email").val();
         var status = $("#status").val();
         var profession = $("#profession").val();
+        var facebook = $('#facebook').val();
         var route = "/alumnos/actualizar/" + value;
 
         $.ajax({
@@ -427,6 +428,7 @@ Lista de Alumnos
                 state: state,
                 city: city,
                 email: email,
+                facebook: facebook,
                 status: status
             },
             beforeSend: function () {

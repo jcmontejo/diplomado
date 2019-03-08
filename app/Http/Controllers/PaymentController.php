@@ -36,6 +36,7 @@ class PaymentController extends Controller
         return view('incomes.payments', compact('accounts', 'methods', 'account_types'));
     }
 
+    
     public function paymentReceiveds()
     {
         $start_date = Input::get('one');

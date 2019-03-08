@@ -67,7 +67,7 @@ class GenerationController extends Controller
     public function studentsInscription($id)
     {
         $generation = Generation::find($id);
-
+        
         $students = DB::table('student_inscriptions')
             ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
             ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
@@ -90,7 +90,7 @@ class GenerationController extends Controller
             )
             ->get();
 
-            
+        
         // $cost = DB::table('student_inscriptions')
         //     ->where('student_inscriptions.generation_id', '=', $id)
         //     ->sum('final_cost');
