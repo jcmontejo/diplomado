@@ -47,6 +47,7 @@ class GenerationController extends Controller
         return \Response::json($formatted_tags);
     }
 
+
     public function dataGenerations()
     {
         $generations = Generation::select(['id', 'name_diplomat', 'docent', 'number_generation', 'number_students',

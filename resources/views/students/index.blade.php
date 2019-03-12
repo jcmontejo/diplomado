@@ -82,6 +82,7 @@ Lista de Alumnos
                         <thead>
                             <th>Curp</th>
                             <th>Matricula</th>
+                            <th>Diplomado Inscrito</th>
                             <th>Nombre Alumno</th>
                             <th>Apellido Paterno</th>
                             <th>Apellido Materno</th>
@@ -97,24 +98,6 @@ Lista de Alumnos
                             <th>Vendedor</th>
                             <th>Acciones</th>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Nombre Alumno</th>
-                                <th>Apellido Paterno</th>
-                                <th>Apellido Materno</th>
-                                <th>Fecha de Nacimiento</th>
-                                <th>Genero</th>
-                                <th>Teléfono</th>
-                                <th>Dirección</th>
-                                <th>Correo Electrónico</th>
-                                <th>Profesión</th>
-                                <th>Documentos</th>
-                                <th>Fecha/Hora de Creación</th>
-                                <th>Estatus</th>
-                                <th>Vendedor</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -128,6 +111,7 @@ Lista de Alumnos
 @include('students.modal-documents')
 @include('students.modal-inscription')
 @endsection
+
 
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
@@ -209,6 +193,10 @@ Lista de Alumnos
                     name: 'enrollment'
                 },
                 {
+                    data: 'diplomats',
+                    name: 'students.name'
+                },
+                {
                     data: 'name',
                     name: 'name'
                 },
@@ -277,6 +265,7 @@ Lista de Alumnos
     }
 
     $("#createStudent").click(function () {
+        $('#message-error-inscription').css('display', 'none');
         $('#modalCreate').modal('show');
     })
 
@@ -582,18 +571,38 @@ Lista de Alumnos
         });
     }
 
-    $("#processInscription").click(function () {
+   $("#processInscription").click(function () {
         var student_id = $("#id-student").val();
         var generation_id = $("#generation_id").val();
+        var discount = $("#discount").val();
+        var number_payments = $("#number_payments").val();
+        var first_payment = $("#first_payment").val();
+        var account = $("#accountDestination").val();
+        var payment_method = $("#payment_method").val();
+        var account_type = $("#account_type").val();
+        var comments = $("#comments").val();
+        var amount_of_payments = $("#amount_of_payments").val();
+        var periodicity = $("#periodicity").val();
+        var type_of_inscription = $("#type_of_inscription").val();
         // Save Files
 
         var form_data = new FormData();
         // Rest of data
         form_data.append('generation_id', generation_id);
-        form_data.append('student_id', student_id)
+        form_data.append('student_id', student_id);
+        form_data.append('discount', discount);
+        form_data.append('number_payments', number_payments);
+        form_data.append('first_payment', first_payment);
+        form_data.append('account', account);
+        form_data.append('payment_method', payment_method);
+        form_data.append('account_type', account_type);
+        form_data.append('comments', comments);
+        form_data.append('amount_of_payments', amount_of_payments);
+        form_data.append('periodicity', periodicity);
+        form_data.append('type_of_inscription', type_of_inscription);
 
         // End
-        var route = "/alumnos/procesar/inscripcion"
+        var route = "/alumnos/procesar/inscripcion";
 
         $.ajax({
             url: route,
@@ -615,12 +624,21 @@ Lista de Alumnos
                 $('#lastnameInscription').val('');
                 $('#motherlastnameInscription').val('');
                 $('#id-student').val('');
-                $("#modalInscription").modal('toggle');
+                $("#modalInscription .close").click();
                 $('#message-error-inscription').css('display', 'none');
                 reload();
                 swal("Bien hecho!", "Has registrado un nuevo alumno!", "success");
             },
             error: function (data) {
+                if (data.status === 400) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Los datos del alumno estan incompletos, favor de completar todos los campos antes de inscribir.", "error");
+                }
+                if (data.status === 406) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Número de pago procesado anteriormente, seleccione otro número de pago.", "error");
+                }
+                $("#modalInscription .close").click();
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";

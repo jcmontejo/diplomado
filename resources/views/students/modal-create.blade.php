@@ -36,7 +36,7 @@
                                     placeholder="Introduce Facebook">
                             </div>
                             <div class="form-group col-md-12">
-                                <label for="exampleInputPassword1">¿En que diplomados esta interesado?</label>
+                                <label for="exampleInputPassword1">¿En que diplomado esta interesado?</label>
                                 {{-- <input type="text" class="form-control form-control-lg" id="interestedSave"
                                     placeholder="Introduce el o los diplomados en el que esta interesado"> --}}
                                     <select name="interestedSave" id="interestedSave" class="form-control">

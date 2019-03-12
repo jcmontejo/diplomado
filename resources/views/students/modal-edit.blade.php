@@ -41,6 +41,7 @@
                                 </select>
                                 {{-- <input type="text" class="form-control form-control-lg" id="sex" placeholder="H/M"> --}}
                             </div>
+
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Teléfono de Contacto</label>
                                 <input type="text" class="form-control form-control-lg" id="phone" placeholder="Introduce teléfono de contacto">
@@ -48,6 +49,18 @@
                             <div class="form-group col-md-8">
                                 <label for="exampleInputPassword1">Facebook</label>
                                 <input type="text" class="form-control form-control-lg" id="facebook" placeholder="Introduce teléfono de contacto">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputPassword1">¿En que diplomado esta interesado?</label>
+                                {{-- <input type="text" class="form-control form-control-lg" id="interestedSave"
+                                    placeholder="Introduce el o los diplomados en el que esta interesado"> --}}
+                                    <select name="interested" id="interested" class="form-control">
+                                        @forelse ($diplomats as $diplomat)
+                                        <option value="{{$diplomat->name}}">{{$diplomat->name}}</option> 
+                                        @empty
+                                        <option value="null">No hay diplomados registrados</option>  
+                                        @endforelse
+                                    </select>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="exampleInputPassword1">Dirección</label>
