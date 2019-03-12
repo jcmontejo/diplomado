@@ -430,6 +430,14 @@ Lista de Alumnos
                 swal("Bien hecho!", "Has actualizado al alumno exitosamente!", "success");
             },
             error: function (data) {
+                if (data.status === 500) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Estas introduciendo una CURP incorrecta, favor de verificar.", "error");
+                }
+                if (data.status === 400) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Ya existe un registro con la misma CURP.", "error");
+                }
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";
@@ -442,6 +450,7 @@ Lista de Alumnos
             }
         });
     });
+
 
     function Delete(btn) {
         var id = btn.value;
