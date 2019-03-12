@@ -25,15 +25,19 @@ class IncentiveController extends Controller
             ->select('incentives.id as id', 'commission', 'full_price', 'status', 'users.name as employe', 'student_inscription_id')->get();
 
         return Datatables::of($incentives)
-            ->addColumn('details', function ($incentive) {
-                $id = $incentive->student_inscription_id;
-                $inscription = StudentInscription::find($id);
-                $diplomat = Diplomat::find($inscription->diplomat_id);
-                $generation = Generation::find($inscription->generation_id);
-                $student = Student::find($inscription->student_id);
+            // ->addColumn('details', function ($incentive) {
+            //     $id = $incentive->student_inscription_id;
+            //     $inscription = StudentInscription::find($id);
+            //     if ($inscription) {
+            //         $diplomat = Diplomat::find($inscription->diplomat_id);
+            //         $generation = Generation::find($inscription->generation_id);
+            //         $student = Student::find($inscription->student_id);
 
-                return $diplomat->name . '/' . $generation->number_generation . '/' . $student->name . ' ' . $student->last_name . ' ' . $student->mother_last_name . '/' . $inscription->created_at;
-            })
+            //         return $diplomat->name . '/' . $generation->number_generation . '/' . $student->name . ' ' . $student->last_name . ' ' . $student->mother_last_name . '/' . $inscription->created_at;
+            //     }else{
+            //         return 'Null';
+            //     }
+            // })
             ->addColumn('action', function ($incentive) {
                 $id = $incentive->id;
                 if ($incentive->status == 'pendiente') {
@@ -44,7 +48,7 @@ class IncentiveController extends Controller
                 //return $student->color == 'red' ? 'bg-danger' : 'bg-warning';
                 if ($incentive->status == 'pendiente') {
                     return 'bg-danger';
-                }else {
+                } else {
                     return 'bg-success';
                 }
             })

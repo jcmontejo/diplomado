@@ -29,7 +29,7 @@ Todas las comisiones
                             <th>FULL PRICE</th>
                             <th>Estatus de pago</th>
                             <th>Vendedor</th>
-                            <th>Detalles</th>
+                            {{-- <th>Detalles</th> --}}
                             <th>Acciones</th>
                         </thead>
                     </table>
@@ -81,10 +81,10 @@ Todas las comisiones
                     data: 'employe',
                     name: 'employe'
                 },
-                {
-                    data: 'details',
-                    name: 'details'
-                },
+                // {
+                //     data: 'details',
+                //     name: 'details'
+                // },
                 {
                     data: 'action',
                     name: 'action',
