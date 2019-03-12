@@ -179,6 +179,7 @@ Route::group(['prefix' => 'gastos', 'middleware' => 'permission:modulo-transacci
     Route::delete('eliminar/{id}', 'ExpenseController@destroy');
 });
 
+
 // Incentives
 Route::group(['prefix' => 'comisiones'], function () {
     Route::get('/', 'IncentiveController@index');

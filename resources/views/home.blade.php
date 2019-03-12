@@ -10,8 +10,8 @@ Panel Principal
 @include('partials.content-vendedor')
 @elseif(Auth::user()->hasRole('Administracion'))
 @include('partials.content-administracion')
-@else
-@include('partials.content-admin')
+@elseif(Auth::user()->hasRole('Control Escolar'))
+@include('partials.content-administracion')
 @endif
 @endsection
 

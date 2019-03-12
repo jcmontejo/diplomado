@@ -169,6 +169,11 @@ class StudentController extends Controller
                 <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
                 </div>
                 </td>';
+                } elseif ($userNow->hasRole('Control Escolar')) {
+                    return '<td><div class="btn-group" role="group" aria-label="Basic example">
+                <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
+                </div>
+                </td>';
                 } else {
                     return '<td><div class="btn-group" role="group" aria-label="Basic example">
                     <button class="btn btn-warning">Sin privilegios</button>
