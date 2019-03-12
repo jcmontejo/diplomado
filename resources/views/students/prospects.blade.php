@@ -302,6 +302,7 @@ Lista de Alumnos
     }
 
     $("#createStudent").click(function () {
+        $('#message-error-save').css('display', 'none');
         $('#modalCreate').modal('show');
     })
 
@@ -421,6 +422,7 @@ Lista de Alumnos
             $("#sex").val(res.sex);
             $("#phone").val(res.phone);
             $("#facebook").val(res.facebook);
+            $("#interested").val(res.interested);
             $("#address").val(res.address);
             $("#state").val(res.state);
             $("#city").val(res.city);
@@ -483,7 +485,8 @@ Lista de Alumnos
             },
             success: function () {
                 $("#preloader").css("display", "none");
-                $("#modalEdit").modal('toggle');
+                $("#modalEdit .close").click();
+                $('#message-error-edit').css('display', 'none');
                 reload();
                 swal("Bien hecho!", "Has actualizado al alumno exitosamente!", "success");
             },
@@ -771,7 +774,7 @@ Lista de Alumnos
                 $('#lastnameInscription').val('');
                 $('#motherlastnameInscription').val('');
                 $('#id-student').val('');
-                $("#modalInscription").modal('toggle');
+                $("#modalInscription .close").click();
                 $('#message-error-inscription').css('display', 'none');
                 reload();
                 swal("Bien hecho!", "Has registrado un nuevo alumno!", "success");
@@ -785,7 +788,7 @@ Lista de Alumnos
                      $("#preloader").css("display", "none");
                      swal("Error!", "Número de pago procesado anteriormente, seleccione otro número de pago.", "error");
                 }
-                $("#modalInscription").modal('toggle');
+                $("#modalInscription .close").click();
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
                 var errorString = "<ul>";

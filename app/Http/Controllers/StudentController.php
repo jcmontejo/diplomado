@@ -163,19 +163,30 @@ class StudentController extends Controller
                 <button class="btn btn-rounded btn-xs btn-warning mb-3" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fa fa-pencil"></i> Inscribir</button>
                 </div>
                 </td>';
-                } elseif($userNow->hasRole('Administrador')) {
+                } elseif ($userNow->hasRole('Administrador')) {
                     return '<td><div class="btn-group" role="group" aria-label="Basic example">
                 <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
                 <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
                 </div>
                 </td>';
-                }
-                else{
+                } else {
                     return '<td><div class="btn-group" role="group" aria-label="Basic example">
                     <button class="btn btn-warning">Sin privilegios</button>
                 </td>';
 
                 }
+            })
+            ->addColumn('diplomats', function ($student) {
+                $id = $student->id;
+                $data = array('hola', 'mundo');
+
+                $query = DB::table('student_inscriptions')
+                    ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
+                    ->where('student_inscriptions.student_id', '=', $id)
+                //->where('student_inscriptions.status', '=', 'Alta')
+                    ->select('diplomats.name as diplomat')->first();
+
+                return $query->diplomat;
             })
             ->make(true);
     }
@@ -419,7 +430,6 @@ class StudentController extends Controller
         }
         return false;
     }
-    
 
     public function edit($id)
     {
@@ -437,16 +447,7 @@ class StudentController extends Controller
 
                 if ($request->curp) {
                     if ($this->validate_curp($request->curp)) {
-                        if ($this->if_exist_student($request->curp)) {
-                            DB::rollBack();
-
-                            return response()
-                                ->json([
-                                    'message' => 'Ya existe un registro con la misma CURP.',
-                                    'status' => 400,
-                                ], 400);
-
-                        } else {
+                        if ($student->curp) {
                             $student->curp = $request->curp;
                             $student->name = $request->name;
                             $student->last_name = $request->last_name;
@@ -468,6 +469,40 @@ class StudentController extends Controller
                                 "message" => "success",
                             ]);
 
+                        } else {
+                            if ($this->if_exist_student($request->curp)) {
+                                DB::rollBack();
+
+                                return response()
+                                    ->json([
+                                        'message' => 'Ya existe un registro con la misma CURP.',
+                                        'status' => 400,
+                                    ], 400);
+
+                            } else {
+                                $student->curp = $request->curp;
+                                $student->name = $request->name;
+                                $student->last_name = $request->last_name;
+                                $student->mother_last_name = $request->mother_last_name;
+                                $student->facebook = $request->facebook;
+                                // $student->interested = $request->interested;
+                                $student->birthdate = $request->birthdate;
+                                $student->sex = $request->sex;
+                                $student->phone = $request->phone;
+                                $student->address = $request->address;
+                                $student->state = $request->state;
+                                $student->city = $request->city;
+                                $student->email = $request->email;
+                                $student->profession = $request->profession;
+                                $student->save();
+                                DB::commit();
+
+                                return response()->json([
+                                    "message" => "success",
+                                ]);
+
+                            }
+
                         }
                     } else {
                         DB::rollBack();
@@ -485,7 +520,7 @@ class StudentController extends Controller
                     $student->last_name = $request->last_name;
                     $student->mother_last_name = $request->mother_last_name;
                     $student->facebook = $request->facebook;
-                    // $student->interested = $request->interested;
+                    $student->interested = $request->interested;
                     $student->birthdate = $request->birthdate;
                     $student->sex = $request->sex;
                     $student->phone = $request->phone;
