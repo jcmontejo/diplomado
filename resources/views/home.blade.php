@@ -12,6 +12,8 @@ Panel Principal
 @include('partials.content-administracion')
 @elseif(Auth::user()->hasRole('Control Escolar'))
 @include('partials.content-administracion')
+@elseif(Auth::user()->hasRole('Administrador'))
+@include('partials.content-admin')
 @endif
 @endsection
 
