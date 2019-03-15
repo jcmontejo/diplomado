@@ -20,7 +20,10 @@ class CreateLowsTable extends Migration
             
             $table->unsignedInteger('studentinscriptions_id');
 
-            $table->foreign('studentinscriptions_id')->references('id')->on('student_inscriptions');
+            $table->foreign('studentinscriptions_id')
+                ->references('id')
+                ->on('student_inscriptions')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -925,7 +925,7 @@ Lista de Alumnos
             },
             success: function () {
                 $("#preloader").css("display", "none");
-                $("#modalEdit").modal('toggle');
+                $("#modalDown .close").click();
 
                 swal("Bien hecho!", "Has dado de baja al alumno exitosamente!", "success");
                 location.reload();
