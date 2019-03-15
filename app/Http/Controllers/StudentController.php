@@ -591,8 +591,8 @@ class StudentController extends Controller
                 ->select('student_inscriptions.*')
                 ->where('student_id', '=', $id);
 
-            $incentive = DB::table('incentives')
-                ->where('student_inscription_id', '=', $student_inscriptions->id)->delete();
+            // $incentive = DB::table('incentives')
+            //     ->where('student_inscription_id', '=', $student_inscriptions->id)->delete();
 
             $student_inscriptions->delete();
 
