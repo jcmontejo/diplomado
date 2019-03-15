@@ -418,6 +418,7 @@ Lista de Alumnos
                 city: city,
                 email: email,
                 facebook: facebook,
+                profession: profession,
                 status: status
             },
             beforeSend: function () {

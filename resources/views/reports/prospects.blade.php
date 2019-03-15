@@ -25,6 +25,7 @@ Reporte de Prospectos
                             <th>CURP</th>
                             <th>Nombre</th>
                             <th>Estatus</th>
+                            <th>Diplomado Inscrito</th>
                             <th>Teléfono</th>
                             <th>Correo Electrónico</th>
                             <th>Fecha/hora de Alta</th>
@@ -79,6 +80,10 @@ Reporte de Prospectos
                 {
                     data: 'now',
                     name: 'now'
+                },
+                {
+                    data: 'diplomats',
+                    name: 'diplomats'
                 },
                 {
                     data: 'phone',

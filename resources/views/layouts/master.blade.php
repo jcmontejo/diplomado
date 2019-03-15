@@ -635,9 +635,9 @@ overflow-y: auto;
         <!-- footer area start-->
         <footer>
             <div class="footer-area">
-                <p>© Copyright 2018. Todos los Derechos son Reservados. Sistema web desarrollado por <a href="https://www.linkedin.com/in/jcmontejo/"
+                {{-- <p>© Copyright 2018. Todos los Derechos son Reservados. Sistema web desarrollado por <a href="https://www.linkedin.com/in/jcmontejo/"
                         target=”_blank”>Juan
-                        Carlos Montejo</a>.</p>
+                        Carlos Montejo</a>.</p> --}}
             </div>
         </footer>
         <!-- footer area end-->

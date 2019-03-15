@@ -183,7 +183,7 @@ class StudentController extends Controller
             })
             ->addColumn('diplomats', function ($student) {
                 $id = $student->id;
-                $data = array('hola', 'mundo');
+                //$data = array('hola', 'mundo');
 
                 $query = DB::table('student_inscriptions')
                     ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')

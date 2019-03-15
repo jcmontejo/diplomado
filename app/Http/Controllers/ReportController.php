@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Debt;
+use App\Student;
+use Auth;
 use DB;
 use Yajra\Datatables\Datatables;
-use Auth;
-use App\Student;
-use App\Debt;
 
 class ReportController extends Controller
 {
@@ -100,43 +100,53 @@ class ReportController extends Controller
             $students = Student::where([
                 ['user_id', '=', $user->id],
             ])->select([
-                'id', 
-                'curp', 
-                'enrollment', 
+                'id',
+                'curp',
+                'enrollment',
                 DB::raw('CONCAT(name," ",last_name," ",mother_last_name) as name'),
-                'birthdate', 
-                'sex', 
-                'phone', 
-                'address', 
+                'birthdate',
+                'sex',
+                'phone',
+                'address',
                 'status',
-                'email', 
-                'profession', 
-                'documents', 
-                'user_id', 
+                'email',
+                'profession',
+                'documents',
+                'user_id',
                 'created_at']);
         } else {
             $students = Student::where('status', '=', 1)->select(['id', 'curp', 'enrollment', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at']);
         }
 
         return Datatables::of($students)
-            ->addColumn('now', function ($student) {
+            ->addColumn('diplomats', function ($student) {
                 $id = $student->id;
+                $status = $student->status;
 
-                $debts = DB::table('debts')->where([
-                    ['status', '=', 'ACTIVA'],
-                    ['student_id', '=', $id],
-                ])->count();
+                if ($status === '1') {
+                    $query = DB::table('student_inscriptions')
+                        ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
+                        ->where('student_inscriptions.student_id', '=', $id)
+                        ->select('diplomats.name as diplomat')->first();
 
-                if ($debts) {
+                    return $query->diplomat;
+                }else {
+                    return 'No hay datos.';
+                }
+            })
+            ->addColumn('now', function ($student) {
+                $status = $student->status;
+
+                if ($status === '1') {
                     return 'INSCRITO';
                 } else {
                     return 'NO INSCRITO';
                 }
             })
-             ->setRowClass(function ($student) {
+            ->setRowClass(function ($student) {
                 if ($student->status === '1') {
                     return 'alert-success';
-                }else {
+                } else {
                     return 'alert-danger';
                 }
             })->make(true);
