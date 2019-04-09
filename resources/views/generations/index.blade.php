@@ -30,7 +30,7 @@ Lista de Generaciones
                         <th>Docente</th>
                         <th>Generación</th>
                         <th>Alumnos Inscritos</th>
-                        <th>Costo de Diplomado</th>
+                        <th>Costo de Diplomado (BASE)</th>
                         <th>Importe a pagar por comisión (BASE</th>
                         <th>% a pagar por FULL PRICE</th>
                         <th>Fecha/Hora de Creación</th>

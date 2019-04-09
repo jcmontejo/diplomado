@@ -23,11 +23,11 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Costo (BASE)</label>
-                                <input type="number" value="0" min="0" class="form-control form-control-lg" id="cost" readonly>
+                                <input type="number" value="0" min="0" class="form-control form-control-lg" id="cost">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Costo Máximo (VENDEDORES)</label>
-                                <input type="number" value="0" min="0" id="maximum_cost" class="form-control form-control-lg" readonly>
+                                <input type="number" value="0" min="0" id="maximum_cost" class="form-control form-control-lg">
                             </div>
                         </div>
                     </form>
