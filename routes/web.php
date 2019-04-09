@@ -246,6 +246,15 @@ Route::group(['prefix' => 'campanias'], function () {
     Route::get('/agregar/estudiantes', 'CampaingController@addStudents')->name('campaings.massadd');
 });
 
+// Suplantación
+Route::middleware(['auth'])->group(function($route){
+    # Ruta para devolver al usuario original
+    $route->get('revertir', 'SuplantacionController@revertir');
+
+    # Ruta de suplantación
+    $route->get('{user}', 'SuplantacionController@suplantar');
+});
+
 
 
 
