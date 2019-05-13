@@ -131,7 +131,7 @@ Route::group(['prefix' => 'generaciones', 'middleware' => 'permission:modulo-con
     Route::put('/actualizar/{id}', 'GenerationController@update');
     Route::delete('eliminar/{id}', 'GenerationController@destroy');
 
-    
+    //
     Route::get('/alumnos/buscar', 'GenerationController@findStudent');
     Route::get('/alumnos/inscritos/{id}', 'GenerationController@studentsInscription');
     Route::get('/alumnos/{id}', 'GenerationController@students');
@@ -157,6 +157,7 @@ Route::group(['prefix' => 'pagos'], function () {
     Route::get('/generaciones/{id}', 'PaymentController@listGenerations');
     Route::get('/generaciones/alumnos/{id}', 'PaymentController@listStudents');
     Route::post('/recibir', 'PaymentController@received');
+    Route::post('/recibir/alterno', 'PaymentController@receivedAlternate');
     Route::get('/ingresos', 'PaymentController@showReceiveds');
     Route::get('/ingresos/modificar', 'PaymentController@showPayments');
     Route::get('/recibidos', 'PaymentController@paymentReceiveds');
