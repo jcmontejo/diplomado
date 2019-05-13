@@ -132,42 +132,66 @@ Lista de Alumnos
                                             @if ($payment_1 AND $payment_1->status != 'PENDIENTE')
                                             ${{number_format($payment_1->amount_paid,2)}}({{$payment_1->date}})
                                             @else
-                                            <span style="color:red;">-------</span>
+                                            <span style="color:red;">
+                                                <button @if ($student->total_debt == 0)
+                                                    disabled
+                                                @endif class="btn btn-success btn-xs" onclick="modalPay(1,{{$student->debt_id}});" data-toggle="modal" data-target="#modalPay"><i class="fa fa-money"></i> Pagar</button>
+                                            </span>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($payment_2 AND $payment_2->status != 'PENDIENTE')
                                             ${{number_format($payment_2->amount_paid,2)}}({{$payment_1->date}})
                                             @else
-                                            <span style="color:red;">-------</span>
+                                            <span style="color:red;">
+                                                <button @if ($student->total_debt == 0)
+                                                    disabled
+                                                @endif class="btn btn-success btn-xs" onclick="modalPay(2,{{$student->debt_id}});" data-toggle="modal" data-target="#modalPay"><i class="fa fa-money"></i> Pagar</button>
+                                            </span>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($payment_3 AND $payment_3->status != 'PENDIENTE')
                                             ${{number_format($payment_3->amount_paid,2)}}({{$payment_1->date}})
                                             @else
-                                            <span style="color:red;">-------</span>
+                                            <span style="color:red;">
+                                                <button @if ($student->total_debt == 0)
+                                                    disabled
+                                                @endif class="btn btn-success btn-xs" onclick="modalPay(3,{{$student->debt_id}});" data-toggle="modal" data-target="#modalPay"><i class="fa fa-money"></i> Pagar</button>
+                                            </span>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($payment_4 AND $payment_4->status != 'PENDIENTE')
                                             ${{number_format($payment_4->amount_paid,2)}}({{$payment_1->date}})
                                             @else
-                                            <span style="color:red;">-------</span>
+                                            <span style="color:red;">
+                                                <button @if ($student->total_debt == 0)
+                                                    disabled
+                                                @endif class="btn btn-success btn-xs" onclick="modalPay(4,{{$student->debt_id}});" data-toggle="modal" data-target="#modalPay"><i class="fa fa-money"></i> Pagar</button>
+                                            </span>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($payment_5 AND $payment_5->status != 'PENDIENTE')
                                             ${{number_format($payment_5->amount_paid,2)}}({{$payment_1->date}})
                                             @else
-                                            <span style="color:red;">-------</span>
+                                            <span style="color:red;">
+                                                <button @if ($student->total_debt == 0)
+                                                    disabled
+                                                @endif class="btn btn-success btn-xs" onclick="modalPay(5,{{$student->debt_id}});" data-toggle="modal" data-target="#modalPay"><i class="fa fa-money"></i> Pagar</button>
+                                            </span>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($payment_6 AND $payment_6->status != 'PENDIENTE')
                                             ${{number_format($payment_6->amount_paid,2)}}({{$payment_1->date}})
                                             @else
-                                            <span style="color:red;">-------</span>
+                                            <span style="color:red;">
+                                                <button @if ($student->total_debt == 0)
+                                                    disabled
+                                                @endif class="btn btn-success btn-xs" onclick="modalPay(6,{{$student->debt_id}});" data-toggle="modal" data-target="#modalPay"><i class="fa fa-money"></i> Pagar</button>
+                                            </span>
                                             @endif
                                         </td>
                                         <td>${{number_format($student->final_cost,2)}}</td>
@@ -841,6 +865,7 @@ Lista de Alumnos
 @include('generations.modal-show')
 @include('generations.modal-down')
 @include('generations.modal-details-low')
+@include('generations.modal-pay')
 @endsection
 @section('js')
 <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
@@ -868,6 +893,19 @@ Lista de Alumnos
             //     }
             // }]
         });
+
+        $(document).on('keyup', '.amount', function () {
+            var amount = parseFloat($(this).closest("tr").find(".amount").val());
+            var discount = parseFloat(0);
+            $(this).closest("tr").find(".sub_total").val(amount - discount);
+
+            //Show Total Amount
+            var total = 0;
+            var sub_total = parseFloat($(this).find(".total").val());
+            total += sub_total;
+
+            // $("#total").val(total);
+        });
     });
 
     function Show(btn) {
@@ -882,6 +920,80 @@ Lista de Alumnos
             $("#debt").val(res.debt);
         });
     }
+
+    function modalPay(num_pay,debt_id) {
+        var number_payment = num_pay;
+        var debt_id = debt_id;
+
+        $("#num_pay").val(number_payment);
+        $("#debt_id").val(debt_id);
+    }
+
+    $("#processPay").click(function () {
+        var debt_id = $("#debt_id").val();
+        var date_payment = $("#date_payment").val();
+        var observation = $("#observation").val();
+        var number_payment = $("#num_pay").val();
+        var payment_method = $("#payment_method").val();
+        var destination_account = $("#destination_account").val();
+        var account_type = $("#account_type").val();
+        var amount = $("#amount").val();
+        var discount = 0;
+        var total = $("#ammount").val();
+
+        var route = "/pagos/recibir/alterno"
+
+        $.ajax({
+            url: route,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                debt_id: debt_id,
+                date_payment: date_payment,
+                observation: observation,
+                number_payment: number_payment,
+                payment_method: payment_method,
+                destination_account: destination_account,
+                account_type: account_type,
+                amount: amount,
+                discount: discount
+                //total: total
+            },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
+            success: function () {
+                $("#preloader").css("display", "none");
+
+                $('#message-error-save').css('display', 'none');
+            
+                swal("Bien hecho!", "Hemos procesado el pago exitosamente!", "success");
+                location.reload();
+            },
+            error: function (data) {
+                if (data.status === 400) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Estas introduciendo un monto mayor al adeudo del alumno.", "error");
+                }
+                if (data.status === 406) {
+                     $("#preloader").css("display", "none");
+                     swal("Error!", "Número de pago procesado anteriormente, seleccione otro número de pago.", "error");
+                }
+                $("#preloader").css("display", "none");
+                var response = JSON.parse(data.responseText);
+                var errorString = "<ul>";
+                $.each(response.errors, function (key, value) {
+                    errorString += "<li>" + value + "</li>";
+                });
+
+                $("#error-save").html(errorString);
+                $("#message-error-save").fadeIn();
+            }
+        });
+    })
 
     function Down(btn) {
         var route = "/generaciones/alumnos/consultar/" + btn.value;

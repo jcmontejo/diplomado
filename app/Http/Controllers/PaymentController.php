@@ -12,12 +12,12 @@ use App\Payment;
 use App\PaymentMethod;
 use App\PaymentReceived;
 use App\StudentInscription;
+use Auth;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use PDF;
 use Yajra\Datatables\Datatables;
-use Auth;
 
 class PaymentController extends Controller
 {
@@ -36,7 +36,6 @@ class PaymentController extends Controller
         return view('incomes.payments', compact('accounts', 'methods', 'account_types'));
     }
 
-    
     public function paymentReceiveds()
     {
         $start_date = Input::get('one');
@@ -299,6 +298,81 @@ class PaymentController extends Controller
             $received->amount = $request->amount;
             $received->discount = $request->discount;
             $received->total = $request->total;
+            $received->type = '1';
+            $received->debt_id = $debt->id;
+            $received->save();
+
+            $payment_process = Payment::where('debt_id', '=', $debt->id)
+                ->where('number_payment', '=', $number_payment)
+                ->first();
+
+            if ($payment_process) {
+                $payment_process->amount_paid = $received->amount;
+                $payment_process->date = $received->date_payment;
+                $payment_process->status = 'PAGADO';
+                $payment_process->income_id = $received->id;
+                $payment_process->save();
+            }
+
+            if ($this->adjustDebt($debt->id, $received->total)) {
+                $this->sumAccount($received->destination_account, $received->total);
+
+                DB::commit();
+                return response()->json([
+                    "message" => "success",
+                ]);
+            } else {
+                DB::rollBack();
+                return response()
+                    ->json([
+                        'message' => 'Cantidad mayor a la deuda.',
+                        'status' => 400,
+                    ], 400);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+    }
+
+    public function receivedAlternate(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            //Get Data
+            $debt = DB::table('debts')
+                ->where('id', '=', $request->debt_id)
+                ->where('status', '=', 'ACTIVA')
+                ->first();
+
+            $inscription = StudentInscription::find($debt->generation_id);
+
+            $diplomat = Diplomat::find($inscription->diplomat_id);
+            $generation = Generation::find($inscription->generation_id);
+
+            if ($this->checkNumberPayment($request->number_payment, $debt->id)) {
+                $number_payment = $request->number_payment;
+            } else {
+                DB::rollBack();
+                return response()
+                    ->json([
+                        'message' => 'Pagado ya procesado antes.',
+                        'status' => 406,
+                    ], 406);
+            }
+
+            $received = new PaymentReceived();
+            $received->diplomat_id = $diplomat->id;
+            $received->generation_id = $generation->id;
+            $received->student_id = $inscription->student_id;
+            $received->date_payment = $request->date_payment;
+            $received->observation = $request->observation;
+            $received->payment_method = $request->payment_method;
+            $received->destination_account = $request->destination_account;
+            $received->account_type = $request->account_type;
+            $received->amount = $request->amount;
+            $received->discount = $request->discount;
+            $received->total = $request->amount;
             $received->type = '1';
             $received->debt_id = $debt->id;
             $received->save();
