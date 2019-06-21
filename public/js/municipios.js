@@ -2517,4 +2517,7 @@ var municipios = {
         "Villanueva",
         "Zacatecas"
     ],
+    "OTRO":[
+        "OTRO",
+    ],
 }
