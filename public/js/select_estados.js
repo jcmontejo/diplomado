@@ -22,7 +22,7 @@ $(document).ready(function () {
                 }
             });
             $('#citySave').html(html);
-            // $('select').material_select('update');
+            //$('select').material_select('update');
         })
         .trigger("change");
 });

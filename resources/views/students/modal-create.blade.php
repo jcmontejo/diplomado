@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
-                <div class="col-lg-6 col-ml-12">
+                <div class="col-md-12">
                     <div id='message-error-save' class="alert alert-danger alert-dismissible fade show" role='alert'
                         style="display: none">
                         <strong id="error-save"></strong>
@@ -134,48 +134,6 @@
                                   <option value="110">110%</option>
                                 </select>
                             </div>
-                            <hr>
-                            {{-- <div class="form-group col-md-12">
-                                <h5 class="modal-title">Documentación</h5>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Comprobante de Domicilio</label>
-                                <input type="file" class="form-control form-control-lg" id="proofaddressSave"
-                                    placeholder="Introduce profesión del alumno">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="exampleInputPassword1">Comprobante de Ultimo Grado de Estudios</label>
-                                <input type="file" class="form-control form-control-lg" id="proofstudiesSave"
-                                    placeholder="Introduce profesión del alumno">
-                            </div> --}}
-                            {{-- <div class="form-group col-md-12">
-                                <h5 class="modal-title">*Selecciona <span style="color:red;">ES PROSPECTO</span>
-                                    unicamente si el alumno aún no esta seguro de inscribirse a un diplomado.</h5>
-                            </div> --}}
-                            {{-- <div class="form-group col-md-12">
-                                <label for="exampleInputPassword1">Selecciona opción</label>
-                                <select name="status" id="status" class="form-control form-control-lg">
-                                    <option value="">---Selecciona Opción---</option>
-                                    <option value="1">YA SERA ALUMNO</option>
-                                    <option value="0">ES PROSPECTO</option>
-                                </select>
-                            </div> --}}
-                            {{-- <div id="blockDiplomat" class="col-md-12">
-                                <div class="form-group col-md-12">
-                                    <h5 class="modal-title">Matricular a Diplomado</h5>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label for="exampleInputPassword1">Selecciona Diplomado</label>
-                                    <select name="generationSave" id="generationSave" class="form-control form-control-lg">
-                                        @forelse ($generations as $generation)
-                                        <option value="{{$generation->id}}">{{$generation->name_diplomat}}---{{$generation->number_generation}}</option>
-                                        @empty
-                                        <option>NO EXISTEN GENERACIONES REGISTRADAS</option>
-                                        @endforelse
-                                    </select>
-                                </div>
-                            </div> --}}
                         </div>
                     </form>
                 </div>
