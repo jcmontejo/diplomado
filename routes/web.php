@@ -78,7 +78,7 @@ Route::group(['prefix' => 'metodos-de-pago', 'middleware' => 'permission:modulo-
 });
 
 
-// Students
+// Students..
 Route::group(['prefix' => 'alumnos', 'middleware' => 'permission:modulo-alumnos'], function () {
     Route::get('/', 'StudentController@index');
     Route::get('/prospectos', 'StudentController@prospects');

@@ -38,6 +38,7 @@ class StudentController extends Controller
         return view('students.index', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types'));
     }
 
+    
     public function prospects(Request $request)
     {
         $generations = Generation::all();
