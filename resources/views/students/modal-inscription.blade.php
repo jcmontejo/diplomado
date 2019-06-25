@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
-                <div class="col-lg-6 col-ml-12">
+                <div class="col-md-12">
                     <div id='message-error' class="alert alert-danger alert-dismissible fade show" role='alert' style="display: none">
                         <strong id="error"></strong>
                     </div>
