@@ -28,10 +28,6 @@ Lista de Generaciones
                         <th>Docente</th>
                         <th>Generación</th>
                         <th>Alumnos Inscritos</th>
-                        <th>Costo de Diplomado (BASE)</th>
-                        <th>Importe a pagar por comisión (BASE</th>
-                        <th>% a pagar por FULL PRICE</th>
-                        <th>Fecha/Hora de Creación</th>
                         <th>Acciones</th>
                     </thead>
                 </table>
@@ -86,28 +82,6 @@ Lista de Generaciones
                 {
                     data: 'number_students',
                     name: 'number_students',
-                },
-                {
-                    data: 'cost',
-                    "render": function (data, type, row) {
-                        return '$' + data;
-                    }
-                },
-                {
-                    data: 'commision',
-                    "render": function (data, type, row) {
-                        return '$' + data;
-                    }
-                },
-                {
-                    data: 'full_price',
-                    "render": function (data, type, row) {
-                        return data+'%';
-                    }
-                },
-                {
-                    data: 'created_at',
-                    name: 'created_at'
                 },
                 {
                     data: 'action',
