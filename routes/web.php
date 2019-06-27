@@ -256,6 +256,13 @@ Route::middleware(['auth'])->group(function($route){
     $route->get('{user}', 'SuplantacionController@suplantar');
 });
 
+// Rutas extras para vendedores
+Route::get('/datos/generaciones', 'GeneralController@index');
+Route::get('/datos/generaciones/todos', 'GeneralController@dataGenerations')->name('sellers.generations');
+Route::get('/datos/generaciones/alumnos/inscritos/{id}', 'GeneralController@studentsInscription');
+
+
+
 
 
 

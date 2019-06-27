@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="{{asset('assets/css/owl.carousel.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/slicknav.min.css')}}">
     <!-- amchart css -->
-    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css"
+        media="all" />
     <!-- others css -->
     <link rel="stylesheet" href="{{asset('assets/css/typography.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/default-css.css')}}">
@@ -33,222 +34,230 @@
     <style>
         /* Styles for wrapping the search box */
 
-.main {
-    width: 50%;
-    margin: 50px auto;
-}
+        .main {
+            width: 50%;
+            margin: 50px auto;
+        }
 
-/* Bootstrap 4 text input with search icon */
+        /* Bootstrap 4 text input with search icon */
 
-.has-search .form-control {
-    padding-left: 2.375rem;
-}
+        .has-search .form-control {
+            padding-left: 2.375rem;
+        }
 
-.has-search .form-control-feedback {
-    position: absolute;
-    z-index: 2;
-    display: block;
-    width: 2.375rem;
-    height: 2.375rem;
-    line-height: 2.375rem;
-    text-align: center;
-    pointer-events: none;
-    color: #aaa;
-}
-        #invoice{
-    padding: 30px;
-}
+        .has-search .form-control-feedback {
+            position: absolute;
+            z-index: 2;
+            display: block;
+            width: 2.375rem;
+            height: 2.375rem;
+            line-height: 2.375rem;
+            text-align: center;
+            pointer-events: none;
+            color: #aaa;
+        }
 
-.invoice {
-    position: relative;
-    background-color: #FFF;
-    min-height: 680px;
-    padding: 15px
-}
+        #invoice {
+            padding: 30px;
+        }
 
-.invoice header {
-    padding: 10px 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #3989c6
-}
+        .invoice {
+            position: relative;
+            background-color: #FFF;
+            min-height: 680px;
+            padding: 15px
+        }
 
-.invoice .company-details {
-    text-align: right
-}
+        .invoice header {
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #3989c6
+        }
 
-.invoice .company-details .name {
-    margin-top: 0;
-    margin-bottom: 0
-}
+        .invoice .company-details {
+            text-align: right
+        }
 
-.invoice .contacts {
-    margin-bottom: 20px
-}
+        .invoice .company-details .name {
+            margin-top: 0;
+            margin-bottom: 0
+        }
 
-.invoice .invoice-to {
-    text-align: left
-}
+        .invoice .contacts {
+            margin-bottom: 20px
+        }
 
-.invoice .invoice-to .to {
-    margin-top: 0;
-    margin-bottom: 0
-}
+        .invoice .invoice-to {
+            text-align: left
+        }
 
-.invoice .invoice-details {
-    text-align: right
-}
+        .invoice .invoice-to .to {
+            margin-top: 0;
+            margin-bottom: 0
+        }
 
-.invoice .invoice-details .invoice-id {
-    margin-top: 0;
-    color: #3989c6
-}
+        .invoice .invoice-details {
+            text-align: right
+        }
 
-.invoice main {
-    padding-bottom: 50px
-}
+        .invoice .invoice-details .invoice-id {
+            margin-top: 0;
+            color: #3989c6
+        }
 
-.invoice main .thanks {
-    margin-top: -100px;
-    font-size: 2em;
-    margin-bottom: 50px
-}
+        .invoice main {
+            padding-bottom: 50px
+        }
 
-.invoice main .notices {
-    padding-left: 6px;
-    border-left: 6px solid #3989c6
-}
+        .invoice main .thanks {
+            margin-top: -100px;
+            font-size: 2em;
+            margin-bottom: 50px
+        }
 
-.invoice main .notices .notice {
-    font-size: 1.2em
-}
+        .invoice main .notices {
+            padding-left: 6px;
+            border-left: 6px solid #3989c6
+        }
 
-.invoice table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    margin-bottom: 20px
-}
+        .invoice main .notices .notice {
+            font-size: 1.2em
+        }
 
-.invoice table td,.invoice table th {
-    padding: 15px;
-    background: #eee;
-    border-bottom: 1px solid #fff
-}
+        .invoice table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px
+        }
 
-.invoice table th {
-    white-space: nowrap;
-    font-weight: 400;
-    font-size: 16px
-}
+        .invoice table td,
+        .invoice table th {
+            padding: 15px;
+            background: #eee;
+            border-bottom: 1px solid #fff
+        }
 
-.invoice table td h3 {
-    margin: 0;
-    font-weight: 400;
-    color: #3989c6;
-    font-size: 1.2em
-}
+        .invoice table th {
+            white-space: nowrap;
+            font-weight: 400;
+            font-size: 16px
+        }
 
-.invoice table .qty,.invoice table .total,.invoice table .unit {
-    text-align: right;
-    font-size: 1.2em
-}
+        .invoice table td h3 {
+            margin: 0;
+            font-weight: 400;
+            color: #3989c6;
+            font-size: 1.2em
+        }
 
-.invoice table .no {
-    color: #fff;
-    font-size: 1.6em;
-    background: #3989c6
-}
+        .invoice table .qty,
+        .invoice table .total,
+        .invoice table .unit {
+            text-align: right;
+            font-size: 1.2em
+        }
 
-.invoice table .unit {
-    background: #ddd
-}
+        .invoice table .no {
+            color: #fff;
+            font-size: 1.6em;
+            background: #3989c6
+        }
 
-.invoice table .total {
-    background: #3989c6;
-    color: #fff
-}
+        .invoice table .unit {
+            background: #ddd
+        }
 
-.invoice table tbody tr:last-child td {
-    border: none
-}
+        .invoice table .total {
+            background: #3989c6;
+            color: #fff
+        }
 
-.invoice table tfoot td {
-    background: 0 0;
-    border-bottom: none;
-    white-space: nowrap;
-    text-align: right;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    border-top: 1px solid #aaa
-}
+        .invoice table tbody tr:last-child td {
+            border: none
+        }
 
-.invoice table tfoot tr:first-child td {
-    border-top: none
-}
+        .invoice table tfoot td {
+            background: 0 0;
+            border-bottom: none;
+            white-space: nowrap;
+            text-align: right;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border-top: 1px solid #aaa
+        }
 
-.invoice table tfoot tr:last-child td {
-    color: #3989c6;
-    font-size: 1.4em;
-    border-top: 1px solid #3989c6
-}
+        .invoice table tfoot tr:first-child td {
+            border-top: none
+        }
 
-.invoice table tfoot tr td:first-child {
-    border: none
-}
+        .invoice table tfoot tr:last-child td {
+            color: #3989c6;
+            font-size: 1.4em;
+            border-top: 1px solid #3989c6
+        }
 
-.invoice footer {
-    width: 100%;
-    text-align: center;
-    color: #777;
-    border-top: 1px solid #aaa;
-    padding: 8px 0
-}
+        .invoice table tfoot tr td:first-child {
+            border: none
+        }
 
-@media print {
-    .invoice {
-        font-size: 11px!important;
-        overflow: hidden!important
-    }
+        .invoice footer {
+            width: 100%;
+            text-align: center;
+            color: #777;
+            border-top: 1px solid #aaa;
+            padding: 8px 0
+        }
 
-    .invoice footer {
-        position: absolute;
-        bottom: 10px;
-        page-break-after: always
-    }
+        @media print {
+            .invoice {
+                font-size: 11px !important;
+                overflow: hidden !important
+            }
 
-    .invoice>div:last-child {
-        page-break-before: always
-    }
-}
+            .invoice footer {
+                position: absolute;
+                bottom: 10px;
+                page-break-after: always
+            }
+
+            .invoice>div:last-child {
+                page-break-before: always
+            }
+        }
+
         .table-wrapper-scroll-y {
-display: block;
-max-height: 200px;
-overflow-y: auto;
--ms-overflow-style: -ms-autohiding-scrollbar;
-}
+            display: block;
+            max-height: 200px;
+            overflow-y: auto;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+        }
+
         /* Preloader */
-#preloader{
-	display: none;
-	background: rgba(39, 60, 117,.5);
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	z-index: 1100 !important;
-}
-    #preloader > .bar {
-  display: inline-block;
-  padding: 0px;
-  text-align: left;
-  left: 50%;
-  top: 50%;
-  position: absolute;
-  width: 150px;
-  height: 20px;
-  border: 1px solid #2980b9;
-  background-size: 28px 28px;
-}
+        #preloader {
+            display: none;
+            background: rgba(39, 60, 117, .5);
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1100 !important;
+        }
+
+        #preloader>.bar {
+            display: inline-block;
+            padding: 0px;
+            text-align: left;
+            left: 50%;
+            top: 50%;
+            position: absolute;
+            width: 150px;
+            height: 20px;
+            border: 1px solid #2980b9;
+            background-size: 28px 28px;
+        }
+
     </style>
     @yield('css')
 </head>
@@ -282,30 +291,37 @@ overflow-y: auto;
                         <ul class="metismenu" id="menu">
                             <li class="active">
                                 @can('modulo-inicio')
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Inicio</span></a>
+                                <a href="javascript:void(0)" aria-expanded="true"><i
+                                        class="ti-dashboard"></i><span>Inicio</span></a>
                                 <ul class="collapse">
-                                    <li class="{{ Request::url()== url('/home') ? 'active' : '' }}"><a href="{{url('/home')}}">Panel
+                                    <li class="{{ Request::url()== url('/home') ? 'active' : '' }}"><a
+                                            href="{{url('/home')}}">Panel
                                             Principal</a></li>
                                 </ul>
                                 @endcan
                             </li>
                             <li>
                                 @can('modulo-perfil')
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Perfil</span></a>
+                                <a href="javascript:void(0)" aria-expanded="true"><i
+                                        class="ti-user"></i><span>Perfil</span></a>
                                 <ul class="collapse {{ Request::url()== url('/perfil') ? 'in' : '' }}">
-                                    <li class="{{ Request::url()== url('/perfil') ? 'active' : '' }}"><a href="{{url('/perfil')}}">Actualizar
+                                    <li class="{{ Request::url()== url('/perfil') ? 'active' : '' }}"><a
+                                            href="{{url('/perfil')}}">Actualizar
                                             Perfil</a></li>
                                 </ul>
                                 @endcan
                             </li>
                             <li>
                                 @can('modulo-alumnos')
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-id-badge"></i><span>Alumnos</span></a>
+                                <a href="javascript:void(0)" aria-expanded="true"><i
+                                        class="ti-id-badge"></i><span>Alumnos</span></a>
                                 <ul class="collapse {{ Request::url()== url('/alumnos') ? 'in' : '' }}">
                                     @if (Auth::user()->hasRole('Control Escolar'))
-                                    <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a href="{{url('/alumnos')}}">Estudiantes</a></li>
+                                    <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a
+                                            href="{{url('/alumnos')}}">Estudiantes</a></li>
                                     @else
-                                    <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a href="{{url('/alumnos')}}">Estudiantes</a></li>
+                                    <li class="{{ Request::url()== url('/alumnos') ? 'active' : '' }}"><a
+                                            href="{{url('/alumnos')}}">Estudiantes</a></li>
                                     <li class="{{ Request::url()== url('/alumnos/prospectos') ? 'active' : '' }}"><a
                                             href="{{url('/alumnos/prospectos')}}">Seguimiento de Prospectos</a></li>
                                     @endif
@@ -314,9 +330,11 @@ overflow-y: auto;
                             </li>
                             <li>
                                 @can('modulo-docentes')
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-blackboard"></i><span>Docentes</span></a>
+                                <a href="javascript:void(0)" aria-expanded="true"><i
+                                        class="ti-blackboard"></i><span>Docentes</span></a>
                                 <ul class="collapse {{ Request::url()== url('/docentes') ? 'in' : '' }}">
-                                    <li class="{{ Request::url()== url('/docentes') ? 'active' : '' }}"><a href="{{url('/docentes')}}">Todos
+                                    <li class="{{ Request::url()== url('/docentes') ? 'active' : '' }}"><a
+                                            href="{{url('/docentes')}}">Todos
                                             los Docentes</a></li>
                                 </ul>
                                 @endcan
@@ -326,17 +344,30 @@ overflow-y: auto;
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-agenda"></i><span>Control
                                         Escolar</span></a>
                                 <ul class="collapse {{ Request::url()== url('/diplomados') ? 'in' : '' }}">
-                                    <li class="{{ Request::url()== url('/diplomados') ? 'active' : '' }}"><a href="{{url('diplomados')}}">Diplomados</a></li>
-                                    <li class="{{ Request::url()== url('/generaciones') ? 'active' : '' }}"><a href="{{url('/generaciones')}}">Generaciones</a></li>
+                                    <li class="{{ Request::url()== url('/diplomados') ? 'active' : '' }}"><a
+                                            href="{{url('diplomados')}}">Diplomados</a></li>
+                                    <li class="{{ Request::url()== url('/generaciones') ? 'active' : '' }}"><a
+                                            href="{{url('/generaciones')}}">Generaciones</a></li>
                                 </ul>
                                 @endcan
                             </li>
+                            @if (Auth::user()->hasRole('Vendedor'))
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-agenda"></i><span>Control
+                                        Escolar</span></a>
+                                <ul class="collapse {{ Request::url()== url('/datos/generaciones') ? 'in' : '' }}">
+                                    <li class="{{ Request::url()== url('/datos/generaciones') ? 'active' : '' }}"><a
+                                            href="{{url('/datos/generaciones')}}">Generaciones</a></li>
+                                </ul>
+                            </li>
+                            @endif
                             <li>
                                 @can('modulo-cuentas-bancarias')
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-bank"></i>
                                     <span>Cuentas Bancarias</span></a>
                                 <ul class="collapse {{ Request::url()== url('/cuentas') ? 'in' : '' }}">
-                                    <li class="{{ Request::url()== url('/cuentas') ? 'active' : '' }}"><a href="{{url('/cuentas')}}">Todas
+                                    <li class="{{ Request::url()== url('/cuentas') ? 'active' : '' }}"><a
+                                            href="{{url('/cuentas')}}">Todas
                                             las Cuentas</a></li>
                                 </ul>
                                 @endcan
@@ -401,13 +432,16 @@ overflow-y: auto;
                                 </ul>
                                 @endcan
                             </li>
-                            {{-- <li class="{{ Request::url()== url('/usuarios') ? 'active' : '' }}"><a href="{{url('/usuarios')}}"><i
-                                        class="fa fa-users"></i> <span>Gestión de Usuarios</span></a></li> --}}
+                            {{-- <li class="{{ Request::url()== url('/usuarios') ? 'active' : '' }}"><a
+                                href="{{url('/usuarios')}}"><i class="fa fa-users"></i> <span>Gestión de
+                                    Usuarios</span></a></li> --}}
                             <li>
                                 @can('modulo-administracion')
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-cogs"></i> <span>Administración</span></a>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-cogs"></i>
+                                    <span>Administración</span></a>
                                 <ul class="collapse">
-                                    <li class="{{ Request::url()== url('/usuarios') ? 'active' : '' }}"><a href="{{url('/usuarios')}}">Gestión
+                                    <li class="{{ Request::url()== url('/usuarios') ? 'active' : '' }}"><a
+                                            href="{{url('/usuarios')}}">Gestión
                                             de Usuarios</a></li>
                                     <li><a href="{{url('/admin/roles')}}">Roles de Usuario</a></li>
                                     {{-- <li><a href="#">Permisos de Usuario</a></li>
@@ -521,126 +555,127 @@ overflow-y: auto;
                                     <div class="nofity-list">
                                         <a href="#" class="notify-item">
                                             <div class="notify-thumb">
-                                                <img src="{{asset('assets/images/author/author-img1.jpg')}}" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Hey I am waiting for you...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="{{asset('assets/images/author/author-img2.jpg')}}" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">When you can connect with me...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="{{asset('assets/images/author/author-img3.jpg')}}" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">I missed you so much...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="{{asset('assets/images/author/author-img4.jpg')}}" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Your product is completely Ready...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="{{asset('assets/images/author/author-img2.jpg')}}" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Hey I am waiting for you...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="{{asset('assets/images/author/author-img1.jpg')}}" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Hey I am waiting for you...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="{{asset('assets/images/author/author-img3.jpg')}}" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Hey I am waiting for you...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div> --}}
+                                                <img src="{{asset('assets/images/author/author-img1.jpg')}}"
+                    alt="image">
                 </div>
-            </div>
-            <!-- header area end -->
-            <!-- page title area start -->
-            <div class="page-title-area">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <div class="breadcrumbs-area clearfix">
-                            <h4 class="page-title pull-left">@yield('header-1')</h4>
-                            <ul class="breadcrumbs pull-left">
-                                <li><a href="{{url('/home')}}">Inicio</a></li>
-                                <li><span>@yield('header-2')</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 clearfix">
-                        <div class="user-profile pull-right">
-                            <img class="avatar user-thumb" src="{{asset('/images/user.png')}}" alt="avatar">
-                            <h4 class="user-name dropdown-toggle" data-toggle="dropdown"> {{ Auth::user()->name }} <i
-                                    class="fa fa-angle-down"></i></h4>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">Cerrar
-                                    Sesión</a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                <div class="notify-text">
+                    <p>Aglae Mayer</p>
+                    <span class="msg">Hey I am waiting for you...</span>
+                    <span>3:15 PM</span>
                 </div>
-            </div>
-            <!-- page title area end -->
-            <div class="main-content-inner">
-                @yield('content')
+                </a>
+                <a href="#" class="notify-item">
+                    <div class="notify-thumb">
+                        <img src="{{asset('assets/images/author/author-img2.jpg')}}" alt="image">
+                    </div>
+                    <div class="notify-text">
+                        <p>Aglae Mayer</p>
+                        <span class="msg">When you can connect with me...</span>
+                        <span>3:15 PM</span>
+                    </div>
+                </a>
+                <a href="#" class="notify-item">
+                    <div class="notify-thumb">
+                        <img src="{{asset('assets/images/author/author-img3.jpg')}}" alt="image">
+                    </div>
+                    <div class="notify-text">
+                        <p>Aglae Mayer</p>
+                        <span class="msg">I missed you so much...</span>
+                        <span>3:15 PM</span>
+                    </div>
+                </a>
+                <a href="#" class="notify-item">
+                    <div class="notify-thumb">
+                        <img src="{{asset('assets/images/author/author-img4.jpg')}}" alt="image">
+                    </div>
+                    <div class="notify-text">
+                        <p>Aglae Mayer</p>
+                        <span class="msg">Your product is completely Ready...</span>
+                        <span>3:15 PM</span>
+                    </div>
+                </a>
+                <a href="#" class="notify-item">
+                    <div class="notify-thumb">
+                        <img src="{{asset('assets/images/author/author-img2.jpg')}}" alt="image">
+                    </div>
+                    <div class="notify-text">
+                        <p>Aglae Mayer</p>
+                        <span class="msg">Hey I am waiting for you...</span>
+                        <span>3:15 PM</span>
+                    </div>
+                </a>
+                <a href="#" class="notify-item">
+                    <div class="notify-thumb">
+                        <img src="{{asset('assets/images/author/author-img1.jpg')}}" alt="image">
+                    </div>
+                    <div class="notify-text">
+                        <p>Aglae Mayer</p>
+                        <span class="msg">Hey I am waiting for you...</span>
+                        <span>3:15 PM</span>
+                    </div>
+                </a>
+                <a href="#" class="notify-item">
+                    <div class="notify-thumb">
+                        <img src="{{asset('assets/images/author/author-img3.jpg')}}" alt="image">
+                    </div>
+                    <div class="notify-text">
+                        <p>Aglae Mayer</p>
+                        <span class="msg">Hey I am waiting for you...</span>
+                        <span>3:15 PM</span>
+                    </div>
+                </a>
             </div>
         </div>
-        <!-- main content area end -->
-        <!-- footer area start-->
-        <footer>
-            <div class="footer-area">
-                {{-- <p>© Copyright 2018. Todos los Derechos son Reservados. Sistema web desarrollado por <a href="https://www.linkedin.com/in/jcmontejo/"
+        </li>
+        </ul>
+    </div> --}}
+    </div>
+    </div>
+    <!-- header area end -->
+    <!-- page title area start -->
+    <div class="page-title-area">
+        <div class="row align-items-center">
+            <div class="col-sm-6">
+                <div class="breadcrumbs-area clearfix">
+                    <h4 class="page-title pull-left">@yield('header-1')</h4>
+                    <ul class="breadcrumbs pull-left">
+                        <li><a href="{{url('/home')}}">Inicio</a></li>
+                        <li><span>@yield('header-2')</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-6 clearfix">
+                <div class="user-profile pull-right">
+                    <img class="avatar user-thumb" src="{{asset('/images/user.png')}}" alt="avatar">
+                    <h4 class="user-name dropdown-toggle" data-toggle="dropdown"> {{ Auth::user()->name }} <i
+                            class="fa fa-angle-down"></i></h4>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">Cerrar
+                            Sesión</a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- page title area end -->
+    <div class="main-content-inner">
+        @yield('content')
+    </div>
+    </div>
+    <!-- main content area end -->
+    <!-- footer area start-->
+    <footer>
+        <div class="footer-area">
+            {{-- <p>© Copyright 2018. Todos los Derechos son Reservados. Sistema web desarrollado por <a href="https://www.linkedin.com/in/jcmontejo/"
                         target=”_blank”>Juan
                         Carlos Montejo</a>.</p> --}}
-            </div>
-        </footer>
-        <!-- footer area end-->
+        </div>
+    </footer>
+    <!-- footer area end-->
     </div>
     <!-- page container area end -->
     <!-- jquery latest version -->
