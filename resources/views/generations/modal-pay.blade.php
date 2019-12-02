@@ -41,12 +41,12 @@
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="exampleInputPassword1">Cuenta Destino</label>
+                            <label for="exampleInputPassword1">Banco Destino</label>
                             <select name="account" id="destination_account" class="form-control">
                                 @forelse ($accounts as $account)
                                 <option value="{{$account->id}}">{{$account->account_name}}</option>
                                 @empty
-                                <option value="0">No existen cuentas registradas.</option>
+                                <option value="0">No existen bancos registrados.</option>
                                 @endforelse
                             </select>
                         </div>

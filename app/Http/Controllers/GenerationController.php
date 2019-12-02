@@ -65,14 +65,23 @@ class GenerationController extends Controller
             ->make(true);
     }
 
-    public function studentsInscription($id)
+    public function listStudentsGeneration()
     {
+        
+    }
+
+    public function studentsInscription($id, Request $request)
+    {   
+        $request->session()->put('search', $request->has('search') ? $request->get('search') : ($request->session()->has('search') ? $request->session()->get('search') : ''));
+
         $generation = Generation::find($id);
         
         $students = DB::table('student_inscriptions')
             ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
             ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
             ->where('student_inscriptions.generation_id', '=', $id)
+            ->where('student_inscriptions.status', '=', 'Alta')
+            ->where('name', 'like', '%' . $request->session()->get('search') . '%')
             ->select(
                 DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
                 'students.email as email',
@@ -89,7 +98,7 @@ class GenerationController extends Controller
                 'debts.amount as total_debt',
                 'debts.id as debt_id'
             )
-            ->get();
+            ->paginate(100);
 
         
         // $cost = DB::table('student_inscriptions')
@@ -106,7 +115,11 @@ class GenerationController extends Controller
             ->where('student_inscriptions.generation_id', '=', $id)
             ->sum('debts.amount');
 
-        return view('generations.students', compact('students', 'generation', 'cost', 'debt_global'));
+        if ($request->ajax()) {
+            return view('generations.ajax', compact('students', 'generation', 'cost', 'debt_global'));
+        }else{
+            return view('generations.students-load', compact('students', 'generation', 'cost', 'debt_global'));
+        }
         // return $students;
 
     }

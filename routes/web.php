@@ -11,6 +11,15 @@
 |
 */
 
+Route::get('/clear-cache', function() {
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('config:cache');
+    //$exitCode = Artisan::call('route:cache');
+    $exitCode = Artisan::call('view:clear');
+    return 'DONE'; //Return anything..
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -84,6 +93,7 @@ Route::group(['prefix' => 'alumnos', 'middleware' => 'permission:modulo-alumnos'
     Route::get('/prospectos', 'StudentController@prospects');
     Route::get('/datos/prospectos', 'StudentController@dataProspects');
     Route::get('/datos', 'StudentController@dataStudents')->name('students.data');
+    Route::post('/checkCurp', 'StudentController@checkCurp');
     Route::get('/crear', 'StudentController@create');
     Route::post('/guardar', 'StudentController@store');
     Route::get('/editar/{id}', 'StudentController@edit');
@@ -142,6 +152,7 @@ Route::group(['prefix' => 'generaciones', 'middleware' => 'permission:modulo-con
     Route::get('/alumnos/baja/consultar/{id}', 'GenerationController@low');
 
     Route::get('/inscripciones/recientes/', 'GenerationController@recentsInscription');
+    Route::get('/convenios/pendientes/', 'AgreementController@list');
 
     Route::get('/consultar/inscripcion/{id}', 'GenerationController@consult');
     Route::put('/marcar/leida/{id}', 'GenerationController@read');
@@ -158,6 +169,7 @@ Route::group(['prefix' => 'pagos'], function () {
     Route::get('/generaciones/alumnos/{id}', 'PaymentController@listStudents');
     Route::post('/recibir', 'PaymentController@received');
     Route::post('/recibir/alterno', 'PaymentController@receivedAlternate');
+    Route::post('/recibir/convenio', 'AgreementController@processAgreement');
     Route::get('/ingresos', 'PaymentController@showReceiveds');
     Route::get('/ingresos/modificar', 'PaymentController@showPayments');
     Route::get('/recibidos', 'PaymentController@paymentReceiveds');
@@ -231,6 +243,9 @@ Route::group(['prefix' => 'reportes'], function () {
     Route::get('/datos/adeudos/descargar', 'ReportController@displayReportDebts');
     Route::get('/no-documentos', 'ReportController@showNoDocuments');
     Route::get('/estudiantes/no-documentos', 'ReportController@noDocuments');
+    Route::get('/convenios', function(){
+        return view('reports.convenios');
+    });
 });
 
 // Campaings

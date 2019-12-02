@@ -15,7 +15,7 @@
                         <div class="form-row">
                              <div class="form-group col-md-4">
                                 <label for="exampleInputEmail1">CURP</label>
-                                <input type="text" class="form-control form-control-lg" id="curpSave" placeholder="Introduce CURP del alumno">
+                                <input type="text" onkeyup="checkCurp(this)" class="form-control form-control-lg" id="curpSave" placeholder="Introduce CURP del alumno">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputEmail1">Nombre</label>

@@ -31,6 +31,7 @@
     {{-- Datatables --}}
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{asset('/datatables/buttons.dataTables.css')}}">
+    <link rel="stylesheet" href="{{asset('toastr/toastr.min.css')}}">
     <style>
         /* Styles for wrapping the search box */
 
@@ -233,8 +234,8 @@
             -ms-overflow-style: -ms-autohiding-scrollbar;
         }
 
-        /* Preloader */
-        #preloader {
+         /* Preloader */
+         #preloader {
             display: none;
             background: rgba(39, 60, 117, .5);
             position: fixed;
@@ -254,10 +255,14 @@
             position: absolute;
             width: 150px;
             height: 20px;
-            border: 1px solid #2980b9;
+            /* border: 1px solid #2980b9; */
             background-size: 28px 28px;
         }
-
+        th { font-size: 11px; }
+        td { font-size: 10px; }
+        table { margin-top: 20px; }
+      table.space { margin-top: 50px; }
+      table, th, td { border: 1px solid black; }
     </style>
     @yield('css')
 </head>
@@ -272,7 +277,7 @@
     </div>
     <div id="preloader">
         <div class="bar">
-            <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
+            <i class="fa fa-graduation-cap fa-spin" style="font-size:100px"></i>
         </div>
     </div>
     <!-- preloader area end -->
@@ -428,6 +433,7 @@
                                     <li><a href="{{url('/reportes/adeudos')}}">Reporte de Adeudos</a></li>
                                     <li><a href="{{url('/reportes/no-documentos')}}">Reporte de Estudiantes Faltantes
                                             de Documentación</a></li>
+                                            <li><a href="{{url('/reportes/convenios')}}">Convenios Pendientes</a></li>
                                     @endif
                                 </ul>
                                 @endcan
@@ -716,7 +722,7 @@
     {{-- SummerNote --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+    <script src="{{asset('toastr/toastr.min.js')}}"></script>
     @yield('js')
 </body>
-
 </html>

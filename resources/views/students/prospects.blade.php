@@ -301,10 +301,40 @@ Lista de Alumnos
         });
     }
 
+
     $("#createStudent").click(function () {
         $('#message-error-save').css('display', 'none');
         $('#modalCreate').modal('show');
     })
+
+    function checkCurp(element) {
+        var curp = $(element).val();
+        $.ajax({
+            type: "POST",
+            url: '{{url('/alumnos/checkCurp')}}',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+				curp: curp
+            },
+            dataType: "json",
+            success: function (res) {
+                if (res.exists) {
+                    toastr.error(
+                        'Esta CURP ya existe, verificalo!',
+                        'Alerta');
+                    //$("#emailSave").addClass('is-invalid');
+                    $("#curpSave").addClass('is-invalid');
+                    $("#saveStudent").addClass('disabled');
+                } else {
+                    $("#curpSave").removeClass('is-invalid');
+                    $("#saveStudent").removeClass('disabled');
+                }
+            },
+            error: function (jqXHR, exception) {}
+        });
+    }
 
     $("#saveStudent").click(function () {
         var curp = $('#curpSave').val();

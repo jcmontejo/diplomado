@@ -866,6 +866,7 @@ Lista de Alumnos
 @include('generations.modal-down')
 @include('generations.modal-details-low')
 @include('generations.modal-pay')
+@include('generations.modal-convenio')
 @endsection
 @section('js')
 <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
@@ -873,6 +874,7 @@ Lista de Alumnos
     $(document).ready(function () {
 
         $('table.display').DataTable({
+            "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50,100,"All"] ],
             "dom": 'lBfrtip',
             "buttons": ['csv', 'excel', 'print'],
             // "columnDefs": [{
@@ -927,6 +929,14 @@ Lista de Alumnos
 
         $("#num_pay").val(number_payment);
         $("#debt_id").val(debt_id);
+    }
+
+    function modalConvenio(num_pay,debt_id) {
+        var convenio_number_payment = num_pay;
+        var convenio_debt_id = debt_id;
+
+        $("#convenio_num_pay").val(convenio_number_payment);
+        $("#convenio_debt_id").val(convenio_debt_id);
     }
 
     $("#processPay").click(function () {

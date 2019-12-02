@@ -150,6 +150,8 @@ $todos = DB::table('todos')->where([
         });
     }
 
+    
+
     function ShowInscriptionRecent(btn) {
         var route = "/generaciones/consultar/inscripcion/" + btn.value;
 

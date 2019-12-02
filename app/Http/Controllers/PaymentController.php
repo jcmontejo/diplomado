@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Account;
 use App\AccountType;
+use App\Agreement;
 use App\Debt;
 use App\Diplomat;
 use App\Generation;
@@ -381,12 +382,18 @@ class PaymentController extends Controller
                 ->where('number_payment', '=', $number_payment)
                 ->first();
 
+            $agreement = DB::table('agreements')
+            ->where('debt_id',$debt->id)
+            ->where('num_pay', $number_payment)
+            ->update(['status'=>0]);
+
             if ($payment_process) {
                 $payment_process->amount_paid = $received->amount;
                 $payment_process->date = $received->date_payment;
                 $payment_process->status = 'PAGADO';
                 $payment_process->income_id = $received->id;
                 $payment_process->save();
+
             }
 
             if ($this->adjustDebt($debt->id, $received->total)) {
@@ -491,7 +498,6 @@ class PaymentController extends Controller
             DB::commit();
 
             return response()->json(["message" => "success"]);
-
         } catch (Exception $e) {
             DB::rollBack();
         }
