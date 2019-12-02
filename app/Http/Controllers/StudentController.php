@@ -215,6 +215,19 @@ class StudentController extends Controller
         return view('students.detail_prospects', compact('students', 'generations', 'diplomats', 'accounts', 'methods', 'account_types'));
     }
 
+    public function checkCurp(Request $request)
+    {
+        $student = DB::table('students')
+            ->where('curp', '=', $request->curp)
+            ->first();
+
+        if ($student) {
+            return response()->json(array("exists" => true));
+        } else {
+            return response()->json(array("exists" => false));
+        }
+    }
+
     public function store(StoreStudent $request)
     {
         try {

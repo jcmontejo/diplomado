@@ -37,7 +37,8 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="">Descuento</label>
-                                <select name="discount" id="discount" class="form-control form-control-lg">
+                                <input type="number" value="0" min="1" step="1" id="discount" name="discount" class="form-control form-control-lg">
+                                {{-- <select name="discount" id="discount" class="form-control form-control-lg">
                                     <option value="0">--Selecciona--</option>
                                     <option value="0">0</option>
                                     <option value="100">100</option>
@@ -50,11 +51,12 @@
                                     <option value="800">800</option>
                                     <option value="900">900</option>
                                     <option value="1000">1000</option>
-                                </select>
+                                </select> --}}
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="">Número de Pagos</label>
-                                <select name="number_payments" id="number_payments" class="form-control form-control-lg">
+                                <input type="number" value="1" min="1" max="10" step="1" id="number_payments" name="number_payments" class="form-control form-control-lg">
+                                {{-- <select name="number_payments" id="number_payments" class="form-control form-control-lg">
                                     <option>--Selecciona--</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -62,7 +64,7 @@
                                     <option value="4">4</option>
                                     <option value="5">5</option>
                                     <option value="6">6</option>
-                                </select>
+                                </select> --}}
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="">¿De cuanto seran los pagos?</label>

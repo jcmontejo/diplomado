@@ -18,6 +18,7 @@ Lista de Generaciones
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Lista De Generaciones</h4>
+                
                 <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
                     <strong>Generación Actualizado Correctamente.</strong>
                 </div>
