@@ -105,6 +105,7 @@ class GenerationController extends Controller
         //     ->where('student_inscriptions.generation_id', '=', $id)
         //     ->sum('final_cost');
 
+
         $cost = DB::table('student_inscriptions')
             ->where('student_inscriptions.generation_id', '=', $id)
             ->sum('final_cost');
@@ -116,7 +117,7 @@ class GenerationController extends Controller
             ->sum('debts.amount');
 
         if ($request->ajax()) {
-            return view('generations.ajax', compact('students', 'generation', 'cost', 'debt_global'));
+            return view('generations.ajax-1', compact('students', 'generation', 'cost', 'debt_global'));
         }else{
             return view('generations.students-load', compact('students', 'generation', 'cost', 'debt_global'));
         }
