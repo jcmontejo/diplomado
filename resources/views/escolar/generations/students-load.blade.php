@@ -149,8 +149,7 @@
                 $("#preloader").css("display", "none");
 
                 $('#message-error-save').css('display', 'none');
-
-                swal("Bien hecho!", "Hemos procesado el pago exitosamente!", "success");
+                toastr.success('Hemos procesado el pago exitosamente!', 'Bien hecho!')
                 location.reload();
             },
             error: function (data) {
@@ -188,9 +187,11 @@
         $("#convenio_total_debt").val(convenio_total_debt);
     }
 
-    function modalEditarPrimerPago(debt_id) {
+    function modalEditarPrimerPago(debt_id, total_debt) {
         var primer_pago_debt_id = debt_id;
+        var primer_pago_total_debt = total_debt;
         $("#primer_pago_debt_id").val(primer_pago_debt_id);
+        $("#primer_pago_total_debt").val(primer_pago_total_debt);
     }
 
 
@@ -204,7 +205,7 @@
         var route = "/pagos/recibir/convenio"
 
         if (parseInt(amount) > parseInt(total_debt)) {
-            toastr.error('Monto mayor al adeudo!', 'Bien hecho!')
+            toastr.error('Monto mayor al adeudo!', 'Ooops!')
         } else {
             $.ajax({
                 url: route,
@@ -246,44 +247,47 @@
 
     $("#procesarEditarPrimerPago").click(function () {
         var debt_id = $("#primer_pago_debt_id").val();
-        var date_pay = $("#fechaPrimerPago").val();
         var amount_pay = $("#montoPrimerPago").val();
+        var total_debt = $("#primer_pago_total_debt").val();
 
         var route = "/control-escolar/generaciones/editar/pago/";
 
-        $.ajax({
-            url: route,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                debt_id: debt_id,
-                date_pay: date_pay,
-                amount_pay: amount_pay
-            },
-            beforeSend: function () {
-                $("#preloader").css("display", "block");
-            },
-            success: function () {
-                $("#preloader").css("display", "none");
-                $("#modalEditarPrimerPago .close").click();
-                toastr.success('Pago editado exitosamente!', 'Bien hecho!')
-                //location.reload();
-            },
-            error: function (data) {
-                $("#preloader").css("display", "none");
-                var response = JSON.parse(data.responseText);
-                var errorString = "<ul>";
-                $.each(response.errors, function (key, value) {
-                    errorString += "<li>" + value + "</li>";
-                });
+        if (parseInt(amount_pay) > parseInt(total_debt)) {
+            toastr.error('Monto mayor al adeudo!', 'Ooops!')
+        } else {
+            $.ajax({
+                url: route,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    debt_id: debt_id,
+                    amount_pay: amount_pay
+                },
+                beforeSend: function () {
+                    $("#preloader").css("display", "block");
+                },
+                success: function () {
+                    $("#preloader").css("display", "none");
+                    $("#modalEditarPrimerPago .close").click();
+                    toastr.success('Pago editado exitosamente!', 'Bien hecho!')
+                    location.reload();
+                },
+                error: function (data) {
+                    $("#preloader").css("display", "none");
+                    var response = JSON.parse(data.responseText);
+                    var errorString = "<ul>";
+                    $.each(response.errors, function (key, value) {
+                        errorString += "<li>" + value + "</li>";
+                    });
 
-                $("#error-edit").html(errorString);
-                $("#message-error-edit").fadeIn();
-            }
-        });
+                    $("#error-edit").html(errorString);
+                    $("#message-error-edit").fadeIn();
+                }
+            });
+        }
     })
 
     function Down(btn) {
@@ -329,8 +333,7 @@
             success: function () {
                 $("#preloader").css("display", "none");
                 $("#modalDown .close").click();
-
-                swal("Bien hecho!", "Has dado de baja al alumno exitosamente!", "success");
+                toastr.success('Has dado de baja al alumno exitosamente!', 'Bien hecho!')
                 location.reload();
             },
             error: function (data) {

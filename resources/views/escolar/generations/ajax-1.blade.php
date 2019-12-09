@@ -141,7 +141,7 @@
                                     <td>{{$student->observations}}</td>
                                     <td>${{number_format($student->discount,2)}}</td>
                                     <td>${{number_format($student->first_payment,2)}} <button  data-toggle="modal"
-                                        data-target="#modalEditarPrimerPago" onclick="modalEditarPrimerPago({{$student->debt_id}});" class="btn btn-xs btn-info"><i class="fas fa-edit"></i> Modificar</button></td>
+                                        data-target="#modalEditarPrimerPago" onclick="modalEditarPrimerPago({{$student->debt_id}}, {{$student->total_debt}});" class="btn btn-xs btn-info"><i class="fas fa-edit"></i> Modificar</button></td>
                                     <td>
                                         @if ($payment_1 AND $payment_1->status != 'PENDIENTE')
                                         ${{number_format($payment_1->amount_paid,2)}}({{$payment_1->date}})
@@ -675,6 +675,56 @@
                         </table>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="menu7">
+                        <h4 class="header-title">NOMBRE DEL DIPLOMADO: {{$generation->name_diplomat}}</h4>
+                        <h3 class="header-title">GENERACIÓN: {{$generation->number_generation}}</h3>
+                        <div class="table-responsive">
+                            <table class="table display" id="students1">
+                                <thead>
+                                    <th>NP</th>
+                                    <th>NOMBRE DEL ALUMNO</th>
+                                    <th>CURP</th>
+                                    <th>EMAIL</th>
+                                    <th>TELÉFONO</th>
+                                    <th>OBSERVACIONES</th>
+                                    <th>DES. APLICABLE</th>
+                                    <th>INSCRIPCIÓN</th>
+                                    <th>COSTO DIPLOMADO</th>
+                                    <th>PAGO TOTAL</th>
+                                    <th>ADEUDO</th>
+                                </thead>
+                                <tbody>
+                                    @foreach ($students_low as $indexKey => $student)
+                                    @php
+                                    $payment_1 = \DB::table('payments')
+                                    ->where('debt_id', '=', $student->debt_id)
+                                    ->where('number_payment', '=', '1')
+                                    ->where('status', '=', 'PENDIENTE')
+                                    ->first();
+    
+                                    $agreement_1 = \DB::table('agreements')
+                                    ->where('debt_id', '=', $student->debt_id)
+                                    ->where('num_pay', '=', '1')
+                                    ->first();
+                                    @endphp
+                                    <tr>
+                                        <td>{{$indexKey+1}}</td>
+                                        <td>{{$student->full_name}}</td>
+                                        <td>{{$student->curp}}</td>
+                                        <td>{{$student->email}}</td>
+                                        <td>{{$student->phone}}</td>
+                                        <td>{{$student->observations}}</td>
+                                        <td>${{number_format($student->discount,2)}}</td>
+                                        <td>${{number_format($student->first_payment,2)}}</td>
+                                        <td>${{number_format($student->final_cost,2)}}</td>
+                                        <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
+                                        <td>${{number_format($student->total_debt,2 )}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

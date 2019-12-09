@@ -12,12 +12,9 @@
                 <div class="modal-body">
                     <form>
                         <input type="hidden" id="primer_pago_debt_id">
+                        <input type="hidden" id="primer_pago_total_debt">
                         <div class="form-row">
-                            <div class="form-group col-md-4 editarPago">
-                                <label for="exampleInputPassword1">Fecha de Pago</label>
-                                <input type="date" class="form-control" id="fechaPrimerPago" name="fechaPrimerPago">
-                            </div>
-                            <div class="form-group col-md-8 editarPago">
+                            <div class="form-group col-md-12 editarPago">
                                 <label for="exampleInputPassword1">Monto de Pago</label>
                                 <input type="number" min="1" name="montoPrimerPago" id="montoPrimerPago" class="form-control">
                             </div>
