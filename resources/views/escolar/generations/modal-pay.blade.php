@@ -21,7 +21,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="exampleInputPassword1">Fecha de Pago</label>
-                            <input type="date" class="form-control" id="date_payment">
+                        <input type="date" class="form-control" id="date_payment" value="{{\Carbon\Carbon::now()->toDateString()}}">
                         </div>
                         <div class="form-group col-md-8">
                             <label for="exampleInputPassword1">Observaciones</label>
@@ -64,7 +64,9 @@
                                                     <select name='account_type' id="account_type"
                                                         class='form-control form-control-lg'>
                                                         @forelse ($types as $type)
+                                                        @if ($type->id === 2)
                                                         <option value="{{$type->id}}">{{$type->account_type}}</option>
+                                                        @endif
                                                         @empty
                                                         <option>No hay tipos de cuotas registradas.</option>
                                                         @endforelse

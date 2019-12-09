@@ -100,6 +100,30 @@ class GenerationController extends Controller
             )
             ->paginate(100);
 
+            $students_low = DB::table('student_inscriptions')
+            ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
+            ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
+            ->where('student_inscriptions.generation_id', '=', $id)
+            ->where('student_inscriptions.status', '=', 'Baja')
+            ->where('name', 'like', '%' . $request->session()->get('search') . '%')
+            ->select(
+                DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
+                'students.email as email',
+                'students.enrollment',
+                'students.curp',
+                'students.phone as phone',
+                'students.documents as documents',
+                DB::raw('CONCAT(student_inscriptions.number_of_payments," PAGOS DE ",student_inscriptions.amount_of_payments) as observations'),
+                'student_inscriptions.discount as discount',
+                'student_inscriptions.first_payment as first_payment',
+                'student_inscriptions.id as id_inscription',
+                'student_inscriptions.final_cost as final_cost',
+                'student_inscriptions.status as status',
+                'debts.amount as total_debt',
+                'debts.id as debt_id'
+            )
+            ->paginate(100);
+
 
         // $cost = DB::table('student_inscriptions')
         //     ->where('student_inscriptions.generation_id', '=', $id)
@@ -117,9 +141,9 @@ class GenerationController extends Controller
             ->sum('debts.amount');
 
         if ($request->ajax()) {
-            return view('escolar.generations.ajax-1', compact('students', 'generation', 'cost', 'debt_global'));
+            return view('escolar.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
         } else {
-            return view('escolar.generations.students-load', compact('students', 'generation', 'cost', 'debt_global'));
+            return view('escolar.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
         }
         // return $students;
     }
@@ -422,16 +446,14 @@ class GenerationController extends Controller
             $original = $inscription->first_payment;
             $new = $request->amount_pay;
 
-            $inscription->final_cost = $inscription->final_cost + $original;
-            $inscription->final_cost = $inscription->final_cost - $new;
-            $inscription->first_payment = $new;
-            $inscription->save();
-
             $debtA = Debt::where('generation_id', '=', $inscription->id)->first();
 
             $debtA->amount = $debtA->amount + $original;
             $debtA->amount = $debtA->amount - $new;
             $debtA->save();
+
+            $inscription->first_payment = $new;
+            $inscription->save();
 
             return response()->json(["message" => "success"]);
         } catch (\Exception $e) {
