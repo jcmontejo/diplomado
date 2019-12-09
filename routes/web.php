@@ -276,6 +276,54 @@ Route::get('/datos/generaciones', 'GeneralController@index');
 Route::get('/datos/generaciones/todos', 'GeneralController@dataGenerations')->name('sellers.generations');
 Route::get('/datos/generaciones/alumnos/inscritos/{id}', 'GeneralController@studentsInscription');
 
+Route::get('/prueba/admin', function(){
+    return view('test.test');
+});
+
+//Rutas para control escolar
+// Students..
+Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-alumnos'], function () {
+    //Alumnos
+    Route::get('/alumnos/lista', 'Escolar\StudentController@index');
+    Route::get('/alumnos/datos', 'Escolar\StudentController@dataStudents');
+    Route::get('/alumnos/editar/{id}', 'Escolar\StudentController@edit');
+    Route::put('/alumnos/actualizar/{id}', 'Escolar\StudentController@update');
+    //Docentes
+    Route::get('/docentes/lista', 'Escolar\TeacherController@index');
+    Route::get('/docentes/datos', 'Escolar\TeacherController@dataTeachers');
+    Route::get('/docentes/crear', 'Escolar\TeacherController@create');
+    Route::post('/docentes/guardar', 'Escolar\TeacherController@store');
+    Route::get('/docentes/editar/{id}', 'Escolar\TeacherController@edit');
+    Route::put('/docentes/actualizar/{id}', 'Escolar\TeacherController@update');
+    Route::delete('/docentes/eliminar/{id}', 'Escolar\TeacherController@destroy');
+    //Generaciones
+    Route::get('/generaciones/lista', 'Escolar\GenerationController@index');
+    Route::get('/generaciones/datos', 'Escolar\GenerationController@dataGenerations');
+    Route::get('/generaciones/crear', 'Escolar\GenerationController@create');
+    Route::post('/generaciones/guardar', 'Escolar\GenerationController@store');
+    Route::get('/generaciones/editar/{id}', 'Escolar\GenerationController@edit');
+    Route::put('/generaciones/actualizar/{id}', 'Escolar\GenerationController@update');
+    Route::delete('/generaciones/eliminar/{id}', 'Escolar\GenerationController@destroy');
+
+    Route::get('/generaciones/alumnos/buscar', 'Escolar\GenerationController@findStudent');
+    Route::get('/generaciones/alumnos/inscritos/{id}', 'Escolar\GenerationController@studentsInscription');
+    Route::get('/generaciones/alumnos/{id}', 'Escolar\GenerationController@students');
+    Route::get('/generaciones/alumnos/consultar/{id}', 'Escolar\GenerationController@search');
+    Route::put('/generaciones/alumnos/baja/{id}', 'Escolar\GenerationController@down');
+    Route::put('/generaciones/alumnos/alta/{id}', 'Escolar\GenerationController@up');
+
+    Route::get('/generaciones/alumnos/baja/consultar/{id}', 'Escolar\GenerationController@low');
+
+    Route::get('/generaciones/inscripciones/recientes/', 'Escolar\GenerationController@recentsInscription');
+    Route::get('/generaciones/convenios/pendientes/', 'AgreementController@list');
+
+    Route::get('/generaciones/consultar/inscripcion/{id}', 'Escolar\GenerationController@consult');
+    Route::put('/generaciones/marcar/leida/{id}', 'Escolar\GenerationController@read');
+    Route::get('/generaciones/enviar/recibo/{id}', 'Escolar\GenerationController@sendVoucher');
+    Route::get('/generaciones/enviar/recibo/dos/{id}', 'Escolar\GenerationController@sendVoucherTwo');
+    Route::post('/generaciones/editar/pago/', 'Escolar\GenerationController@editPay');
+});
+
 
 
 

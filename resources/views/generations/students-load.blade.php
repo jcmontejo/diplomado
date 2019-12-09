@@ -46,33 +46,39 @@ GENERACIÓN: {{$generation->number_generation}}
         color: red;
         font-weight: bold;
     }
-     /* 
+
+    /* 
 Generic Styling, for Desktops/Laptops 
 */
-table { 
-  width: 100%; 
-  border-collapse: collapse; 
-}
-/* Zebra striping */
-tr:nth-of-type(odd) { 
-  background: #eee; 
-}
-th { 
-  background: #333; 
-  color: white; 
-  font-weight: bold; 
-}
-td, th { 
-  padding: 6px; 
-  border: 1px solid #ccc; 
-  text-align: left; 
-}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* Zebra striping */
+    tr:nth-of-type(odd) {
+        background: #eee;
+    }
+
+    th {
+        background: #607D8B;
+        color: white;
+        font-weight: bold;
+    }
+
+    td,
+    th {
+        padding: 6px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+
 </style>
 @endsection
 @section('content')
 <div class="row">
     <div id="content">
-        @include('generations.ajax')
+        @include('generations.ajax-1')
     </div>
     <div class="loading">
         <i class="fa fa-refresh fa-spin fa-2x fa-fw"></i><br />
@@ -87,9 +93,21 @@ td, th {
 @endsection
 @section('js')
 <script>
-    $(document).on('click', 'a.page-link', function (event) {
-        event.preventDefault();
-        ajaxLoad($(this).attr('href'));
+    $(document).ready(function () {
+        $('table.display').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "searching": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf'
+            ],
+            "lengthMenu": [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, "Todos"]
+            ],
+        });
     });
 
     function ajaxLoad(filename, content) {
@@ -102,6 +120,19 @@ td, th {
             success: function (data) {
                 $("#" + content).html(data);
                 $('.loading').hide();
+                $(document).ready(function () {
+                    $('table.display').DataTable({
+                        "searching": false,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'excel', 'pdf'
+                        ],
+                        "lengthMenu": [
+                            [10, 25, 50, 100, -1],
+                            [10, 25, 50, 100, "Todos"]
+                        ],
+                    });
+                });
             },
             error: function (xhr, status, error) {
                 alert(xhr.responseText);
@@ -122,7 +153,7 @@ td, th {
         });
     }
 
-    function modalPay(num_pay,debt_id) {
+    function modalPay(num_pay, debt_id) {
         var number_payment = num_pay;
         var debt_id = debt_id;
 
@@ -170,18 +201,21 @@ td, th {
                 $("#preloader").css("display", "none");
 
                 $('#message-error-save').css('display', 'none');
-            
+
                 swal("Bien hecho!", "Hemos procesado el pago exitosamente!", "success");
                 location.reload();
             },
             error: function (data) {
                 if (data.status === 400) {
-                     $("#preloader").css("display", "none");
-                     swal("Error!", "Estas introduciendo un monto mayor al adeudo del alumno.", "error");
+                    $("#preloader").css("display", "none");
+                    swal("Error!", "Estas introduciendo un monto mayor al adeudo del alumno.",
+                        "error");
                 }
                 if (data.status === 406) {
-                     $("#preloader").css("display", "none");
-                     swal("Error!", "Número de pago procesado anteriormente, seleccione otro número de pago.", "error");
+                    $("#preloader").css("display", "none");
+                    swal("Error!",
+                        "Número de pago procesado anteriormente, seleccione otro número de pago.",
+                        "error");
                 }
                 $("#preloader").css("display", "none");
                 var response = JSON.parse(data.responseText);
@@ -196,7 +230,7 @@ td, th {
         });
     })
 
-    function modalConvenio(num_pay,debt_id) {
+    function modalConvenio(num_pay, debt_id) {
         var convenio_number_payment = num_pay;
         var convenio_debt_id = debt_id;
 
@@ -232,7 +266,7 @@ td, th {
                 $("#preloader").css("display", "none");
 
                 $('#message-error-save').css('display', 'none');
-            
+
                 swal("Bien hecho!", "Hemos procesado el convenio exitosamente!", "success");
                 location.reload();
             },
@@ -353,5 +387,6 @@ td, th {
             allowOutsideClick: false
         });
     }
+
 </script>
 @endsection
