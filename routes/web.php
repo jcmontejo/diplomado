@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     $exitCode = Artisan::call('config:clear');
     $exitCode = Artisan::call('cache:clear');
     $exitCode = Artisan::call('config:cache');
@@ -48,7 +48,7 @@ Route::group(['prefix' => 'usuarios', 'middleware' => 'permission:modulo-adminis
 });
 
 Route::group(['prefix' => 'perfil', 'middleware' => 'permission:modulo-perfil'], function () {
-    Route::get('/','UserController@show');
+    Route::get('/', 'UserController@show');
     Route::get('/editar/', 'UserController@edit');
     Route::put('/actualizar/{id}', 'UserController@update');
 });
@@ -158,7 +158,6 @@ Route::group(['prefix' => 'generaciones', 'middleware' => 'permission:modulo-con
     Route::put('/marcar/leida/{id}', 'GenerationController@read');
     Route::get('/enviar/recibo/{id}', 'GenerationController@sendVoucher');
     Route::get('/enviar/recibo/dos/{id}', 'GenerationController@sendVoucherTwo');
-
 });
 
 
@@ -243,7 +242,7 @@ Route::group(['prefix' => 'reportes'], function () {
     Route::get('/datos/adeudos/descargar', 'ReportController@displayReportDebts');
     Route::get('/no-documentos', 'ReportController@showNoDocuments');
     Route::get('/estudiantes/no-documentos', 'ReportController@noDocuments');
-    Route::get('/convenios', function(){
+    Route::get('/convenios', function () {
         return view('reports.convenios');
     });
 });
@@ -263,7 +262,7 @@ Route::group(['prefix' => 'campanias'], function () {
 });
 
 // Suplantación
-Route::middleware(['auth'])->group(function($route){
+Route::middleware(['auth'])->group(function ($route) {
     # Ruta para devolver al usuario original
     $route->get('revertir', 'SuplantacionController@revertir');
 
@@ -276,7 +275,7 @@ Route::get('/datos/generaciones', 'GeneralController@index');
 Route::get('/datos/generaciones/todos', 'GeneralController@dataGenerations')->name('sellers.generations');
 Route::get('/datos/generaciones/alumnos/inscritos/{id}', 'GeneralController@studentsInscription');
 
-Route::get('/prueba/admin', function(){
+Route::get('/prueba/admin', function () {
     return view('test.test');
 });
 
@@ -325,14 +324,37 @@ Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-
     Route::post('/generaciones/editar/pago/', 'Escolar\GenerationController@editPay');
 });
 
+Route::group(['prefix' => 'clinica'], function () {
+    //Doctors
+    Route::get('/terapeutas/lista', 'Clinic\DoctorController@index');
+    Route::get('/terapeutas/datos', 'Clinic\DoctorController@dataTeachers')->name('doctors.data');
+    Route::get('/terapeutas/crear', 'Clinic\DoctorController@create');
+    Route::post('/terapeutas/guardar', 'Clinic\DoctorController@store');
+    Route::get('/terapeutas/editar/{id}', 'Clinic\DoctorController@edit');
+    Route::put('/terapeutas/actualizar/{id}', 'Clinic\DoctorController@update');
+    Route::delete('/terapeutas/eliminar/{id}', 'Clinic\DoctorController@destroy');
 
+    //Rooms
+    Route::get('/consultorios/lista', 'Clinic\RoomController@index');
+    Route::get('/consultorios/datos', 'Clinic\RoomController@dataTeachers')->name('rooms.data');
+    Route::get('/consultorios/crear', 'Clinic\RoomController@create');
+    Route::post('/consultorios/guardar', 'Clinic\RoomController@store');
+    Route::get('/consultorios/editar/{id}', 'Clinic\RoomController@edit');
+    Route::put('/consultorios/actualizar/{id}', 'Clinic\RoomController@update');
+    Route::delete('/consultorios/eliminar/{id}', 'Clinic\RoomController@destroy');
 
+    //Appoinments
+    Route::get('/citas/lista', 'Clinic\AppoinmentController@index');
+    Route::get('/citas/datos', 'Clinic\AppoinmentController@dataTeachers')->name('appoinments.data');
+    Route::get('/citas/crear', 'Clinic\AppoinmentController@create');
+    Route::post('/citas/guardar', 'Clinic\AppoinmentController@store');
+    Route::get('/citas/editar/{id}', 'Clinic\AppoinmentController@edit');
+    Route::put('/citas/actualizar/{id}', 'Clinic\AppoinmentController@update');
+    Route::delete('/citas/eliminar/{id}', 'Clinic\AppoinmentController@destroy');
 
+    Route::get('/calendario', function(){
+        return view('clinic.calendar.index');
+    });
 
-
-
-
-
-
-
-
+    Route::get('/calendario/datos', 'Clinic\AppoinmentController@calendar');
+});
