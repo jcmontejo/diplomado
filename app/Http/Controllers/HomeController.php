@@ -26,7 +26,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        if (Auth::user()->hasRole('Control Escolar')) {
+            return view('test.test');
+        } else {
+            return view('home');
+        }
     }
 
     public function traffic()
