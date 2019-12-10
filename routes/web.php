@@ -325,6 +325,9 @@ Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-
 });
 
 Route::group(['prefix' => 'clinica'], function () {
+    Route::get('/inicio', function(){
+        return view('clinic.home');
+    });
     //Doctors
     Route::get('/terapeutas/lista', 'Clinic\DoctorController@index');
     Route::get('/terapeutas/datos', 'Clinic\DoctorController@dataTeachers')->name('doctors.data');
