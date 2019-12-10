@@ -316,6 +316,7 @@ Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-
 
     Route::get('/generaciones/inscripciones/recientes/', 'Escolar\GenerationController@recentsInscription');
     Route::get('/generaciones/convenios/pendientes/', 'AgreementController@list');
+    Route::get('/generaciones/convenios/pendientes/al-dia', 'AgreementController@listToday');
 
     Route::get('/generaciones/consultar/inscripcion/{id}', 'Escolar\GenerationController@consult');
     Route::put('/generaciones/marcar/leida/{id}', 'Escolar\GenerationController@read');

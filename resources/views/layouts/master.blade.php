@@ -651,6 +651,7 @@
                     </ul>
                 </div>
             </div>
+            
             <div class="col-sm-6 clearfix">
                 <div class="user-profile pull-right">
                     <img class="avatar user-thumb" src="{{asset('/images/user.png')}}" alt="avatar">
