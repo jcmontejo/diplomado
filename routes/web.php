@@ -279,8 +279,70 @@ Route::get('/prueba/admin', function () {
     return view('test.test');
 });
 
+//Administración
+Route::group(['prefix' => 'admon'], function () {
+    Route::get('/inicio', function () {
+        return view('admon.home');
+    });
+
+    Route::get('/perfil', function(){
+        return view('admon.update');
+    });
+
+    Route::get('/perfil/editar/', 'UserController@edit');
+    Route::put('/perfil/actualizar/{id}', 'UserController@update');
+
+    //Alumnos
+    Route::get('/alumnos/lista', 'Admon\StudentController@index');
+    Route::get('/alumnos/datos', 'Admon\StudentController@dataStudents');
+    Route::get('/alumnos/editar/{id}', 'Admon\StudentController@edit');
+    Route::put('/alumnos/actualizar/{id}', 'Admon\StudentController@update');
+    //Docentes
+    Route::get('/docentes/lista', 'Admon\TeacherController@index');
+    Route::get('/docentes/datos', 'Admon\TeacherController@dataTeachers');
+    Route::get('/docentes/crear', 'Admon\TeacherController@create');
+    Route::post('/docentes/guardar', 'Admon\TeacherController@store');
+    Route::get('/docentes/editar/{id}', 'Admon\TeacherController@edit');
+    Route::put('/docentes/actualizar/{id}', 'Admon\TeacherController@update');
+    Route::delete('/docentes/eliminar/{id}', 'Admon\TeacherController@destroy');
+    //Diplomados
+    Route::get('/diplomados/lista', 'Admon\DiplomatController@index');
+    Route::get('/diplomados/datos', 'Admon\DiplomatController@dataDiplomats')->name('admon.diplomats.data');
+    Route::get('/diplomados/crear', 'Admon\DiplomatController@create');
+    Route::post('/diplomados/guardar', 'Admon\DiplomatController@store');
+    Route::get('/diplomados/editar/{id}', 'Admon\DiplomatController@edit');
+    Route::put('/diplomados/actualizar/{id}', 'Admon\DiplomatController@update');
+    Route::delete('/diplomados/eliminar/{id}', 'Admon\DiplomatController@destroy');
+    //Generaciones
+    Route::get('/generaciones/lista', 'Admon\GenerationController@index');
+    Route::get('/generaciones/datos', 'Admon\GenerationController@dataGenerations');
+    Route::get('/generaciones/crear', 'Admon\GenerationController@create');
+    Route::post('/generaciones/guardar', 'Admon\GenerationController@store');
+    Route::get('/generaciones/editar/{id}', 'Admon\GenerationController@edit');
+    Route::put('/generaciones/actualizar/{id}', 'Admon\GenerationController@update');
+    Route::delete('/generaciones/eliminar/{id}', 'Admon\GenerationController@destroy');
+
+    Route::get('/generaciones/alumnos/buscar', 'Admon\GenerationController@findStudent');
+    Route::get('/generaciones/alumnos/inscritos/{id}', 'Admon\GenerationController@studentsInscription');
+    Route::get('/generaciones/alumnos/{id}', 'Admon\GenerationController@students');
+    Route::get('/generaciones/alumnos/consultar/{id}', 'Admon\GenerationController@search');
+    Route::put('/generaciones/alumnos/baja/{id}', 'Admon\GenerationController@down');
+    Route::put('/generaciones/alumnos/alta/{id}', 'Admon\GenerationController@up');
+
+    Route::get('/generaciones/alumnos/baja/consultar/{id}', 'Admon\GenerationController@low');
+
+    Route::get('/generaciones/inscripciones/recientes/', 'Admon\GenerationController@recentsInscription');
+    Route::get('/generaciones/convenios/pendientes/', 'AgreementController@list');
+    Route::get('/generaciones/convenios/pendientes/al-dia', 'AgreementController@listToday');
+
+    Route::get('/generaciones/consultar/inscripcion/{id}', 'Admon\GenerationController@consult');
+    Route::put('/generaciones/marcar/leida/{id}', 'Admon\GenerationController@read');
+    Route::get('/generaciones/enviar/recibo/{id}', 'Admon\GenerationController@sendVoucher');
+    Route::get('/generaciones/enviar/recibo/dos/{id}', 'Admon\GenerationController@sendVoucherTwo');
+    Route::post('/generaciones/editar/pago/', 'Admon\GenerationController@editPay');
+});
+
 //Rutas para control escolar
-// Students..
 Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-alumnos'], function () {
     //Alumnos
     Route::get('/alumnos/lista', 'Escolar\StudentController@index');
@@ -325,7 +387,7 @@ Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-
 });
 
 Route::group(['prefix' => 'clinica'], function () {
-    Route::get('/inicio', function(){
+    Route::get('/inicio', function () {
         return view('clinic.home');
     });
     //Doctors
@@ -355,9 +417,58 @@ Route::group(['prefix' => 'clinica'], function () {
     Route::put('/citas/actualizar/{id}', 'Clinic\AppoinmentController@update');
     Route::delete('/citas/eliminar/{id}', 'Clinic\AppoinmentController@destroy');
 
-    Route::get('/calendario', function(){
+    Route::get('/calendario', function () {
         return view('clinic.calendar.index');
     });
 
     Route::get('/calendario/datos', 'Clinic\AppoinmentController@calendar');
+});
+
+//Vendedores
+Route::group(['prefix' => 'ventas'], function () {
+    Route::get('/inicio', function () {
+        return view('sales.home');
+    });
+
+    Route::get('/perfil', function(){
+        return view('sales.update');
+    });
+
+    Route::get('/perfil/editar/', 'UserController@edit');
+    Route::put('/perfil/actualizar/{id}', 'UserController@update');
+
+    Route::get('/alumnos/lista', 'Sales\StudentController@index');
+    Route::get('/alumnos/prospectos', 'Sales\StudentController@prospects');
+    Route::get('/alumnos/datos/prospectos', 'Sales\StudentController@dataProspects');
+
+    Route::get('/alumnos/datos', 'Sales\StudentController@dataStudents')->name('students.data');
+    Route::post('/alumnos/checkCurp', 'Sales\StudentController@checkCurp');
+    Route::get('/alumnos/crear', 'Sales\StudentController@create');
+    //Buscar alumno
+    Route::get('/alumnos/buscar/{search}', 'Sales\StudentController@search');
+    Route::post('/alumnos/guardar', 'Sales\StudentController@store');
+    Route::get('/alumnos/editar/{id}', 'Sales\StudentController@edit');
+    Route::put('/alumnos/actualizar/{id}', 'Sales\StudentController@update');
+    Route::put('/alumnos/actualizar/semaforo/{id}', 'Sales\StudentController@updateStatus');
+    Route::delete('/lumnos/eliminar/{id}', 'Sales\StudentController@destroy');
+    Route::put('/alumnos/descartar/{id}', 'Sales\StudentController@down');
+    Route::get('/alumnos/documentos/{id}', 'Sales\StudentController@Documents');
+    Route::get('/alumnos/consultar/{id}', 'Sales\StudentController@show');
+    Route::post('/alumnos/subir/documentos', 'Sales\StudentController@uploadDocuments');
+    Route::get('/alumnos/consultar/{id}', 'Sales\StudentController@searchStudent');
+    Route::post('/alumnos/procesar/inscripcion', 'Sales\StudentController@incscriptionStudent');
+    Route::get('/alumnos/detalles/{porcent}', 'Sales\StudentController@detailsPorcent');
+
+    //Buscar generaciones
+    Route::get('/alumnos/buscar/generaciones/{id}', 'Sales\StudentController@listGenerations');
+
+    //Inscripciones
+    Route::post('/alumnos/revisar', 'Sales\StudentController@checkStudentInscription');
+    Route::post('/alumnos/procesar/reinscripcion', 'Sales\StudentController@incscriptionStudentOld');
+    Route::post('/alumnos/procesar/nuevainscripcion', 'Sales\StudentController@nStudent');
+
+    // Rutas extras ventas
+    Route::get('/alumnos/datos/generaciones', 'Sales\GeneralController@index');
+    Route::get('/alumnos/datos/generaciones/todos', 'Sales\GeneralController@dataGenerations')->name('sales.sellers.generations');
+    Route::get('/alumnos/datos/generaciones/alumnos/inscritos/{id}', 'Sales\GeneralController@studentsInscription');
 });

@@ -1,44 +1,38 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admon;
 
-use App\Diplomat;
-use App\Http\Requests\StoreDiplomat;
+use App\Teacher;
+use App\Http\Requests\StoreTeacher;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use App\Http\Controllers\Controller;
 
-
-class DiplomatController extends Controller
+class TeacherController extends Controller
 {
     public function index(Request $request)
     {
-        return view('diplomats.index');
+        return view('admon.teachers.index');
     }
 
-    
-    public function dataDiplomats()
+    public function dataTeachers()
     {
-        $diplomats = Diplomat::select(['id', 'name', 'key', 'cost', 'maximum_cost']);
+        $teachers = Teacher::select(['id', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'email', 'address', 'joining_date']);
 
-        return Datatables::of($diplomats)
-            ->addColumn('action', function ($diplomat) {
-                $id = $diplomat->id;
+        return Datatables::of($teachers)
+            ->addColumn('action', function ($teacher) {
+                $id = $teacher->id;
                 return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
                 <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></div></td>';
             })
             ->make(true);
     }
 
-    public function create()
-    {
-        return view('diplomats.create');
-    }
-
-    public function store(StoreDiplomat $request)
+    public function store(StoreTeacher $request)
     {
         if ($request->ajax()) {
             $validated = $request->validated();
-            Diplomat::create($request->all());
+            Teacher::create($request->all());
 
             return response()->json([
                 "message" => "success",
@@ -48,25 +42,24 @@ class DiplomatController extends Controller
 
     public function edit($id)
     {
-        $diplomat = Diplomat::find($id);
-        return response()->json($diplomat);
+        $teacher = Teacher::find($id);
+        return response()->json($teacher);
     }
 
-    public function update(StoreDiplomat $request, $id)
+    public function update(StoreTeacher $request, $id)
     {
-        $diplomat = Diplomat::find($id);
-        $diplomat->fill($request->all());
-        $diplomat->save();
+        $teacher = Teacher::find($id);
+        $teacher->fill($request->all());
+        $teacher->save();
         return response()->json(["message" => "success"]);
     }
 
     public function destroy($id)
     {
-        Diplomat::find($id)->delete();
+        Teacher::find($id)->delete();
 
         return response()->json([
             'success' => 'Record has been deleted successfully!',
         ]);
     }
-
 }

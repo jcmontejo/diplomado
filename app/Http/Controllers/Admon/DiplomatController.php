@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admon;
 
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Diplomat;
 use App\Http\Requests\StoreDiplomat;
-use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
-
 
 class DiplomatController extends Controller
 {
     public function index(Request $request)
     {
-        return view('diplomats.index');
+        return view('admon.diplomats.index');
     }
 
     
@@ -31,7 +31,7 @@ class DiplomatController extends Controller
 
     public function create()
     {
-        return view('diplomats.create');
+        return view('admon.diplomats.create');
     }
 
     public function store(StoreDiplomat $request)
@@ -68,5 +68,4 @@ class DiplomatController extends Controller
             'success' => 'Record has been deleted successfully!',
         ]);
     }
-
 }

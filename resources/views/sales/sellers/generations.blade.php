@@ -1,0 +1,84 @@
+@extends('layouts.adminLTESales')
+@section('content')
+<div class="row">
+    <!-- data table start -->
+    <div class="col-12 mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Lista De Generaciones</h4>
+                <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
+                    <strong>Generación Actualizado Correctamente.</strong>
+                </div>
+               <div class="table-responsive">
+                    <table class="table" id="generations">
+                    <thead>
+                        <th>Nombre Diplomado</th>
+                        <th>Docente</th>
+                        <th>Generación</th>
+                        <th>Alumnos Inscritos</th>
+                        <th>Acciones</th>
+                    </thead>
+                </table>
+               </div>
+            </div>
+        </div>
+    </div>
+    <!-- data table end -->
+</div>
+@endsection
+@section('js')
+<script>
+    $(document).ready(function () {
+        Charge();
+    });
+
+    function reload() {
+        $('#generations').each(function () {
+            dt = $(this).dataTable();
+            dt.fnDraw();
+        })
+    }
+
+    function reloadStudents() {
+        $('#students').each(function () {
+            dt = $(this).dataTable();
+            dt.fnDraw();
+        })
+    }
+
+    function Charge() {
+        $('#generations').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            ajax: '{!! route('sales.sellers.generations') !!}',
+
+            columns: [{
+                    data: 'name_diplomat',
+                    name: 'name_diplomat'
+                },
+                {
+                    data: 'docent',
+                    name: 'docent'
+                },
+                {
+                    data: 'number_generation',
+                    name: 'number_generation'
+                },
+                {
+                    data: 'number_students',
+                    name: 'number_students',
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
+    }
+</script>
+@endsection

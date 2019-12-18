@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Escolar;
+namespace App\Http\Controllers\Admon;
 
 use App\Debt;
 use App\Diplomat;
@@ -18,14 +18,13 @@ use PDF;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 
-
 class GenerationController extends Controller
 {
     public function index(Request $request)
     {
         $diplomats = Diplomat::all();
         $docents = Teacher::all();
-        return view('escolar.generations.index', compact('diplomats', 'docents'));
+        return view('admon.generations.index', compact('diplomats', 'docents'));
     }
 
     public function findStudent(Request $request)
@@ -61,7 +60,7 @@ class GenerationController extends Controller
             ->addColumn('action', function ($generation) {
                 $id = $generation->id;
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
-                <a href="/control-escolar/generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a>
+                <a href="/admon/generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a>
                 <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
                 </div></td>';
             })
@@ -142,9 +141,9 @@ class GenerationController extends Controller
             ->sum('debts.amount');
 
         if ($request->ajax()) {
-            return view('escolar.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+            return view('admon.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
         } else {
-            return view('escolar.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+            return view('admon.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
         }
         // return $students;
     }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 
+
 class TeacherController extends Controller
 {
     public function index(Request $request)
