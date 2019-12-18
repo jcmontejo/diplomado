@@ -32,6 +32,8 @@ class HomeController extends Controller
             return view('clinic.home');
          }elseif(Auth::user()->hasRole('Vendedor')){
              return view('sales.home');
+         }elseif (Auth::user()->hasRole('Administracion')) {
+            return view('admon.home');
          } else {
             return view('home');
         }
