@@ -24,19 +24,19 @@ class StoreStudent extends FormRequest
     public function rules()
     {
         return [
-            //'curp' => 'required',
-            // 'last_name' => 'required|max:50',
-            // 'mother_last_name' => 'required|max:50',
-            // 'birthdate' => 'required|date',
-            // 'sex' => 'required',
-            //'phone' => 'required|digits:10',
-            // 'state' => 'required',
-            // 'city' => 'required',
-            // 'address' => 'required',
-            // 'email' => 'required|email',
+            'curp' => 'required',
+            'last_name' => 'required|max:50',
+            'mother_last_name' => 'required|max:50',
+            'birthdate' => 'required|date',
+            'sex' => 'required',
+            'phone' => 'required|digits:10',
+            'state' => 'required',
+            'city' => 'required',
+            'address' => 'required',
+            'email' => 'required|email',
             'facebook' => 'required',
-            'interested' => 'required',
-            'status' => 'required',
+            //'interested' => 'required',
+            //'status' => 'required',
         ];
 
     }

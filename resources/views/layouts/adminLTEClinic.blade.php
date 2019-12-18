@@ -50,6 +50,11 @@
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
+        <div id="preloader" style="display:none">
+                <div class="bar">
+                    <i class="fa fa-spinner fa-spin" style="font-size:100px; color:aliceblue"></i>
+                </div>
+            </div>
     <div class="wrapper">
 
         <!-- Navbar -->

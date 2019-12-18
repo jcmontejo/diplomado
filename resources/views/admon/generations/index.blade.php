@@ -1,4 +1,4 @@
-@extends('layouts.adminLTE')
+@extends('layouts.adminLTEAdmon')
 @section('content')
 <div class="row">
     <!-- data table start -->
@@ -33,15 +33,26 @@
     <!-- data table end -->
 </div>
 
-@include('escolar.generations.modal-edit')
-@include('escolar.generations.modal-create')
-@include('escolar.generations.modal-students')
+@include('admon.generations.modal-edit')
+@include('admon.generations.modal-create')
+@include('admon.generations.modal-students')
 @endsection
 @section('js')
 <script>
     $(document).ready(function () {
         Charge();
     });
+
+    function checkPassword(){
+        var password = $("#password").val();
+        if (password==='Temporal.2019') {
+            toastr.success('Contraseña correcta!', 'Bien hecho!')
+            $('.actions input').attr('disabled', false);
+        }else{
+            $('.actions input').attr('disabled', 'disabled');
+            toastr.error('Contraseña incorrecta!', 'Ooops!')
+        }
+    }
 
     function reload() {
         $('#generations').each(function () {
@@ -71,7 +82,7 @@
             },
             processing: true,
             serverSide: true,
-            ajax: '{!! url('/control-escolar/generaciones/datos') !!}',
+            ajax: '{!! url('/admon/generaciones/datos') !!}',
 
             columns: [{
                     data: 'name_diplomat',

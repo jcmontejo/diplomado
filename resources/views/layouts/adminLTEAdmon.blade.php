@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SERendipity | Control Escolar</title>
+    <title>SERendipity | Ventas</title>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Tell the browser to be responsive to screen width -->
@@ -45,12 +45,35 @@
             z-index: 2000;
             display: none;
         }
+         /* Preloader */
+        #preloader {
+            display: none;
+            background: rgba(39, 60, 117, .5);
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1100 !important;
+        }
 
+        #preloader>.bar {
+            display: inline-block;
+            padding: 0px;
+            text-align: left;
+            left: 50%;
+            top: 50%;
+            position: absolute;
+            width: 150px;
+            height: 20px;
+            /* border: 1px solid #2980b9; */
+            background-size: 28px 28px;
+        }
     </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
-        <div id="preloader" style="display:none">
+        <div id="preloader">
                 <div class="bar">
                     <i class="fa fa-spinner fa-spin" style="font-size:100px; color:aliceblue"></i>
                 </div>
@@ -65,12 +88,12 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                <a href="{{url('/prueba/admin')}}" class="nav-link">Sistema de Control Escolar</a>
+                <a href="{{url('/admon/inicio')}}" class="nav-link">Sistema de Administración</a>
                 </li>
             </ul>
         </nav>
         <!-- /.navbar -->
-        @include('sidebars.escolar')
+        @include('sidebars.admon')
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->

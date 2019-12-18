@@ -30,7 +30,9 @@ class HomeController extends Controller
             return view('test.test');
         }elseif(Auth::user()->hasRole('clinica')){
             return view('clinic.home');
-        } else {
+         }elseif(Auth::user()->hasRole('Vendedor')){
+             return view('sales.home');
+         } else {
             return view('home');
         }
     }

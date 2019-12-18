@@ -1,4 +1,4 @@
-@extends('layouts.adminLTE')
+@extends('layouts.adminLTEAdmon')
 @section('content')
 <div class="row">
     <!-- data table start -->
@@ -32,14 +32,25 @@
     </div>
     <!-- data table end -->
 </div>
-@include('escolar.teachers.modal-edit')
-@include('escolar.teachers.modal-create')
+@include('admon.teachers.modal-edit')
+@include('admon.teachers.modal-create')
 @endsection
 @section('js')
 <script>
     $(document).ready(function () {
         Charge();
     });
+
+    function checkPassword(){
+        var password = $("#password").val();
+        if (password==='Temporal.2019') {
+            toastr.success('Contraseña correcta!', 'Bien hecho!')
+            $('.actions input').attr('disabled', false);
+        }else{
+            $('.actions input').attr('disabled', 'disabled');
+            toastr.error('Contraseña incorrecta!', 'Ooops!')
+        }
+    }
 
     function reload() {
         $('#teachers').each(function () {

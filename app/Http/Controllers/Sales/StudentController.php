@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Sales;
 
+use App\Http\Controllers\Controller;
 use App\Account;
 use App\AccountType;
 use App\Debt;
@@ -36,7 +37,7 @@ class StudentController extends Controller
         $methods = PaymentMethod::all();
         $account_types = AccountType::all();
 
-        return view('students.index', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types'));
+        return view('sales.students.index', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types'));
     }
 
     public function prospects(Request $request)
@@ -75,7 +76,6 @@ class StudentController extends Controller
                 $user = User::find($id);
 
                 return $user->name;
-
             })
             ->addColumn('action', function ($student) {
 
@@ -98,7 +98,6 @@ class StudentController extends Controller
                     <h4>PROSPECTO DESCARTADO</h4>
                     </td>';
                     }
-
                 } else {
                     return '<td>
                     <h4>---</h4>
@@ -116,7 +115,6 @@ class StudentController extends Controller
                 }
             })
             ->make(true);
-
     }
 
     public function dataStudents()
@@ -145,7 +143,6 @@ class StudentController extends Controller
                 } else {
                     return 'INACTIVO';
                 }
-
             })
             ->addColumn('owner', function ($student) {
                 $id = $student->user_id;
@@ -153,7 +150,6 @@ class StudentController extends Controller
                 $user = User::find($id);
 
                 return $user->name;
-
             })
             ->addColumn('action', function ($student) {
                 $id = $student->id;
@@ -179,7 +175,6 @@ class StudentController extends Controller
                     return '<td><div class="btn-group" role="group" aria-label="Basic example">
                     <button class="btn btn-warning">Sin privilegios</button>
                 </td>';
-
                 }
             })
             ->addColumn('diplomats', function ($student) {
@@ -189,7 +184,7 @@ class StudentController extends Controller
                 $query = DB::table('student_inscriptions')
                     ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
                     ->where('student_inscriptions.student_id', '=', $id)
-                //->where('student_inscriptions.status', '=', 'Alta')
+                    //->where('student_inscriptions.status', '=', 'Alta')
                     ->select('diplomats.name as diplomat')->first();
 
                 return $query->diplomat;
@@ -227,6 +222,56 @@ class StudentController extends Controller
         } else {
             return response()->json(array("exists" => false));
         }
+    }
+
+    public function search($search)
+    {
+        $student = Student::where('curp', '=', $search)->first();
+
+        if ($student) {
+            $inscriptions = StudentInscription::where('student_inscriptions.student_id', '=', $student->id)
+                ->where('student_inscriptions.status', '=', 'Baja')
+                ->join('diplomats', 'diplomats.id', '=', 'student_inscriptions.diplomat_id')
+                ->join('generations', 'generations.id', '=', 'student_inscriptions.generation_id')
+                ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
+                ->select(
+                    DB::raw('CONCAT(student_inscriptions.number_of_payments," PAGOS DE ",student_inscriptions.amount_of_payments) as observations'),
+                    'student_inscriptions.discount as discount',
+                    'student_inscriptions.first_payment as first_payment',
+                    'student_inscriptions.id as id_inscription',
+                    'student_inscriptions.final_cost as final_cost',
+                    'student_inscriptions.status as status',
+                    'debts.amount as total_debt',
+                    'debts.id as debt_id',
+                    'diplomats.name as diplomat',
+                    'generations.number_generation as generation',
+                    'diplomats.id as id_diplomat'
+                )->get();
+        }
+
+        if ($student) {
+            return response()->json([
+                'status' => 'ok',
+                'data' => $student,
+                'inscriptions' => $inscriptions
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'no'
+            ]);
+        }
+    }
+
+    public function listGenerations($id)
+    {
+        $student_inscriptions = DB::table("student_inscriptions")
+            ->where('id', '=', $id)
+            ->first();
+
+        $generations = DB::table("generations")
+            ->where("diplomat_id", $student_inscriptions->diplomat_id)
+            ->pluck("number_generation", "id");
+        return json_encode($generations);
     }
 
     public function store(StoreStudent $request)
@@ -399,7 +444,6 @@ class StudentController extends Controller
                         return response()->json([
                             "message" => "success",
                         ]);
-
                     } else {
                         if ($this->if_exist_student($request->curp)) {
                             DB::rollBack();
@@ -409,7 +453,6 @@ class StudentController extends Controller
                                     'message' => 'Ya existe un registro con la misma CURP.',
                                     'status' => 400,
                                 ], 400);
-
                         } else {
                             $student->curp = $request->curp;
                             $student->name = $request->name;
@@ -431,9 +474,7 @@ class StudentController extends Controller
                             return response()->json([
                                 "message" => "success",
                             ]);
-
                         }
-
                     }
                     // } else {
                     //     DB::rollBack();
@@ -467,9 +508,7 @@ class StudentController extends Controller
                     return response()->json([
                         "message" => "success",
                     ]);
-
                 }
-
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -529,7 +568,6 @@ class StudentController extends Controller
             return response()->json([
                 'success' => 'Record has been deleted successfully!',
             ]);
-
         } catch (Exception $e) {
             DB::rollBack();
         }
@@ -692,7 +730,6 @@ class StudentController extends Controller
                         $discount,
                         $debt,
                     ]);
-
                 } else {
                     DB::rollBack();
 
@@ -706,7 +743,6 @@ class StudentController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
         }
-
     }
 
     public function received($diplomat, $generation, $inscription, $first_payment, $account, $method, $type)
@@ -808,7 +844,6 @@ class StudentController extends Controller
         } else {
             return false;
         }
-
     }
 
     public function newInscription($id)
@@ -823,6 +858,248 @@ class StudentController extends Controller
             return false;
         } else {
             return true;
+        }
+    }
+
+    public function checkStudentInscription(Request $request)
+    {
+        $exist = DB::table('student_inscriptions')
+            ->where('student_id', '=', $request->student_id)
+            ->where('generation_id', '=', $request->generation_re)
+            ->where('status', '=', 'Alta')
+            ->first();
+
+            if ($exist) {
+                return response()->json(array("exists" => true));
+            } else {
+                return response()->json(array("exists" => false));
+            }
+    }
+
+    public function incscriptionStudentOld(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            if ($request->ajax()) {
+                //Data
+                $student_inscription = StudentInscription::find($request->old_inscription);
+                $student = Student::find($request->student_id);
+                $generation = Generation::find($request->generation_re);
+                $diplomat = Diplomat::find($generation->diplomat_id);
+                //Calculate discount
+                $debt = Debt::where('generation_id', '=', $student_inscription->id)->first();
+                $discount_new = $student_inscription->final_cost - $debt->amount;
+
+                // Student Inscription
+                $inscription = new StudentInscription();
+                $inscription->student_id = $student->id;
+                $inscription->diplomat_id = $generation->diplomat_id;
+                $inscription->generation_id = $generation->id;
+                $inscription->discount = $discount_new;
+                $inscription->final_cost = $diplomat->maximum_cost - $discount_new;
+                $inscription->number_of_payments = $student_inscription->number_of_payments;
+                $inscription->first_payment = 0;
+                $inscription->comments = "Recursador";
+                $inscription->amount_of_payments = $student_inscription->amount_of_payments;
+                $inscription->periodicity = $student_inscription->periodicity;
+                $inscription->type_of_inscription = "RECURSADOR";
+                $inscription->save();
+
+                $generation->number_students = $generation->number_students + 1;
+                $generation->save();
+
+                // Add Debt and Payments to student
+                $date = new Carbon($generation->start_date);
+                $sum_first_payment = $inscription->discount + $inscription->first_payment;
+                $discount = $inscription->final_cost - $inscription->first_payment;
+
+                //$amount = ($discount / $request->number_payments);
+
+                $debt = new Debt();
+                $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
+                $debt->student_id = $student->id;
+                $debt->generation_id = $inscription->id;
+                $debt->save();
+
+                for ($i = 1; $i <= $request->number_payments; $i++) {
+                    $date = $date->addWeeks(2);
+                    if ($date->dayOfWeek === Carbon::SUNDAY) {
+                        $date->addDay();
+                    }
+                    $datePayment[$i] = $date->toDateString();
+
+                    $payment = new Payment();
+                    $payment->concept = 'COLEGIATURA';
+                    $payment->number_payment = $i;
+                    $payment->date = $datePayment[$i];
+                    $payment->amount_paid = 0;
+                    $payment->student_id = $student->id;
+                    $payment->generation_id = $generation->id;
+                    $payment->diplomat_id = $diplomat->id;
+                    $payment->status = 'PENDIENTE';
+                    $payment->debt_id = $debt->id;
+                    $payment->save();
+                }
+
+                $mytime = Carbon::now();
+
+                DB::commit();
+
+                return response()->json([
+                    'student' => $student,
+                    'generation' => $generation,
+                    'old_inscription' => $student_inscription
+                ]);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+    }
+
+    public function nStudent(StoreStudent $request)
+    {
+        try {
+            DB::beginTransaction();
+            if ($request->ajax()) {
+                $validated = $request->validated();
+                $user = Auth::user();
+
+                $number = Student::max('id') + 1;
+
+                $student = new Student();
+                $student->enrollment = '000000' . $number;
+                $student->curp = $request->curp;
+                $student->name = $request->name;
+                $student->last_name = $request->last_name;
+                $student->mother_last_name = $request->mother_last_name;
+                $student->facebook = $request->facebook;
+                $student->interested = 'null';
+                $student->birthdate = $request->birthdate;
+                $student->sex = $request->sex;
+                $student->phone = $request->phone;
+                $student->address = $request->address;
+                $student->state = $request->state;
+                $student->city = $request->city;
+                $student->email = $request->email;
+                $student->profession = $request->profession;
+                $student->status = 100;
+                if ($student->status <= 30) {
+                    $student->color = 'red';
+                } elseif ($student->status >= 40 and $student->status <= 80) {
+                    $student->color = 'yellow';
+                } elseif ($student->status >= 90) {
+                    $student->color = 'green';
+                }
+                $student->user_id = $user->id;
+                $student->save();
+                DB::commit();
+
+
+                $this->nInscription($student->id, $request->generation_id, $request->discount, $request->number_payments, $request->amount_of_payments, $request->first_payment, $request->periodicity, $request->account, $request->account_type, $request->payment_method);
+                return response()->json([
+                    "message" => "success",
+                ]);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+    }
+
+    public function nInscription($student_id, $generation_id, $discount, $number_payments, $amount_of_payments, $first_payment, $periodicity, $account, $account_type, $payment_method){
+        try {
+            DB::beginTransaction();
+            if ($this->checkStudent($student_id)) {
+                $student = Student::find($student_id);
+                $student->status = 1;
+                $student->save();
+
+                $generation = Generation::find($generation_id);
+                $diplomat = Diplomat::find($generation->diplomat_id);
+
+                // Student Inscription
+                $inscription = new StudentInscription();
+                $inscription->student_id = $student->id;
+                $inscription->diplomat_id = $generation->diplomat_id;
+                $inscription->generation_id = $generation->id;
+                $inscription->discount = $discount;
+                $inscription->final_cost = $diplomat->maximum_cost - $discount;
+                $inscription->number_of_payments = $number_payments;
+                $inscription->first_payment = $first_payment;
+                $inscription->comments = 'null';
+                $inscription->amount_of_payments = $amount_of_payments;
+                $inscription->periodicity = $periodicity;
+                $inscription->type_of_inscription = 'NUEVO';
+                $inscription->save();
+
+                $generation->number_students = $generation->number_students + 1;
+                $generation->save();
+
+                // Add Debt and Payments to student
+                $date = new Carbon($generation->start_date);
+                $sum_first_payment = $inscription->discount + $inscription->first_payment;
+                $discount = $inscription->final_cost - $inscription->first_payment;
+
+                //$amount = ($discount / $request->number_payments);
+
+                $debt = new Debt();
+                $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
+                $debt->student_id = $student->id;
+                $debt->generation_id = $inscription->id;
+                $debt->save();
+
+                for ($i = 1; $i <= $number_payments; $i++) {
+                    $date = $date->addWeeks(2);
+                    if ($date->dayOfWeek === Carbon::SUNDAY) {
+                        $date->addDay();
+                    }
+                    $datePayment[$i] = $date->toDateString();
+
+                    $payment = new Payment();
+                    $payment->concept = 'COLEGIATURA';
+                    $payment->number_payment = $i;
+                    $payment->date = $datePayment[$i];
+                    $payment->amount_paid = 0;
+                    $payment->student_id = $student->id;
+                    $payment->generation_id = $generation->id;
+                    $payment->diplomat_id = $diplomat->id;
+                    $payment->status = 'PENDIENTE';
+                    $payment->debt_id = $debt->id;
+                    $payment->save();
+                }
+
+                $mytime = Carbon::now();
+
+                $received = new PaymentReceived();
+                $received->diplomat_id = $diplomat->id;
+                $received->generation_id = $generation->id;
+                $received->student_id = $inscription->student_id;
+                $received->date_payment = $mytime->toDateTimeString();
+                $received->observation = 'NULL';
+                $received->payment_method = $payment_method;
+                $received->destination_account = $account;
+                $received->account_type = $account_type;
+                $received->amount = $inscription->first_payment;
+                $received->discount = 0;
+                $received->total = $inscription->first_payment;
+                $received->type = 0;
+                $received->debt_id = $debt->id;
+                $received->save();
+
+                // $this->received($diplomat->id, $generation->id, $inscription->id, $request->first_payment, $request->account, $request->payment_method, $request->account_type);
+
+                $this->incentive($inscription->id, $generation->id, $student->id, $inscription->discount);
+                //$inscription->notify(new NEWInscription($inscription));
+                DB::commit();
+
+                return true;
+            } else {
+                DB::rollBack();
+
+                return false;
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return false;
         }
     }
 }

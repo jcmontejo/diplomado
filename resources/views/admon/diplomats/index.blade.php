@@ -1,30 +1,35 @@
-@extends('layouts.adminLTE')
+@extends('layouts.adminLTEAdmon')
+@section('title')
 @section('content')
 <div class="row">
     <!-- data table start -->
     <div class="col-12 mt-5">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Lista De Docentes</h4>
+                <h4 class="header-title">Lista De Diplomados</h4>
                 <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
-                    <strong>Docente Actualizado Correctamente.</strong>
+                    <strong>Diplomado Actualizado Correctamente.</strong>
                 </div>
-                <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createTeacher"><i class="fas fa-plus"></i> Agregar
-                    Nuevo Docente</a>
+                <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createDiplomat"><i class="fas fa-plus"></i> Agregar
+                    Nuevo Diplomado</a>
                 <div class="table-responsive">
-                    <table class="table" id="teachers">
+                    <table class="table" id="diplomats">
                     <thead>
-                        <th>Nombre Docente</th>
-                        <th>Apellido Paterno</th>
-                        <th>Apellido Materno</th>
-                        <th>Fecha de Nacimiento</th>
-                        <th>Genero</th>
-                        <th>Teléfono</th>
-                        <th>Correo Electrónico</th>
-                        <th>Dirección</th>
-                        <th>Fecha de Ingreso</th>
+                        <th>Nombre Diplomado</th>
+                        <th>Clave Diplomado</th>
+                        <th>Costo (BASE)</th>
+                        <th>Costo Máximo (VENDEDORES)</th>
                         <th>Acciones</th>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Nombre Diplomado</th>
+                            <th>Clave Diplomado</th>
+                            <th>Costo (BASE)</th>
+                            <th>Costo Máximo (VENDEDORES)</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </tfoot>
                 </table>
                 </div>
             </div>
@@ -32,8 +37,8 @@
     </div>
     <!-- data table end -->
 </div>
-@include('escolar.teachers.modal-edit')
-@include('escolar.teachers.modal-create')
+@include('admon.diplomats.modal-edit')
+@include('admon.diplomats.modal-create')
 @endsection
 @section('js')
 <script>
@@ -41,56 +46,47 @@
         Charge();
     });
 
+    function checkPassword(){
+        var password = $("#password").val();
+        if (password==='Temporal.2019') {
+            toastr.success('Contraseña correcta!', 'Bien hecho!')
+            $('.actions input').attr('disabled', false);
+        }else{
+            $('.actions input').attr('disabled', 'disabled');
+            toastr.error('Contraseña incorrecta!', 'Ooops!')
+        }
+    }
+
     function reload() {
-        $('#teachers').each(function () {
+        $('#diplomats').each(function () {
             dt = $(this).dataTable();
             dt.fnDraw();
         })
     }
 
     function Charge() {
-        $('#teachers').DataTable({
+        $('#diplomats').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
             processing: true,
             serverSide: true,
-            ajax: '{!! url('/control-escolar/docentes/datos') !!}',
+            ajax: '{!! route('admon.diplomats.data') !!}',
             columns: [{
                     data: 'name',
                     name: 'name'
                 },
                 {
-                    data: 'last_name',
-                    name: 'last_name'
+                    data: 'key',
+                    name: 'key'
                 },
                 {
-                    data: 'mother_last_name',
-                    name: 'mother_last_name'
+                    data: 'cost',
+                    name: 'cost'
                 },
                 {
-                    data: 'birthdate',
-                    name: 'birthdate'
-                },
-                {
-                    data: 'sex',
-                    name: 'sex'
-                },
-                {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'joining_date',
-                    name: 'joining_date'
+                    data: 'maximum_cost',
+                    name: 'maximum_cost'
                 },
                 {
                     data: 'action',
@@ -102,21 +98,16 @@
         });
     }
 
-    $("#createTeacher").click(function () {
+    $("#createDiplomat").click(function () {
         $('#modalCreate').modal('show');
     })
 
-    $("#saveTeacher").click(function () {
+    $("#saveDiplomat").click(function () {
         var name = $("#nameSave").val();
-        var last_name = $("#lastnameSave").val();
-        var mother_last_name = $("#motherlastnameSave").val();
-        var birthdate = $("#birthdateSave").val();
-        var sex = $("#sexSave").val();
-        var phone = $("#phoneSave").val();
-        var email = $("#emailSave").val();
-        var address = $("#addressSave").val();
-        var joiningdate = $("#joiningdateSave").val();
-        var route = "/control-escolar/docentes/guardar"
+        var key = $("#keySave").val();
+        var cost = $("#costSave").val();
+        var maximum_cost = $("#maximum_costSave").val();
+        var route = "/admon/diplomados/guardar"
 
         $.ajax({
             url: route,
@@ -127,33 +118,22 @@
             dataType: 'json',
             data: {
                 name: name,
-                last_name: last_name,
-                mother_last_name: mother_last_name,
-                birthdate: birthdate,
-                sex: sex,
-                phone: phone,
-                email: email,
-                address: address,
-                joining_date: joiningdate
+                key: key,
+                cost: cost,
+                maximum_cost: maximum_cost
             },
-            beforeSend: function () {
+             beforeSend: function () {
                 $("#preloader").css("display", "block");
             },
             success: function () {
                 $("#preloader").css("display", "none");
                 $('#nameSave').val('');
-                $('#lastnameSave').val('');
-                $('#motherlastnameSave').val('');
-                $('#birthdateSave').val('');
-                $('#sexSave').val('');
-                $('#phoneSave').val('');
-                $('#emailSave').val('');
-                $('#addressSave').val('');
-                $('#joiningdateSave').val('');
+                $('#keySave').val('');
+                $('#costSave').val('');
                 $("#modalCreate").modal('toggle');
-                $('#message-error-save').css('display', 'none');
+                $('#message-error').css('display', 'none');
                 reload();
-                toastr.success('Has registrado un nuevo docente!', 'Bien hecho!')
+                swal("Bien hecho!", "Has creado un nuevo diplomado!", "success");
             },
             error: function (data) {
                 $("#preloader").css("display", "none");
@@ -170,34 +150,24 @@
     })
 
     function Show(btn) {
-        var route = "/control-escolar/docentes/editar/" + btn.value;
+        var route = "/admon/diplomados/editar/" + btn.value;
 
         $.get(route, function (res) {
             $("#name").val(res.name);
-            $("#lastname").val(res.last_name);
-            $("#motherlastname").val(res.mother_last_name);
-            $("#birthdate").val(res.birthdate);
-            $("#sex").val(res.sex);
-            $("#phone").val(res.phone);
-            $("#email").val(res.email);
-            $("#address").val(res.address);
-            $("#joiningdate").val(res.joining_date);
+            $("#key").val(res.key);
+            $("#cost").val(res.cost);
+            $("#maximum_cost").val(res.maximum_cost);
             $("#id").val(res.id);
         });
     }
 
-    $("#updateTeacher").click(function () {
+    $("#updateDiplomat").click(function () {
         var value = $("#id").val();
         var name = $("#name").val();
-        var last_name = $("#lastname").val();
-        var mother_last_name = $("#motherlastname").val();
-        var birthdate = $("#birthdate").val();
-        var sex = $("#sex").val();
-        var phone = $("#phone").val();
-        var email = $('#email').val();
-        var address = $("#address").val();
-        var joiningdate = $("#joiningdate").val();
-        var route = "/control-escolar/docentes/actualizar/" + value;
+        var key = $("#key").val();
+        var cost = $("#cost").val();
+        var maximum_cost = $("#maximum_cost").val();
+        var route = "/admon/diplomados/actualizar/" + value;
 
         $.ajax({
             url: route,
@@ -208,24 +178,18 @@
             dataType: 'json',
             data: {
                 name: name,
-                last_name: last_name,
-                mother_last_name: mother_last_name,
-                birthdate: birthdate,
-                sex: sex,
-                phone: phone,
-                email: email,
-                address: address,
-                joining_date: joiningdate
+                key: key,
+                cost: cost,
+                maximum_cost: maximum_cost
             },
-            beforeSend: function () {
+             beforeSend: function () {
                 $("#preloader").css("display", "block");
             },
             success: function () {
                 $("#preloader").css("display", "none");
                 $("#modalEdit").modal('toggle');
-                $("#message-error-edit").fadeOut();
                 reload();
-                toastr.success('Has actualizado al docente exitosamente!', 'Bien hecho!')
+                swal("Bien hecho!", "Has actualizado un diplomado exitosamente!", "success");
             },
             error: function (data) {
                 $("#preloader").css("display", "none");
@@ -243,7 +207,7 @@
 
     function Delete(btn) {
         var id = btn.value;
-        var route = "/control-escolar/docentes/eliminar/" + btn.value;
+        var route = "/admon/diplomados/eliminar/" + btn.value;
         swal({
             title: '¿Estás seguro?',
             text: "Será eliminado permanentemente!",
@@ -270,10 +234,10 @@
                         })
                         .done(function (response) {
                             reload();
-                            toastr.success('Eliminado!', 'Bien hecho!')
+                            swal('Eliminado!', response.message, response.status);
                         })
                         .fail(function () {
-                            toastr.error('Oops!', 'Algo salió mal con la petición!')
+                            swal('Oops...', 'Algo salió mal con la petición!', 'error ');
                         });
                 });
             },
