@@ -230,7 +230,7 @@ class StudentController extends Controller
 
         if ($student) {
             $inscriptions = StudentInscription::where('student_inscriptions.student_id', '=', $student->id)
-                ->where('student_inscriptions.status', '=', 'Baja')
+                //->where('student_inscriptions.status', '=', 'Baja')
                 ->join('diplomats', 'diplomats.id', '=', 'student_inscriptions.diplomat_id')
                 ->join('generations', 'generations.id', '=', 'student_inscriptions.generation_id')
                 ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
@@ -267,10 +267,16 @@ class StudentController extends Controller
         $student_inscriptions = DB::table("student_inscriptions")
             ->where('id', '=', $id)
             ->first();
+        
+        $flag = DB::table("generations")
+            ->where('id', '=', $student_inscriptions->generation_id)
+            ->first();
 
         $generations = DB::table("generations")
             ->where("diplomat_id", $student_inscriptions->diplomat_id)
+            ->where('number_generation', '=', $flag->number_generation + 1)
             ->pluck("number_generation", "id");
+
         return json_encode($generations);
     }
 
