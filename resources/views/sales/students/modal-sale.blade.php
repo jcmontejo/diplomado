@@ -265,7 +265,7 @@
                             <input type="hidden" id="id">
                             <label for="exampleInputEmail1">Listado de diplomados en los que causo BAJA, selecciona uno para matricular de nuevo</label>
                             <select name="old_data_id" id="old_data_id" class="form-control form-control-lg">
-                                <option value=""></option>
+                                <option value="">----</option>
                             </select>
                         </div>
                         <div class="form-group col-md-12">

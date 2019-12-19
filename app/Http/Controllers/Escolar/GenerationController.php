@@ -62,7 +62,6 @@ class GenerationController extends Controller
                 $id = $generation->id;
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
                 <a href="/control-escolar/generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a>
-                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
                 </div></td>';
             })
             ->make(true);

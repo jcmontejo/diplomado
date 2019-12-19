@@ -10,7 +10,7 @@
                     <div id='message-error-edit' class="alert alert-danger alert-dismissible fade show" role='alert' style="display: none">
                         <strong id="error-edit"></strong>
                     </div>
-                    <form id="form">
+                    <form id="form"> 
                         <div class="form-row">
                             <div class="form-group col-md-12 field">
                                 <label for="exampleInputEmail1">Digita clave maestra</label>
