@@ -198,12 +198,13 @@
     })
 
     function Show(btn) {
-        var route = "generaciones/editar/" + btn.value;
+        var route = "/admon/generaciones/editar/" + btn.value;
 
         $.get(route, function (res) {
             $("#dateEdit").val(res.start_date);
             $("#commisionEdit").val(res.commision);
             $("#full_priceEdit").val(res.full_price);
+            $("#number_generationEdit").val(res.number_generation);
             $("#idEdit").val(res.id);
         });
     }
@@ -213,7 +214,8 @@
         var start_date = $("#dateEdit").val();
         var commission = $("#commisionEdit").val();
         var full_price = $("#full_priceEdit").val();
-        var route = "/generaciones/actualizar/" + value;
+        var number_generation = $("#number_generationEdit").val();
+        var route = "/admon/generaciones/actualizar/" + value;
 
         $.ajax({
             url: route,
@@ -225,7 +227,8 @@
             data: {
                 start_date: start_date,
                 commission: commission,
-                full_price: full_price
+                full_price: full_price,
+                number_generation: number_generation,
             },
             success: function () {
                 $("#modalEdit .close").click();

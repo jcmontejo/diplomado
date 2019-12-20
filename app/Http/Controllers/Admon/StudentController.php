@@ -48,6 +48,7 @@ class StudentController extends Controller
             ->addColumn('action', function ($student) {
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
                 <button class="btn btn-primary btn-flat" value="' . $student->id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
+                <button class="btn btn-danger btn-flat" value="' . $student->id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
                 </div>
                 </td>';
             })

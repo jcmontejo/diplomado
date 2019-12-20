@@ -69,7 +69,7 @@
             "buttons": ['excel', 'pdf'],
             processing: true,
             serverSide: true,
-            ajax: '{!! url('/control-escolar/alumnos/datos') !!}',
+            ajax: '{!! url('/admon/alumnos/datos') !!}',
             columns: [{
                     data: 'curp',
                     name: 'curp'
@@ -206,10 +206,10 @@
 
     function Delete(btn) {
         var id = btn.value;
-        var route = "alumnos/eliminar/" + btn.value;
+        var route = "/alumnos/eliminar/" + btn.value;
         swal({
             title: '¿Estás seguro?',
-            text: "Será eliminado permanentemente!",
+            text: "Será eliminado permanentementse!",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
