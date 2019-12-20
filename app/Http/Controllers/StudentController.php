@@ -119,6 +119,7 @@ class StudentController extends Controller
 
     }
 
+
     public function dataStudents()
     {
         $user = Auth::user();
@@ -509,6 +510,10 @@ class StudentController extends Controller
 
             $payment_receiveds = DB::table('payment_receiveds')
                 ->where('student_id', '=', $id)->delete();
+
+            $agreements = DB::table('agreements')
+                ->join('debts', 'agreements.debt_id', '=', 'debts.id')
+                ->where('debts.student_id', '=', $id)->delete();
 
             $debts = DB::table('debts')
                 ->where('student_id', '=', $id)->delete();
