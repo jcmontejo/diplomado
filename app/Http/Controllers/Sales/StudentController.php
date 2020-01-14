@@ -157,7 +157,7 @@ class StudentController extends Controller
 
                 if ($userNow->hasRole('Vendedor')) {
                     return '<td><div class="btn-group" role="group" aria-label="Basic example">
-                <button class="btn btn-rounded btn-xs btn-warning mb-3" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fa fa-pencil"></i> Inscribir</button>
+                <button class="btn btn-rounded btn-xs btn-success btn-block" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fas fa-plus"></i> Inscribir</button>
                 </div>
                 </td>';
                 } elseif ($userNow->hasRole('Administrador')) {

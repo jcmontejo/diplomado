@@ -1,7 +1,7 @@
 @extends('layouts.adminLTEAdmon')
 @section('content')
 <div class="row">
-    @include('escolar.generations.ajax-1')
+    @include('admon.generations.ajax-1')
     <div class="loading">
         <i class="fas fa-refresh fa-spin fa-2x fa-fw"></i><br />
         <span>Cargando</span>
