@@ -96,7 +96,7 @@ $todos = DB::table('todos')->where([
         <!-- Main row -->
         <div class="row">
             <!-- Left col -->
-            <section class="col-lg-7 connectedSortable">
+            <section class="col-lg-12">
                 <!-- Custom tabs (Charts with tabs)-->
                 <div class="card">
                     <div class="card-header">
@@ -106,11 +106,7 @@ $todos = DB::table('todos')->where([
                         </h3>
                     </div><!-- /.card-header -->
                     <div class="card-body">
-                        <div class="tab-content p-0">
-                            <!-- Morris chart - Sales -->
-                            <div class="chart tab-pane active" id="revenue-chart"
-                                style="position: relative; height: 300px;">
-                                <table class="table table-bordered table-sm" id="recent_inscriptions">
+                        <table class="table table-bordered table-sm" id="recent_inscriptions">
                                     <thead>
                                         <th>Diplomado</th>
                                         <th>Generación</th>
@@ -121,39 +117,6 @@ $todos = DB::table('todos')->where([
                                         <th>Acciones</th>
                                     </thead>
                                 </table>
-                            </div>
-                        </div>
-                    </div><!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </section>
-            <!-- /.Left col -->
-            <!-- Left col -->
-            <section class="col-lg-5 connectedSortable">
-                <!-- Custom tabs (Charts with tabs)-->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-pie mr-1"></i>
-                            Convenios que vencen hoy
-                        </h3>
-                    </div><!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="tab-content p-0">
-                            <!-- Morris chart - Sales -->
-                            <div class="chart tab-pane active" id="revenue-chart"
-                                style="position: relative; height: 300px;">
-                                <table class="table table-bordered table-sm" id="convenios">
-                                    <thead>
-                                        <th>Diplomado</th>
-                                        <th>Generación</th>
-                                        <th>Nombre Estudiante</th>
-                                        <th>Fecha pactada</th>
-                                        <th>Monto</th>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
                     </div><!-- /.card-body -->
                 </div>
                 <!-- /.card -->
@@ -223,7 +186,7 @@ $todos = DB::table('todos')->where([
         });
     }
 
-    function reload() {
+    function reloadI() {
         $('#recent_inscriptions').each(function () {
             dt = $(this).dataTable();
             dt.fnDraw();
@@ -330,7 +293,7 @@ $todos = DB::table('todos')->where([
                             },
                         })
                         .done(function (response) {
-                            reload();
+                            reloadI();
                             swal('Procesada!', response.message, response.status);
                         })
                         .fail(function () {

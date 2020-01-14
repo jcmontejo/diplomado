@@ -45,6 +45,7 @@
 @include('sales.students.modal-adddocuments')
 @include('sales.students.modal-documents')
 @include('sales.students.modal-sale')
+@include('sales.students.modal-inscription')
 @endsection
 @section('js')
 <script>
@@ -55,6 +56,32 @@
             $("#file-address").attr("href", "");
             $("#file-study").append("");
             $("#file-study").attr("href", "");
+        });
+
+         $('select[name="diplomat_id"]').on('change', function () {
+            var diplomatID = $(this).val();
+            if (diplomatID) {
+                $.ajax({
+                    url: '/pagos/generaciones/' + diplomatID,
+                    type: "GET",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#preloader").css("display", "block");
+                    },
+                    success: function (data) {
+                        $("#preloader").css("display", "none");
+                        $('select[name="generation_id"]').empty();
+                        $.each(data, function (key, value) {
+                            $('select[name="generation_id"]').append(
+                                '<option value="' + key +
+                                '">Generación: ' + value + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('select[name="generation_id"]').empty();
+                $('select[name="student_id"]').empty();
+            }
         });
 
         $('select[name="diplomat_id_N"]').on('change', function () {
@@ -80,6 +107,32 @@
             } else {
                 $('select[name="generation_id_N"]').empty();
                 $('select[name="student_id"]').empty();
+            }
+        });
+
+        $('select[name="diplomat_id-alt"]').on('change', function () {
+            var diplomatID = $(this).val();
+            if (diplomatID) {
+                $.ajax({
+                    url: '/pagos/generaciones/' + diplomatID,
+                    type: "GET",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#preloader").css("display", "block");
+                    },
+                    success: function (data) {
+                        $("#preloader").css("display", "none");
+                        $('select[name="generation_id-alt"]').empty();
+                        $.each(data, function (key, value) {
+                            $('select[name="generation_id-alt"]').append(
+                                '<option value="' + key +
+                                '">Generación: ' + value + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('select[name="generation_id-alt"]').empty();
+                $('select[name="student_id-alt"]').empty();
             }
         });
 
@@ -141,7 +194,7 @@
             "buttons": ['excel', 'pdf'],
             processing: true,
             serverSide: true,
-            ajax: '{!! url('alumnos/datos') !!}',
+            ajax: '{!! url('/ventas/alumnos/datos') !!}',
             columns: [{
                     data: 'curp',
                     name: 'curp'
@@ -617,6 +670,7 @@
     })
 
 
+
     function checkCurp(element) {
         var curp = $(element).val();
         $.ajax({
@@ -655,23 +709,24 @@
             $("#nameInscription").val(res.name);
             $("#lastnameInscription").val(res.last_name);
             $("#motherlastnameInscription").val(res.mother_last_name);
-            $("#id-student").val(res.id);
+            $("#id-student-alt").val(res.id);
         });
     }
 
+
     $("#processInscription").click(function () {
-        var student_id = $("#id-student").val();
-        var generation_id = $("#generation_id").val();
-        var discount = $("#discount").val();
-        var number_payments = $("#number_payments").val();
-        var first_payment = $("#first_payment").val();
-        var account = $("#accountDestination").val();
-        var payment_method = $("#payment_method").val();
-        var account_type = $("#account_type").val();
-        var comments = $("#comments").val();
-        var amount_of_payments = $("#amount_of_payments").val();
-        var periodicity = $("#periodicity").val();
-        var type_of_inscription = $("#type_of_inscription").val();
+        var student_id = $("#id-student-alt").val();
+        var generation_id = $("#generation_id-alt").val();
+        var discount = $("#discount-alt").val();
+        var number_payments = $("#number_payments-alt").val();
+        var first_payment = $("#first_payment-alt").val();
+        var account = $("#accountDestination-alt").val();
+        var payment_method = $("#payment_method-alt").val();
+        var account_type = $("#account_type-alt").val();
+        var comments = $("#comments-alt").val();
+        var amount_of_payments = $("#amount_of_payments-alt").val();
+        var periodicity = $("#periodicity-alt").val();
+        var type_of_inscription = $("#type_of_inscription-alt").val();
         // Save Files
 
         var form_data = new FormData();
@@ -711,11 +766,11 @@
                 $('#nameInscription').val('');
                 $('#lastnameInscription').val('');
                 $('#motherlastnameInscription').val('');
-                $('#id-student').val('');
+                $('#id-student-alt').val('');
                 $("#modalInscription .close").click();
                 $('#message-error-inscription').css('display', 'none');
                 reload();
-                swal("Bien hecho!", "Has registrado un nuevo alumno!", "success");
+                toastr.success('Has re inscrito al alumno exitosamente!','Bien hecho!')
             },
             error: function (data) {
                 if (data.status === 400) {

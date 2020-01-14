@@ -10,6 +10,7 @@ use App\Generation;
 use App\Agreement;
 use Yajra\Datatables\Datatables;
 
+
 class AgreementController extends Controller
 {
 

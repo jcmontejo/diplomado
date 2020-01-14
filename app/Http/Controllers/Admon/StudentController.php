@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use DB;
 use Yajra\Datatables\Datatables;
 
+
 class StudentController extends Controller
 {
     public function index(Request $request)

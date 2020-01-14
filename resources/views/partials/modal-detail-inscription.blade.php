@@ -6,23 +6,15 @@
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
-                <div class="col-lg-6 col-ml-12">
+                <div class="col-12">
                     <div id='message-error' class="alert alert-danger alert-dismissible fade show" role='alert' style="display: none">
                         <strong id="error"></strong>
                     </div>
                     <form id="form">
                         <input type="hidden" id="idInscription">
-                        <div id="invoice">
-
-                            <div class="toolbar hidden-print">
-                                {{-- <div class="text-right">
-                                    <button class="btn btn-success" id="readMark"><i class="fa fa-check"></i> Marcar como procesada</button>
-                                    <button class="btn btn-info"><i class="fa fa-file-pdf-o"></i> Enviar recibo por Email</button>
-                                </div> --}}
-                                <hr>
-                            </div>
-                            <div class="invoice overflow-auto">
-                                <div style="min-width: 600px">
+                        <div class="col-12">
+                        <div class="invoice col-12">
+                                <div class="col-12">
                                     <main>
                                         <div class="row contacts">
                                             <div class="col invoice-to">
