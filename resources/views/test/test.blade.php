@@ -94,35 +94,6 @@ $todos = DB::table('todos')->where([
         </div>
         <!-- /.row -->
         <!-- Main row -->
-        <div class="row">
-            <!-- Left col -->
-            <section class="col-lg-12">
-                <!-- Custom tabs (Charts with tabs)-->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-pie mr-1"></i>
-                            Inscripciones recientes
-                        </h3>
-                    </div><!-- /.card-header -->
-                    <div class="card-body">
-                        <table class="table table-bordered table-sm" id="recent_inscriptions">
-                                    <thead>
-                                        <th>Diplomado</th>
-                                        <th>Generación</th>
-                                        <th>Nombre Estudiante</th>
-                                        <th>Matricula</th>
-                                        <th>CURP</th>
-                                        <th>Fecha-Hora de Inscripción</th>
-                                        <th>Acciones</th>
-                                    </thead>
-                                </table>
-                    </div><!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </section>
-            <!-- /.Left col -->
-        </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
 </section>
