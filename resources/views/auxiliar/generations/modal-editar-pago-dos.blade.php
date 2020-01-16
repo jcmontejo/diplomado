@@ -20,7 +20,8 @@
                             <input type="password" class="form-control form-control-lg" onblur="checkPasswordTwo();"
                                 id="password_two" placeholder="************">
                         </div>
-                        <div class="form-group col-md-12 editarPago">
+
+                        <div class="form-group col-md-12 editarPagoDos">
                             <label for="exampleInputPassword1">Monto de Pago</label>
                             <input type="number" min="1" name="montoNuevoPago" id="montoNuevoPago" class="form-control form-control-lg">
                         </div>
