@@ -747,6 +747,7 @@
         // End
         var route = "/ventas/alumnos/procesar/inscripcion";
 
+
         $.ajax({
             url: route,
             headers: {
