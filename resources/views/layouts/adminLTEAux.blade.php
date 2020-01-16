@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SERendipity | Administración</title>
+    <title>SERendipity | Auxiliar</title>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Tell the browser to be responsive to screen width -->
@@ -81,19 +81,19 @@
     <div class="wrapper">
 
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-dark navbar-purple">
+        <nav class="main-header navbar navbar-expand navbar-dark navbar-navy">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                <a href="{{url('/admon/inicio')}}" class="nav-link">Sistema de Administración</a>
+                <a href="{{url('/auxiliar/inicio')}}" class="nav-link">Sistema de Auxiliar Administración</a>
                 </li>
             </ul>
         </nav>
         <!-- /.navbar -->
-        @include('sidebars.admon')
+        @include('sidebars.auxiliar')
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->

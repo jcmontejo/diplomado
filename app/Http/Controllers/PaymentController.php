@@ -375,6 +375,7 @@ class PaymentController extends Controller
             $received->discount = $request->discount;
             $received->total = $request->amount;
             $received->type = '1';
+            $received->number_pay = $number_payment;
             $received->debt_id = $debt->id;
             $received->save();
 

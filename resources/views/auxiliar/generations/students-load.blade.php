@@ -1,4 +1,4 @@
-@extends('layouts.adminLTEAdmon')
+@extends('layouts.adminLTEAux')
 @section('content')
 <div class="row">
     @include('auxiliar.generations.ajax-1')

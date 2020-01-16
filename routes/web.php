@@ -340,6 +340,71 @@ Route::group(['prefix' => 'admon'], function () {
     Route::get('/generaciones/enviar/recibo/{id}', 'Admon\GenerationController@sendVoucher');
     Route::get('/generaciones/enviar/recibo/dos/{id}', 'Admon\GenerationController@sendVoucherTwo');
     Route::post('/generaciones/editar/pago/', 'Admon\GenerationController@editPay');
+    Route::post('/generaciones/editar/pago/alterno', 'Admon\GenerationController@editPayTwo');
+});
+
+//Auxiliar de Admon
+//Administración
+Route::group(['prefix' => 'auxiliar'], function () {
+    Route::get('/inicio', function () {
+        return view('auxiliar.home');
+    });
+
+    Route::get('/perfil', function(){
+        return view('auxiliar.update');
+    });
+
+    Route::get('/perfil/editar/', 'UserController@edit');
+    Route::put('/perfil/actualizar/{id}', 'UserController@update');
+
+    //Alumnos
+    Route::get('/alumnos/lista', 'Auxiliar\StudentController@index');
+    Route::get('/alumnos/datos', 'Auxiliar\StudentController@dataStudents');
+    Route::get('/alumnos/editar/{id}', 'Auxiliar\StudentController@edit');
+    Route::put('/alumnos/actualizar/{id}', 'Auxiliar\StudentController@update');
+    //Docentes
+    Route::get('/docentes/lista', 'Auxiliar\TeacherController@index');
+    Route::get('/docentes/datos', 'Auxiliar\TeacherController@dataTeachers');
+    Route::get('/docentes/crear', 'Auxiliar\TeacherController@create');
+    Route::post('/docentes/guardar', 'Auxiliar\TeacherController@store');
+    Route::get('/docentes/editar/{id}', 'Auxiliar\TeacherController@edit');
+    Route::put('/docentes/actualizar/{id}', 'Auxiliar\TeacherController@update');
+    Route::delete('/docentes/eliminar/{id}', 'Auxiliar\TeacherController@destroy');
+    //Diplomados
+    Route::get('/diplomados/lista', 'Auxiliar\DiplomatController@index');
+    Route::get('/diplomados/datos', 'Auxiliar\DiplomatController@dataDiplomats')->name('Auxiliar.diplomats.data');
+    Route::get('/diplomados/crear', 'Auxiliar\DiplomatController@create');
+    Route::post('/diplomados/guardar', 'Auxiliar\DiplomatController@store');
+    Route::get('/diplomados/editar/{id}', 'Auxiliar\DiplomatController@edit');
+    Route::put('/diplomados/actualizar/{id}', 'Auxiliar\DiplomatController@update');
+    Route::delete('/diplomados/eliminar/{id}', 'Auxiliar\DiplomatController@destroy');
+    //Generaciones
+    Route::get('/generaciones/lista', 'Auxiliar\GenerationController@index');
+    Route::get('/generaciones/datos', 'Auxiliar\GenerationController@dataGenerations');
+    Route::get('/generaciones/crear', 'Auxiliar\GenerationController@create');
+    Route::post('/generaciones/guardar', 'Auxiliar\GenerationController@store');
+    Route::get('/generaciones/editar/{id}', 'Auxiliar\GenerationController@edit');
+    Route::put('/generaciones/actualizar/{id}', 'Auxiliar\GenerationController@update');
+    Route::delete('/generaciones/eliminar/{id}', 'Auxiliar\GenerationController@destroy');
+
+    Route::get('/generaciones/alumnos/buscar', 'Auxiliar\GenerationController@findStudent');
+    Route::get('/generaciones/alumnos/inscritos/{id}', 'Auxiliar\GenerationController@studentsInscription');
+    Route::get('/generaciones/alumnos/{id}', 'Auxiliar\GenerationController@students');
+    Route::get('/generaciones/alumnos/consultar/{id}', 'Auxiliar\GenerationController@search');
+    Route::put('/generaciones/alumnos/baja/{id}', 'Auxiliar\GenerationController@down');
+    Route::put('/generaciones/alumnos/alta/{id}', 'Auxiliar\GenerationController@up');
+
+    Route::get('/generaciones/alumnos/baja/consultar/{id}', 'Auxiliar\GenerationController@low');
+
+    Route::get('/generaciones/inscripciones/recientes/', 'Auxiliar\GenerationController@recentsInscription');
+    Route::get('/generaciones/convenios/pendientes/', 'AgreementController@list');
+    Route::get('/generaciones/convenios/pendientes/al-dia', 'AgreementController@listToday');
+
+    Route::get('/generaciones/consultar/inscripcion/{id}', 'Auxiliar\GenerationController@consult');
+    Route::put('/generaciones/marcar/leida/{id}', 'Auxiliar\GenerationController@read');
+    Route::get('/generaciones/enviar/recibo/{id}', 'Auxiliar\GenerationController@sendVoucher');
+    Route::get('/generaciones/enviar/recibo/dos/{id}', 'Auxiliar\GenerationController@sendVoucherTwo');
+    Route::post('/generaciones/editar/pago/', 'Auxiliar\GenerationController@editPay');
 });
 
 //Rutas para control escolar

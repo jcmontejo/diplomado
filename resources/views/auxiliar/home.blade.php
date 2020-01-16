@@ -1,4 +1,4 @@
-@extends('layouts.adminLTEAdmon')
+@extends('layouts.adminLTEAux')
 @section('content')
 
 @php
@@ -95,31 +95,7 @@ $todos = DB::table('todos')->where([
         <!-- /.row -->
         <!-- Main row -->
         <div class="row">
-            <!-- Left col -->
-            <section class="col-lg-12">
-                <!-- Custom tabs (Charts with tabs)-->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-pie mr-1"></i>
-                            Lista de Convenios
-                        </h3>
-                    </div><!-- /.card-header -->
-                    <div class="card-body">
-                        <table class="table table-bordered table-sm" id="convenios">
-                            <thead>
-                                <th>DIPLOMADO</th>
-                                <th>GENERACIÓN</th>
-                                <th>ALUMNO</th>
-                                <th>FECHA DE PROMESA DE PAGO</th>
-                                <th>MONTO PACTADO</th>
-                            </thead>
-                        </table>
-                    </div><!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </section>
-            <!-- /.Left col -->
+           
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
