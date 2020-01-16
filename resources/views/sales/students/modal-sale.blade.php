@@ -185,15 +185,6 @@
                                 <label for="">Número de Pagos</label>
                                 <input type="number" value="1" min="1" max="10" step="1" id="number_payments_N"
                                     name="number_payments_N" class="form-control form-control-lg">
-                                {{-- <select name="number_payments" id="number_payments" class="form-control form-control-lg">
-                                            <option>--Selecciona--</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                        </select> --}}
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="">¿De cuanto seran los pagos?</label>
