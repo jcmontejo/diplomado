@@ -58,6 +58,19 @@
             else
                 $('.actionsPago input').attr('disabled', false);
         });
+
+        $('.editarPagoDos input').on('keyup', function () {
+            let empty = false;
+
+            $('.editarPagoDos input').each(function () {
+                empty = $(this).val().length == 0;
+            });
+
+            if (empty)
+                $('.actionsPagoDos input').attr('disabled', 'disabled');
+            else
+                $('.actionsPagoDos input').attr('disabled', false);
+        });
     });
 
     function checkPassword(){
