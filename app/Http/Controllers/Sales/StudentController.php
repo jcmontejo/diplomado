@@ -117,12 +117,13 @@ class StudentController extends Controller
             ->make(true);
     }
 
+
     public function dataStudents()
     {
         $user = Auth::user();
         if ($user->hasRole('Vendedor')) {
             $students = Student::where([
-                ['user_id', '=', $user->id],
+                //['user_id', '=', $user->id],
                 ['status', '=', '1'],
             ])->select(['id', 'curp', 'enrollment', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at']);
         } else {
