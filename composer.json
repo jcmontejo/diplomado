@@ -19,7 +19,8 @@
         "pusher/pusher-php-server": "^3.3",
         "quiubas/quiubas-php": "dev-master",
         "spatie/laravel-permission": "^2.28",
-        "yajra/laravel-datatables-oracle": "~8.0"
+        "yajra/laravel-datatables-oracle": "~8.0",
+        "doctrine/dbal": "2.5.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
@@ -45,8 +46,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-            ]
+            "dont-discover": []
         }
     },
     "scripts": {

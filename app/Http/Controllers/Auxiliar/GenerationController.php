@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admon;
+namespace App\Http\Controllers\Auxiliar;
 
 use App\Debt;
 use App\Diplomat;
@@ -10,8 +10,6 @@ use App\Low;
 use App\Student;
 use App\StudentInscription;
 use App\Teacher;
-use App\Payment;
-use App\PaymentReceived;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -20,14 +18,13 @@ use PDF;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 
-
 class GenerationController extends Controller
 {
     public function index(Request $request)
     {
         $diplomats = Diplomat::all();
         $docents = Teacher::all();
-        return view('admon.generations.index', compact('diplomats', 'docents'));
+        return view('auxiliar.generations.index', compact('diplomats', 'docents'));
     }
 
     public function findStudent(Request $request)
@@ -63,9 +60,8 @@ class GenerationController extends Controller
             ->addColumn('action', function ($generation) {
                 $id = $generation->id;
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
-                <a href="/admon/generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a>
+                <a href="/auxiliar/generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a>
                 <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
-                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
                 </div></td>';
             })
             ->make(true);
@@ -145,9 +141,9 @@ class GenerationController extends Controller
             ->sum('debts.amount');
 
         if ($request->ajax()) {
-            return view('admon.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+            return view('auxiliar.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
         } else {
-            return view('admon.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+            return view('auxiliar.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
         }
         // return $students;
     }
@@ -469,32 +465,21 @@ class GenerationController extends Controller
     {
         try {
             $debt = Debt::find($request->debt_id);
+            $inscription = StudentInscription::where('id', '=', $debt->generation_id)->first();
 
-            $payment = Payment::where('debt_id', '=', $debt->id)
-                ->where('number_payment', '=', $request->num_pay)->first();
+            $original = $inscription->first_payment;
+            $new = $request->amount_pay;
 
-            $payment_received = PaymentReceived::where('debt_id', '=', $debt->id)
-                ->where('number_pay', '=', $request->num_pay)->first();
+            $debtA = Debt::where('generation_id', '=', $inscription->id)->first();
 
-            $debt->amount = $debt->amount + $payment_received->amount;
-            $debt->save();
+            $debtA->amount = $debtA->amount + $original;
+            $debtA->amount = $debtA->amount - $new;
+            $debtA->save();
 
-            $payment_received->amount = $request->amount_pay;
-            $payment_received->total = $request->amount_pay;
-            $payment_received->save();
+            $inscription->first_payment = $new;
+            $inscription->save();
 
-            $payment->amount_paid = $payment_received->amount;
-            $payment->save();
-
-            $debt->amount = $debt->amount - $payment_received->amount;
-            $debt->save();
-
-            return response()->json([
-                "message" => "success",
-                "debt" => $debt,
-                "payment" => $payment,
-                "payment_received" => $payment_received
-                ]);
+            return response()->json(["message" => "success"]);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
