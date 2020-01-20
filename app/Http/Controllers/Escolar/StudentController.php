@@ -41,7 +41,8 @@ class StudentController extends Controller
 
     public function dataStudents()
     {
-        $students = Student::where('status', '=', 1)->select(['id', 'curp', 'enrollment', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at']);
+
+        $students = Student::where('status', '=', 1)->select(['id', 'curp', 'enrollment', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'address', 'email', 'profession', 'documents', 'user_id', 'created_at'])->get();
 
         return Datatables::of($students)
             ->addColumn('action', function ($student) {

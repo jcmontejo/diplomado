@@ -16,7 +16,6 @@
                         <thead>
                             <th>Curp</th>
                             <th>Matricula</th>
-                            <th>Diplomado Inscrito</th>
                             <th>Nombre Alumno</th>
                             <th>Apellido Paterno</th>
                             <th>Apellido Materno</th>
@@ -202,10 +201,6 @@
                 {
                     data: 'enrollment',
                     name: 'enrollment'
-                },
-                {
-                    data: 'diplomats',
-                    name: 'students.name'
                 },
                 {
                     data: 'name',
