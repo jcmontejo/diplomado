@@ -240,7 +240,7 @@
 
     function Delete(btn) {
         var id = btn.value;
-        var route = "generaciones/eliminar/" + btn.value;
+        var route = "/admon/generaciones/eliminar/" + btn.value;
         swal({
             title: '¿Estás seguro?',
             text: "Será eliminado permanentemente!",
@@ -266,8 +266,9 @@
                             },
                         })
                         .done(function (response) {
+                            swal.close();
                             reload();
-                            swal('Eliminado!', response.message, response.status);
+                             toastr.success('Generación eliminada!', 'Bien hecho!')
                         })
                         .fail(function () {
                             swal('Oops...', 'Algo salió mal con la petición, contacta a sistemas!', 'error ');

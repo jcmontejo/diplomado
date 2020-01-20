@@ -722,7 +722,7 @@ class StudentController extends Controller
                     $received->discount = 0;
                     $received->total = $inscription->first_payment;
                     $received->type = 0;
-                    $received->number_pay = '0';
+                    $received->number_pay = 0;
                     $received->debt_id = $debt->id;
                     $received->save();
 
