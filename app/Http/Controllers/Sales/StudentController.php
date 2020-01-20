@@ -178,18 +178,6 @@ class StudentController extends Controller
                 </td>';
                 }
             })
-            ->addColumn('diplomats', function ($student) {
-                $id = $student->id;
-                //$data = array('hola', 'mundo');
-
-                $query = DB::table('student_inscriptions')
-                    ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
-                    ->where('student_inscriptions.student_id', '=', $id)
-                    //->where('student_inscriptions.status', '=', 'Alta')
-                    ->select('diplomats.name as diplomat')->first();
-
-                return $query->diplomat;
-            })
             ->make(true);
     }
 
