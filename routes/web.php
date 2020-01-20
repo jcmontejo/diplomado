@@ -289,6 +289,7 @@ Route::group(['prefix' => 'admon'], function () {
         return view('admon.update');
     });
 
+
     Route::get('/perfil/editar/', 'UserController@edit');
     Route::put('/perfil/actualizar/{id}', 'UserController@update');
 
@@ -297,6 +298,7 @@ Route::group(['prefix' => 'admon'], function () {
     Route::get('/alumnos/datos', 'Admon\StudentController@dataStudents');
     Route::get('/alumnos/editar/{id}', 'Admon\StudentController@edit');
     Route::put('/alumnos/actualizar/{id}', 'Admon\StudentController@update');
+    Route::get('/alumnos/expediente/{id}', 'Admon\StudentController@proceedings');
     //Docentes
     Route::get('/docentes/lista', 'Admon\TeacherController@index');
     Route::get('/docentes/datos', 'Admon\TeacherController@dataTeachers');
@@ -320,6 +322,7 @@ Route::group(['prefix' => 'admon'], function () {
     Route::post('/generaciones/guardar', 'Admon\GenerationController@store');
     Route::get('/generaciones/editar/{id}', 'Admon\GenerationController@edit');
     Route::put('/generaciones/actualizar/{id}', 'Admon\GenerationController@update');
+    
     Route::delete('/generaciones/eliminar/{id}', 'Admon\GenerationController@destroy');
 
     Route::get('/generaciones/alumnos/buscar', 'Admon\GenerationController@findStudent');

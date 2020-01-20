@@ -364,14 +364,42 @@ class GenerationController extends Controller
 
     public function destroy($id)
     {
-        $generation = Generation::find($id);
-        if ($generation->number_students = 0) {
-            Generation::find($id)->delete();
+        try {
+            DB::beginTransaction();
+            $generation = Generation::find($id);
+            $inscriptions = StudentInscription::where('generation_id', '=', $generation->id)->get();
+
+            foreach ($inscriptions as $key => $value) {
+
+                $ins = StudentInscription::where('generation_id', '=', $generation->id)->first();
+
+                $debt = Debt::where('generation_id', '=', $ins->id)->first();
+
+                $payments = DB::table('payments')
+                ->where('debt_id', '=', $debt->id)->delete();
+
+                $payment_receiveds = DB::table('payment_receiveds')
+                ->where('debt_id', '=', $debt->id)->delete();
+
+                $agreements = DB::table('agreements')
+                ->join('debts', 'agreements.debt_id', '=', 'debts.id')
+                ->where('debts.id', '=', $debt->id)->delete();
+
+                $debt->delete();
+
+                $ins->delete();
+            }
+
+            $generation->delete();
+
+            DB::commit();
+
             return response()->json([
                 'success' => 'Record has been deleted successfully!',
             ]);
-        } else {
-            return error;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
         }
     }
 
