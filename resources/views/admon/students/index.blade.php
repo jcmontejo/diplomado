@@ -69,6 +69,7 @@
             "buttons": ['excel', 'pdf'],
             processing: true,
             serverSide: true,
+            
             ajax: '{!! url('/admon/alumnos/datos') !!}',
             columns: [{
                     data: 'curp',

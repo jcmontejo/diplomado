@@ -48,7 +48,7 @@ class StudentController extends Controller
         return Datatables::of($students)
             ->addColumn('action', function ($student) {
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
-                <a href="/admon/alumnos/expediente/'.$student->id.'" class="btn btn-success"><i class="fa fa-eye"></i> Expediente</a>
+                <a href="/admon/alumnos/expediente/'.$student->id.'" target="_blank" class="btn btn-success"><i class="fa fa-eye"></i> Expediente</a>
                 <button class="btn btn-primary btn-flat" value="' . $student->id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
                 <button class="btn btn-danger btn-flat" value="' . $student->id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
                 </div>
@@ -60,13 +60,17 @@ class StudentController extends Controller
     public function proceedings($id)
     {   
         $student = Student::find($id);
-        $inscriptions = StudentInscription::where('student_id', '=', $student->id)
+        $inscriptions = StudentInscription::where('student_inscriptions.student_id', '=', $student->id)
             ->join('diplomats', 'diplomats.id', 'student_inscriptions.diplomat_id')
             ->join('generations', 'generations.id', '=', 'student_inscriptions.generation_id')
+            ->join('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
             ->select(
                 'diplomats.name as diplomat',
                 'generations.number_generation as generation',
-                'student_inscriptions.created_at as created_at'
+                'student_inscriptions.created_at as created_at',
+                'student_inscriptions.final_cost as final_cost',
+                'debts.id as debt_id',
+                'debts.amount as amount'
             )
             ->get();
         return view('admon.students.timeline', compact('student', 'inscriptions'));
