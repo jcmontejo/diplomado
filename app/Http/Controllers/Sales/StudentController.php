@@ -636,108 +636,120 @@ class StudentController extends Controller
             DB::beginTransaction();
             if ($request->ajax()) {
 
-                if ($this->checkStudent($request->student_id)) {
-                    $student = Student::find($request->student_id);
-                    $student->status = 1;
-                    $student->save();
+                $exists = DB::table('student_inscriptions')
+                    ->where('student_id', '=', $request->student_id)
+                    ->where('generation_id', '=', $request->generation_id)
+                    ->where('status', '=', 'Alta')
+                    ->first();
 
-                    $generation = Generation::find($request->generation_id);
-                    $diplomat = Diplomat::find($generation->diplomat_id);
-
-                    // Student Inscription
-                    $inscription = new StudentInscription();
-                    $inscription->student_id = $student->id;
-                    $inscription->diplomat_id = $generation->diplomat_id;
-                    $inscription->generation_id = $generation->id;
-                    $inscription->discount = $request->discount;
-                    $inscription->final_cost = $diplomat->maximum_cost - $request->discount;
-                    $inscription->number_of_payments = $request->number_payments;
-                    $inscription->first_payment = $request->first_payment;
-                    $inscription->comments = $request->comments;
-                    $inscription->amount_of_payments = $request->amount_of_payments;
-                    $inscription->periodicity = $request->periodicity;
-                    $inscription->type_of_inscription = $request->type_of_inscription;
-                    $inscription->save();
-
-                    $generation->number_students = $generation->number_students + 1;
-                    $generation->save();
-
-                    // Add Debt and Payments to student
-                    $date = new Carbon($generation->start_date);
-                    $sum_first_payment = $inscription->discount + $inscription->first_payment;
-                    $discount = $inscription->final_cost - $inscription->first_payment;
-
-                    //$amount = ($discount / $request->number_payments);
-
-                    $debt = new Debt();
-                    $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
-                    $debt->student_id = $student->id;
-                    $debt->generation_id = $inscription->id;
-                    $debt->save();
-
-                    for ($i = 1; $i <= $request->number_payments; $i++) {
-                        $date = $date->addWeeks(2);
-                        if ($date->dayOfWeek === Carbon::SUNDAY) {
-                            $date->addDay();
-                        }
-                        $datePayment[$i] = $date->toDateString();
-
-                        $payment = new Payment();
-                        $payment->concept = 'COLEGIATURA';
-                        $payment->number_payment = $i;
-                        $payment->date = $datePayment[$i];
-                        $payment->amount_paid = 0;
-                        $payment->student_id = $student->id;
-                        $payment->generation_id = $generation->id;
-                        $payment->diplomat_id = $diplomat->id;
-                        $payment->status = 'PENDIENTE';
-                        $payment->debt_id = $debt->id;
-                        $payment->save();
-                    }
-
-                    $mytime = Carbon::now();
-
-                    $received = new PaymentReceived();
-                    $received->diplomat_id = $diplomat->id;
-                    $received->generation_id = $generation->id;
-                    $received->student_id = $inscription->student_id;
-                    $received->date_payment = $mytime->toDateTimeString();
-                    $received->observation = 'NULL';
-                    $received->payment_method = $request->payment_method;
-                    $received->destination_account = $request->account;
-                    $received->account_type = $request->account_type;
-                    $received->amount = $inscription->first_payment;
-                    $received->discount = 0;
-                    $received->total = $inscription->first_payment;
-                    $received->type = 0;
-                    $received->number_pay = 0;
-                    $received->debt_id = $debt->id;
-                    $received->save();
-
-                    // $this->received($diplomat->id, $generation->id, $inscription->id, $request->first_payment, $request->account, $request->payment_method, $request->account_type);
-
-                    $this->incentive($inscription->id, $generation->id, $student->id, $inscription->discount);
-                    //$inscription->notify(new NEWInscription($inscription));
-                    DB::commit();
-
-                    return response()->json([
-                        "message" => "success",
-                        $sum_first_payment,
-                        $discount,
-                        $debt,
-                    ]);
-                } else {
+                if ($exists) {
                     DB::rollBack();
-
-                    return response()
-                        ->json([
-                            'message' => 'Datos del estudiante no estan completos.',
-                            'status' => 400,
-                        ], 400);
+                    return response()->json(array("exists" => true));
+                }else {
+                    if ($this->checkStudent($request->student_id)) {
+                        $student = Student::find($request->student_id);
+                        $student->status = 1;
+                        $student->save();
+    
+                        $generation = Generation::find($request->generation_id);
+                        $diplomat = Diplomat::find($generation->diplomat_id);
+    
+                        // Student Inscription
+                        $inscription = new StudentInscription();
+                        $inscription->student_id = $student->id;
+                        $inscription->diplomat_id = $generation->diplomat_id;
+                        $inscription->generation_id = $generation->id;
+                        $inscription->discount = $request->discount;
+                        $inscription->final_cost = $diplomat->maximum_cost - $request->discount;
+                        $inscription->number_of_payments = $request->number_payments;
+                        $inscription->first_payment = $request->first_payment;
+                        $inscription->comments = $request->comments;
+                        $inscription->amount_of_payments = $request->amount_of_payments;
+                        $inscription->periodicity = $request->periodicity;
+                        $inscription->type_of_inscription = $request->type_of_inscription;
+                        $inscription->save();
+    
+                        $generation->number_students = $generation->number_students + 1;
+                        $generation->save();
+    
+                        // Add Debt and Payments to student
+                        $date = new Carbon($generation->start_date);
+                        $sum_first_payment = $inscription->discount + $inscription->first_payment;
+                        $discount = $inscription->final_cost - $inscription->first_payment;
+    
+                        //$amount = ($discount / $request->number_payments);
+    
+                        $debt = new Debt();
+                        $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
+                        $debt->student_id = $student->id;
+                        $debt->generation_id = $inscription->id;
+                        $debt->save();
+    
+                        for ($i = 1; $i <= $request->number_payments; $i++) {
+                            $date = $date->addWeeks(2);
+                            if ($date->dayOfWeek === Carbon::SUNDAY) {
+                                $date->addDay();
+                            }
+                            $datePayment[$i] = $date->toDateString();
+    
+                            $payment = new Payment();
+                            $payment->concept = 'COLEGIATURA';
+                            $payment->number_payment = $i;
+                            $payment->date = $datePayment[$i];
+                            $payment->amount_paid = 0;
+                            $payment->student_id = $student->id;
+                            $payment->generation_id = $generation->id;
+                            $payment->diplomat_id = $diplomat->id;
+                            $payment->status = 'PENDIENTE';
+                            $payment->debt_id = $debt->id;
+                            $payment->save();
+                        }
+    
+                        $mytime = Carbon::now();
+    
+                        $received = new PaymentReceived();
+                        $received->diplomat_id = $diplomat->id;
+                        $received->generation_id = $generation->id;
+                        $received->student_id = $inscription->student_id;
+                        $received->date_payment = $mytime->toDateTimeString();
+                        $received->observation = 'NULL';
+                        $received->payment_method = $request->payment_method;
+                        $received->destination_account = $request->account;
+                        $received->account_type = $request->account_type;
+                        $received->amount = $inscription->first_payment;
+                        $received->discount = 0;
+                        $received->total = $inscription->first_payment;
+                        $received->type = 0;
+                        $received->number_pay = 0;
+                        $received->debt_id = $debt->id;
+                        $received->save();
+    
+                        // $this->received($diplomat->id, $generation->id, $inscription->id, $request->first_payment, $request->account, $request->payment_method, $request->account_type);
+    
+                        $this->incentive($inscription->id, $generation->id, $student->id, $inscription->discount);
+                        //$inscription->notify(new NEWInscription($inscription));
+                        DB::commit();
+    
+                        return response()->json([
+                            "message" => "success",
+                            $sum_first_payment,
+                            $discount,
+                            $debt,
+                        ]);
+                    } else {
+                        DB::rollBack();
+    
+                        return response()
+                            ->json([
+                                'message' => 'Datos del estudiante no estan completos.',
+                                'status' => 400,
+                            ], 400);
+                    }
                 }
             }
         } catch (Exception $e) {
             DB::rollBack();
+            return $e->getMessage();
         }
     }
 
@@ -856,6 +868,7 @@ class StudentController extends Controller
             return true;
         }
     }
+
 
     public function checkStudentInscription(Request $request)
     {
@@ -988,16 +1001,17 @@ class StudentController extends Controller
                 }
                 $student->user_id = $user->id;
                 $student->save();
-                DB::commit();
 
 
                 $this->nInscription($student->id, $request->generation_id, $request->discount, $request->number_payments, $request->amount_of_payments, $request->first_payment, $request->periodicity, $request->account, $request->account_type, $request->payment_method);
+                DB::commit();
                 return response()->json([
                     "message" => "success",
                 ]);
             }
         } catch (Exception $e) {
             DB::rollBack();
+            return $e->getMessage();
         }
     }
 
