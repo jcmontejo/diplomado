@@ -757,16 +757,21 @@
             beforeSend: function () {
                 $("#preloader").css("display", "block");
             },
-            success: function () {
-                $("#preloader").css("display", "none");
-                $('#nameInscription').val('');
-                $('#lastnameInscription').val('');
-                $('#motherlastnameInscription').val('');
-                $('#id-student-alt').val('');
-                $("#modalInscription .close").click();
-                $('#message-error-inscription').css('display', 'none');
-                reload();
-                toastr.success('Has re inscrito al alumno exitosamente!','Bien hecho!')
+            success: function (res) {
+                if (res.exists){
+                    toastr.error('Este alumno ya se encuentra registrado!','Ooops!')
+                    $("#preloader").css("display", "none");
+                }else{
+                    $("#preloader").css("display", "none");
+                    $('#nameInscription').val('');
+                    $('#lastnameInscription').val('');
+                    $('#motherlastnameInscription').val('');
+                    $('#id-student-alt').val('');
+                    $("#modalInscription .close").click();
+                    $('#message-error-inscription').css('display', 'none');
+                    reload();
+                    toastr.success('Has re inscrito al alumno exitosamente!','Bien hecho!')
+                }               
             },
             error: function (data) {
                 if (data.status === 400) {

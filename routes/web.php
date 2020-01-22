@@ -530,6 +530,7 @@ Route::group(['prefix' => 'ventas'], function () {
     //Buscar generaciones
     Route::get('/alumnos/buscar/generaciones/{id}', 'Sales\StudentController@listGenerations');
 
+    
     //Inscripciones
     Route::post('/alumnos/revisar', 'Sales\StudentController@checkStudentInscription');
     Route::post('/alumnos/procesar/reinscripcion', 'Sales\StudentController@incscriptionStudentOld');
