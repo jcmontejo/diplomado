@@ -298,6 +298,15 @@
                                                 class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal"
                                                 data-target="#modalShow"><i class="fa fa-eye"></i>
                                                 Detalles</button>
+                                            @if ($student->status === 'Alta')
+                                            <button value="{{$student->id_inscription}}"
+                                                OnClick="Down(this);"
+                                                class="btn btn-rounded btn-xs btn-danger mb-3"
+                                                data-toggle="modal"
+                                                data-target="#modalDown"><i
+                                                    class="fa fa-thumbs-down"></i>
+                                                Dar de Baja</button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -683,6 +692,7 @@
                                     <th>COSTO DIPLOMADO</th>
                                     <th>PAGO TOTAL</th>
                                     <th>ADEUDO</th>
+                                    <th>ACCIONES</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($students_low as $indexKey => $student)
@@ -710,6 +720,10 @@
                                         <td>${{number_format($student->final_cost,2)}}</td>
                                         <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                                         <td>${{number_format($student->total_debt,2 )}}</td>
+                                        <td>
+                                            <button class="btn btn-xs btn-danger" value="{{$student->id_inscription}}"
+                                                OnClick="Delete(this);"><i class="fas fa-trash"></i> Eliminar</button>
+                                        </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
