@@ -65,6 +65,7 @@ class GenerationController extends Controller
 
                 return $data;
             })
+
             ->addColumn('action', function ($generation) {
                 $id = $generation->id;
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
@@ -365,6 +366,38 @@ class GenerationController extends Controller
         $generation->fill($request->all());
         $generation->save();
         return response()->json(["message" => "success"]);
+    }
+
+    public function deleteStudent($id)
+    {
+        try {
+            DB::beginTransaction();
+            $ins = StudentInscription::where('id', '=', $id)->first();
+
+            $debt = Debt::where('generation_id', '=', $ins->id)->first();
+
+            $payments = DB::table('payments')
+                ->where('debt_id', '=', $debt->id)->delete();
+
+            $payment_receiveds = DB::table('payment_receiveds')
+                ->where('debt_id', '=', $debt->id)->delete();
+
+            $agreements = DB::table('agreements')
+                ->join('debts', 'agreements.debt_id', '=', 'debts.id')
+                ->where('debts.id', '=', $debt->id)->delete();
+
+            $debt->delete();
+
+            $ins->delete();
+            DB::commit();
+
+            return response()->json([
+                'success' => 'Record has been deleted successfully!',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
     }
 
     public function destroy($id)

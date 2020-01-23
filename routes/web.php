@@ -331,6 +331,7 @@ Route::group(['prefix' => 'admon'], function () {
     Route::get('/generaciones/alumnos/consultar/{id}', 'Admon\GenerationController@search');
     Route::put('/generaciones/alumnos/baja/{id}', 'Admon\GenerationController@down');
     Route::put('/generaciones/alumnos/alta/{id}', 'Admon\GenerationController@up');
+    Route::delete('/generaciones/eliminar/alumno/{id}', 'Admon\GenerationController@deleteStudent');
 
     Route::get('/generaciones/alumnos/baja/consultar/{id}', 'Admon\GenerationController@low');
 

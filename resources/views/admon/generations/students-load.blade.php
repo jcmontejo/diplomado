@@ -1,7 +1,7 @@
 @extends('layouts.adminLTEAdmon')
 @section('content')
 <div class="row">
-    @include('auxiliar.generations.ajax-1')
+    @include('admon.generations.ajax-1')
     <div class="loading">
         <i class="fas fa-refresh fa-spin fa-2x fa-fw"></i><br />
         <span>Cargando</span>
@@ -394,6 +394,47 @@
         $.get(route, function (res) {
             $("#studentDown").val(res.fullname);
             $("#inscriptionDown").val(res.id_inscription);
+        });
+    }
+
+    function Delete(btn) {
+        var id = btn.value;
+        var route = "/admon/generaciones/eliminar/alumno/" + btn.value;
+        swal({
+            title: '¿Estás seguro?',
+            text: "Será eliminado permanentemente!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, borralo!',
+            showLoaderOnConfirm: true,
+
+            preConfirm: function () {
+                return new Promise(function (resolve) {
+
+                    $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'DELETE',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                        })
+                        .done(function (response) {
+                            swal.close();
+                            location.reload();
+                            toastr.success('Eliminado!', 'Bien hecho!')
+                        })
+                        .fail(function () {
+                            swal('Oops...', 'Algo salió mal con la petición!', 'error ');
+                        });
+                });
+            },
+            allowOutsideClick: false
         });
     }
 
