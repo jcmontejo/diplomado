@@ -149,6 +149,8 @@
         var start_date = $("#startdateSave").val();
         var commision = $("#commisionSave").val();
         var full_price = $("#full_priceSave").val();
+        var cost = $("#costSave").val();
+        var maximum_cost = $("#maximum_costSave").val();
         var status = $("#statusSave").val();
         var docent_id = $("#docentSave").val();
         var route = "/generaciones/guardar"
@@ -166,6 +168,8 @@
                 start_date: start_date,
                 commision: commision,
                 full_price: full_price,
+                cost: cost,
+                maximum_cost: maximum_cost,
                 status: status,
                 docent_id: docent_id
             },
