@@ -26,7 +26,7 @@ class CreateGenerationsTable extends Migration
             $table->string('docent');
             $table->integer('docent_id');
             $table->unsignedInteger('diplomat_id');
-
+            //
             $table->foreign('diplomat_id')->references('id')->on('diplomats');
             $table->timestamps();
         });

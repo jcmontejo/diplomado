@@ -11,6 +11,7 @@ class Generation extends Model
         'number_generation',
         'number_students',
         'cost',
+        'maximum_cost',
         'start_date',
         'commision',
         'full_price',

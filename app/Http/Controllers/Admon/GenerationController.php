@@ -56,8 +56,8 @@ class GenerationController extends Controller
     {
         $generations = Generation::select([
             'id', 'name_diplomat', 'docent', 'number_generation', 'number_students',
-            'cost', 'commision', 'full_price', 'created_at'
-        ]);
+            'cost', 'maximum_cost', 'commision', 'full_price', 'created_at'
+        ])->orderBy('name_diplomat');
 
         return Datatables::of($generations)
             ->addColumn('total_inscriptions', function ($generation){

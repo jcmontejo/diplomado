@@ -26,6 +26,14 @@
                                 <label for="exampleInputPassword1">% a pagar por FULL PRICE</label>
                                 <input type="number" class="form-control form-control-lg" id="full_priceEdit">
                             </div>
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">COSTO</label>
+                                <input type="number" class="form-control form-control-lg" id="costEdit">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">COSTO MÁXIMO</label>
+                                <input type="number" class="form-control form-control-lg" id="maximum_costEdit">
+                            </div>
                         </div>
                     </form>
                 </div>

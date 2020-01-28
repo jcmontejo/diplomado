@@ -805,6 +805,7 @@
         var bandera = $("#bandera").val();
 
         if (bandera == 1) {
+            
             //Reinscripcion
             var student_id = $("#idStudent").val();
             var generation_re = $("#generation_id_old").val();

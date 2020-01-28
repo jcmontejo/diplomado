@@ -40,7 +40,15 @@
                                 Perfil
                             </p>
                         </a>
-                    </li>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url('/admon/cuentas')}}" class="nav-link">
+                            <i class="nav-icon fas fa-piggy-bank"></i>
+                            <p>
+                                Cuentas
+                            </p>
+                        </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{url('/admon/docentes/lista')}}" class="nav-link">
                         <i class="nav-icon fas fa-book"></i>

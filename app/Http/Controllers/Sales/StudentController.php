@@ -660,7 +660,7 @@ class StudentController extends Controller
                         $inscription->diplomat_id = $generation->diplomat_id;
                         $inscription->generation_id = $generation->id;
                         $inscription->discount = $request->discount;
-                        $inscription->final_cost = $diplomat->maximum_cost - $request->discount;
+                        $inscription->final_cost = $generation->maximum_cost - $request->discount;
                         $inscription->number_of_payments = $request->number_payments;
                         $inscription->first_payment = $request->first_payment;
                         $inscription->comments = $request->comments;
@@ -680,7 +680,7 @@ class StudentController extends Controller
                         //$amount = ($discount / $request->number_payments);
     
                         $debt = new Debt();
-                        $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
+                        $debt->amount = $generation->maximum_cost - $sum_first_payment;
                         $debt->student_id = $student->id;
                         $debt->generation_id = $inscription->id;
                         $debt->save();
@@ -905,7 +905,7 @@ class StudentController extends Controller
                 $inscription->diplomat_id = $generation->diplomat_id;
                 $inscription->generation_id = $generation->id;
                 $inscription->discount = $discount_new;
-                $inscription->final_cost = $diplomat->maximum_cost - $discount_new;
+                $inscription->final_cost = $generation->maximum_cost - $discount_new;
                 $inscription->number_of_payments = $student_inscription->number_of_payments;
                 $inscription->first_payment = 0;
                 $inscription->comments = "Recursador";
@@ -925,7 +925,7 @@ class StudentController extends Controller
                 //$amount = ($discount / $request->number_payments);
 
                 $debt = new Debt();
-                $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
+                $debt->amount = $generation->maximum_cost - $sum_first_payment;
                 $debt->student_id = $student->id;
                 $debt->generation_id = $inscription->id;
                 $debt->save();
@@ -1032,7 +1032,7 @@ class StudentController extends Controller
                 $inscription->diplomat_id = $generation->diplomat_id;
                 $inscription->generation_id = $generation->id;
                 $inscription->discount = $discount;
-                $inscription->final_cost = $diplomat->maximum_cost - $discount;
+                $inscription->final_cost = $generation->maximum_cost - $discount;
                 $inscription->number_of_payments = $number_payments;
                 $inscription->first_payment = $first_payment;
                 $inscription->comments = 'null';
@@ -1052,7 +1052,7 @@ class StudentController extends Controller
                 //$amount = ($discount / $request->number_payments);
 
                 $debt = new Debt();
-                $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
+                $debt->amount = $generation->maximum_cost - $sum_first_payment;
                 $debt->student_id = $student->id;
                 $debt->generation_id = $inscription->id;
                 $debt->save();
