@@ -20,6 +20,7 @@
                         <th>Generación</th>
                         <th>Alumnos Inscritos</th>
                         <th>Costo de Diplomado (BASE)</th>
+                        <th>Costo Máximo</th>
                         <th>Importe a pagar por comisión (BASE</th>
                         <th>% a pagar por FULL PRICE</th>
                         <th>Fecha/Hora de Creación</th>
@@ -103,6 +104,12 @@
                 {
                     data: 'cost',
                     "render": function (data, type, row) {
+                        return '$' + data;
+                    }
+                },
+                {
+                    data: 'maximum_cost',
+                    "render": function (data, type, row){
                         return '$' + data;
                     }
                 },
@@ -201,9 +208,12 @@
         var route = "/admon/generaciones/editar/" + btn.value;
 
         $.get(route, function (res) {
+
             $("#dateEdit").val(res.start_date);
             $("#commisionEdit").val(res.commision);
             $("#full_priceEdit").val(res.full_price);
+            $("#costEdit").val(res.cost);
+            $("#maximum_costEdit").val(res.maximum_cost);
             $("#number_generationEdit").val(res.number_generation);
             $("#idEdit").val(res.id);
         });
@@ -214,7 +224,10 @@
         var start_date = $("#dateEdit").val();
         var commission = $("#commisionEdit").val();
         var full_price = $("#full_priceEdit").val();
+        var cost = $("#costEdit").val();
+        var maximum_cost = $("#maximum_costEdit").val();
         var number_generation = $("#number_generationEdit").val();
+
         var route = "/admon/generaciones/actualizar/" + value;
 
         $.ajax({
@@ -228,6 +241,8 @@
                 start_date: start_date,
                 commission: commission,
                 full_price: full_price,
+                cost: cost,
+                maximum_cost: maximum_cost,
                 number_generation: number_generation,
             },
             success: function () {

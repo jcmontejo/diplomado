@@ -293,6 +293,15 @@ Route::group(['prefix' => 'admon'], function () {
     Route::get('/perfil/editar/', 'UserController@edit');
     Route::put('/perfil/actualizar/{id}', 'UserController@update');
 
+    //Cuentas
+    Route::get('/cuentas', 'Admon\AccountController@index');
+    Route::get('/cuentas/datos', 'Admon\AccountController@dataAccounts')->name('admon.accounts.data');
+    Route::get('/cuentas/crear', 'Admon\AccountController@create');
+    Route::post('/cuentas/guardar', 'Admon\AccountController@store');
+    Route::get('/cuentas/editar/{id}', 'Admon\AccountController@edit');
+    Route::put('/cuentas/actualizar/{id}', 'Admon\AccountController@update');
+    Route::delete('/cuentas/eliminar/{id}', 'Admon\AccountController@destroy');
+
     //Alumnos
     Route::get('/alumnos/lista', 'Admon\StudentController@index');
     Route::get('/alumnos/datos', 'Admon\StudentController@dataStudents');
@@ -533,6 +542,7 @@ Route::group(['prefix' => 'ventas'], function () {
 
     
     //Inscripciones
+    
     Route::post('/alumnos/revisar', 'Sales\StudentController@checkStudentInscription');
     Route::post('/alumnos/procesar/reinscripcion', 'Sales\StudentController@incscriptionStudentOld');
     Route::post('/alumnos/procesar/nuevainscripcion', 'Sales\StudentController@nStudent');
