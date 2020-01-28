@@ -323,7 +323,8 @@ class GenerationController extends Controller
                 $generation = new Generation();
                 $generation->name_diplomat = $diplomat->name;
                 $generation->number_generation = $request->number_generation;
-                $generation->cost = $diplomat->cost;
+                $generation->cost = $request->cost;
+                $generation->maximum_cost = $request->maximum_cost;
                 $generation->start_date = $request->start_date;
                 $generation->commision = $request->commision;
                 $generation->full_price = $request->full_price;
