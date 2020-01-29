@@ -68,8 +68,8 @@
                     name: 'number_generation'
                 },
                 {
-                    data: 'number_students',
-                    name: 'number_students',
+                    data: 'total_inscriptions',
+                    name: 'total_inscriptions',
                 },
                 {
                     data: 'action',

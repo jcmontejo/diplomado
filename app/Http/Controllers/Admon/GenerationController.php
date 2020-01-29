@@ -54,6 +54,7 @@ class GenerationController extends Controller
 
     public function dataGenerations()
     {
+        
         $generations = Generation::select([
             'id', 'name_diplomat', 'docent', 'number_generation', 'number_students',
             'cost', 'maximum_cost', 'commision', 'full_price', 'created_at'
