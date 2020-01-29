@@ -32,6 +32,11 @@ class GeneralController extends Controller
             'cost', 'commision', 'full_price', 'created_at']);
 
         return Datatables::of($generations)
+            ->addColumn('total_inscriptions', function ($generation){
+                $data = StudentInscription::where('generation_id', '=', $generation->id)->count();
+
+                return $data;
+            })
             ->addColumn('action', function ($generation) {
                 $id = $generation->id;
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
