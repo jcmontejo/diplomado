@@ -1049,9 +1049,9 @@ class StudentController extends Controller
                 $inscription->generation_id = $generation->id;
                 $inscription->discount = $discount;
                 if(empty($generation->maximum_cost)){
-                    $inscription->final_cost = $diplomat->maximum_cost - $request->discount;
+                    $inscription->final_cost = $diplomat->maximum_cost - $discount;
                 }else{
-                    $inscription->final_cost = $generation->maximum_cost - $request->discount;
+                    $inscription->final_cost = $generation->maximum_cost - $discount;
                 }
                 $inscription->number_of_payments = $number_payments;
                 $inscription->first_payment = $first_payment;
