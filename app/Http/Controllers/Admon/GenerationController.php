@@ -151,10 +151,16 @@ class GenerationController extends Controller
             ->where('student_inscriptions.generation_id', '=', $id)
             ->sum('debts.amount');
 
+        $docent_pay = DB::table('docent_pays')
+                ->where('generation_id', '=', $id)
+                ->first();
+
+            
         if ($request->ajax()) {
-            return view('admon.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+
+            return view('admon.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global', 'docent_pay'));
         } else {
-            return view('admon.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+            return view('admon.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global', 'docent_pay'));
         }
         // return $students;
     }
@@ -471,6 +477,25 @@ class GenerationController extends Controller
                 'success' => 'Record has been deleted successfully!',
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+        }
+    }
+
+    public function discount(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $debt = Debt::where('generation_id', '=', $request->id)->first();
+            $debt->amount -= $request->amount;
+            $debt->save();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => 'Record has been updated successfully!',
+            ]);
+        } catch (\Throwable $th) {
             DB::rollBack();
         }
     }
