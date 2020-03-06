@@ -14,6 +14,7 @@
 @include('auxiliar.generations.modal-convenio')
 @include('auxiliar.generations.modal-editar-pago')
 @include('auxiliar.generations.modal-editar-pago-dos')
+@include('admon.generations.modal-discount')
 @endsection
 @section('js')
 <script>
@@ -396,6 +397,54 @@
             $("#inscriptionDown").val(res.id_inscription);
         });
     }
+
+    function Discount(btn) {
+        var route = "/generaciones/alumnos/consultar/" + btn.value;
+
+        $.get(route, function (res) {
+            $("#inscriptionDiscount").val(res.id_inscription);
+        });
+    }
+
+    $("#ApplyDiscount").click(function () {
+        var id = $("#inscriptionDiscount").val();
+        var amount = $("#amountDiscount").val();
+
+        var route = "/admon/generaciones/alumnos/descuento/";
+
+        $.ajax({
+            url: route,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id,
+                amount: amount
+            },
+            beforeSend: function () {
+                $("#preloader").css("display", "block");
+            },
+            success: function () {
+                $("#preloader").css("display", "none");
+                $("#modalDiscount .close").click();
+                toastr.success('Has realizado un descuento al alumno exitosamente!', 'Bien hecho!')
+                location.reload();
+            },
+            error: function (data) {
+                $("#preloader").css("display", "none");
+                var response = JSON.parse(data.responseText);
+                var errorString = "<ul>";
+                $.each(response.errors, function (key, value) {
+                    errorString += "<li>" + value + "</li>";
+                });
+
+                $("#error-edit").html(errorString);
+                $("#message-error-edit").fadeIn();
+            }
+        });
+    });
 
     function Delete(btn) {
         var id = btn.value;
