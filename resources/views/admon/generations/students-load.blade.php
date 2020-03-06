@@ -412,7 +412,8 @@
 
         var route = "/admon/generaciones/alumnos/descuento/";
 
-        $.ajax({
+        if (amount != "") {
+            $.ajax({
             url: route,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -444,6 +445,9 @@
                 $("#message-error-edit").fadeIn();
             }
         });
+        }else{
+            toastr.error('Tienes que llenar el campo monto a descontar.', 'Oooops!')
+        }
     });
 
     function Delete(btn) {
