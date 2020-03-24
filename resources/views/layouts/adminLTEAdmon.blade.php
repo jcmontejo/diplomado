@@ -176,6 +176,23 @@
     {{-- SweetAlert --}}
     <script src="{{asset('/js/sweetalert2.min.js')}}"></script>
     @yield('js')
+    <script>
+        function checkMasterKey()
+        {
+            var psd = $("#psdMaster").val();
+
+            var route = "/admon/consultar/contrasenia/" + psd;
+
+            $.get(route, function (res) {
+                if (res.success == true) {
+                    var result = true;
+                }else{
+                   var result = false;
+                }
+                return result;
+            });
+        }
+    </script>
 </body>
 
 </html>

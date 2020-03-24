@@ -48,9 +48,9 @@ class StudentController extends Controller
         return Datatables::of($students)
             ->addColumn('action', function ($student) {
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
-                <a href="/admon/alumnos/expediente/'.$student->id.'" target="_blank" class="btn btn-success"><i class="fa fa-eye"></i> Expediente</a>
-                <button class="btn btn-primary btn-flat" value="' . $student->id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
-                <button class="btn btn-danger btn-flat" value="' . $student->id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
+                <a href="/admon/alumnos/expediente/'.$student->id.'" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Expediente</a>
+                <button class="btn btn-sm btn-primary btn-flat" value="' . $student->id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
+                <button class="btn btn-sm btn-danger btn-flat" OnClick="DeleteMod('.$student->id.');" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i> Eliminar</button>
                 </div>
                 </td>';
             })
@@ -157,6 +157,46 @@ class StudentController extends Controller
             return false;
         } else {
             return true;
+        }
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $payments = DB::table('payments')
+                ->where('student_id', '=', $request->id)->delete();
+
+            $payment_receiveds = DB::table('payment_receiveds')
+                ->where('student_id', '=', $request->id)->delete();
+
+            $agreements = DB::table('agreements')
+                ->join('debts', 'agreements.debt_id', '=', 'debts.id')
+                ->where('debts.student_id', '=', $request->id)->delete();
+
+            $debts = DB::table('debts')
+                ->where('student_id', '=', $request->id)->delete();
+
+            $student_inscriptions = DB::table('student_inscriptions')
+                ->select('student_inscriptions.*')
+                ->where('student_id', '=', $request->id);
+
+            // $incentive = DB::table('incentives')
+            //     ->where('student_inscription_id', '=', $student_inscriptions->id)->delete();
+
+            $student_inscriptions->delete();
+
+            Student::find($request->id)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => 'Record has been deleted successfully!',
+            ]);
+
+        } catch (Exception $e) {
+            DB::rollBack();
         }
     }
 }

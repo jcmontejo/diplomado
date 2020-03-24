@@ -13,6 +13,10 @@
                     <form id="form">
                         <div class="form-row">
                             <div class="form-group col-md-12">
+                                <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                                <input type="password" class="form-control form-control-lg" id="psdMaster" placeholder="****************">
+                            </div>
+                            <div class="form-group col-md-12">
                                 <label for="exampleInputEmail1">Nombre de Cuenta</label>
                                 <input type="text" class="form-control form-control-lg" id="accountnameSave" placeholder="Introduce nombre de la cuenta">
                             </div>
@@ -30,7 +34,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary mt-4 pr-4 pl-4" data-dismiss="modal">Cerrar</button>
-                <a href="#" id="saveAccount" class="btn btn-primary mt-4 pr-4 pl-4" name="saveDiplomat">Guardar</a>
+                <a href="#" id="saveAccount" class="btn btn-primary mt-4 pr-4 pl-4" name="saveAccount">Guardar</a>
             </div>
         </div>
     </div>

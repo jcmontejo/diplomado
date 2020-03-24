@@ -12,6 +12,10 @@
                     </div>
                     <form id="form">
                         <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                                <input type="password" class="form-control form-control-lg" id="psdMasterEdit" placeholder="****************">
+                            </div>
                              <div class="form-group col-4">
                                 <label for="exampleInputEmail1">CURP</label>
                                 <input type="text" class="form-control form-control-lg" id="curp" placeholder="Introduce CURP del alumno">

@@ -10,27 +10,28 @@
                 <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
                     <strong>Diplomado Actualizado Correctamente.</strong>
                 </div>
-                <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createDiplomat"><i class="fas fa-plus"></i> Agregar
+                <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createDiplomat"><i
+                        class="fas fa-plus"></i> Agregar
                     Nuevo Diplomado</a>
                 <div class="table-responsive">
                     <table class="table" id="diplomats">
-                    <thead>
-                        <th>Nombre Diplomado</th>
-                        <th>Clave Diplomado</th>
-                        <th>Costo (BASE)</th>
-                        <th>Costo Máximo (VENDEDORES)</th>
-                        <th>Acciones</th>
-                    </thead>
-                    <tfoot>
-                        <tr>
+                        <thead>
                             <th>Nombre Diplomado</th>
                             <th>Clave Diplomado</th>
                             <th>Costo (BASE)</th>
                             <th>Costo Máximo (VENDEDORES)</th>
                             <th>Acciones</th>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Nombre Diplomado</th>
+                                <th>Clave Diplomado</th>
+                                <th>Costo (BASE)</th>
+                                <th>Costo Máximo (VENDEDORES)</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>
@@ -39,23 +40,13 @@
 </div>
 @include('admon.diplomats.modal-edit')
 @include('admon.diplomats.modal-create')
+@include('admon.diplomats.modal-delete')
 @endsection
 @section('js')
 <script>
     $(document).ready(function () {
         Charge();
     });
-
-    function checkPassword(){
-        var password = $("#password").val();
-        if (password==='Temporal.2019') {
-            toastr.success('Contraseña correcta!', 'Bien hecho!')
-            $('.actions input').attr('disabled', false);
-        }else{
-            $('.actions input').attr('disabled', 'disabled');
-            toastr.error('Contraseña incorrecta!', 'Ooops!')
-        }
-    }
 
     function reload() {
         $('#diplomats').each(function () {
@@ -71,7 +62,7 @@
             },
             processing: true,
             serverSide: true,
-            ajax: '{!! route('admon.diplomats.data') !!}',
+            ajax: '/admon/diplomados/datos',
             columns: [{
                     data: 'name',
                     name: 'name'
@@ -109,44 +100,59 @@
         var maximum_cost = $("#maximum_costSave").val();
         var route = "/admon/diplomados/guardar"
 
-        $.ajax({
-            url: route,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                name: name,
-                key: key,
-                cost: cost,
-                maximum_cost: maximum_cost
-            },
-             beforeSend: function () {
-                $("#preloader").css("display", "block");
-            },
-            success: function () {
-                $("#preloader").css("display", "none");
-                $('#nameSave').val('');
-                $('#keySave').val('');
-                $('#costSave').val('');
-                $("#modalCreate").modal('toggle');
-                $('#message-error').css('display', 'none');
-                reload();
-                swal("Bien hecho!", "Has creado un nuevo diplomado!", "success");
-            },
-            error: function (data) {
-                $("#preloader").css("display", "none");
-                var response = JSON.parse(data.responseText);
-                var errorString = "<ul>";
-                $.each(response.errors, function (key, value) {
-                    errorString += "<li>" + value + "</li>";
-                });
+        //checkPsd
+        var psd = $("#psdMaster").val();
+        var route_psd = "/admon/consultar/contrasenia/" + psd;
 
-                $("#error-save").html(errorString);
-                $("#message-error-save").fadeIn();
-            }
-        });
+        if (psd != "") {
+            $.get(route_psd, function (res) {
+                if (res.success == true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            name: name,
+                            key: key,
+                            cost: cost,
+                            maximum_cost: maximum_cost
+                        },
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $('#nameSave').val('');
+                            $('#keySave').val('');
+                            $('#costSave').val('');
+                            $("#modalCreate").modal('toggle');
+                            $('#message-error').css('display', 'none');
+                            reload();
+                            $("#psdMaster").val("");
+                            toastr.success('Has creado un nuevo diplomado!', 'Bien hecho!')
+                        },
+                        error: function (data) {
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+
+                            $("#error-save").html(errorString);
+                            $("#message-error-save").fadeIn();
+                        }
+                    });
+                } else {
+                    alert('Clave maestra incorrecta.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo de clave maestra.');
+        }
     })
 
     function Show(btn) {
@@ -169,81 +175,113 @@
         var maximum_cost = $("#maximum_cost").val();
         var route = "/admon/diplomados/actualizar/" + value;
 
-        $.ajax({
-            url: route,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'PUT',
-            dataType: 'json',
-            data: {
-                name: name,
-                key: key,
-                cost: cost,
-                maximum_cost: maximum_cost
-            },
-             beforeSend: function () {
-                $("#preloader").css("display", "block");
-            },
-            success: function () {
-                $("#preloader").css("display", "none");
-                $("#modalEdit").modal('toggle');
-                reload();
-                swal("Bien hecho!", "Has actualizado un diplomado exitosamente!", "success");
-            },
-            error: function (data) {
-                $("#preloader").css("display", "none");
-                var response = JSON.parse(data.responseText);
-                var errorString = "<ul>";
-                $.each(response.errors, function (key, value) {
-                    errorString += "<li>" + value + "</li>";
-                });
+        //checkPsd
+        var psd = $("#psdMasterEdit").val();
+        var route_psd = "/admon/consultar/contrasenia/" + psd;
 
-                $("#error-edit").html(errorString);
-                $("#message-error-edit").fadeIn();
-            }
-        });
+        if (psd != "") {
+            $.get(route_psd, function (res) {
+                if (res.success == true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'PUT',
+                        dataType: 'json',
+                        data: {
+                            name: name,
+                            key: key,
+                            cost: cost,
+                            maximum_cost: maximum_cost
+                        },
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $("#modalEdit").modal('toggle');
+                            reload();
+                            $("#psdMasterEdit").val("");
+                            toastr.success('Has actualizado un diplomado exitosamente!',
+                                'Bien hecho!')
+                        },
+                        error: function (data) {
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+
+                            $("#error-edit").html(errorString);
+                            $("#message-error-edit").fadeIn();
+                        }
+                    });
+                } else {
+                    alert('Clave maestra incorrecta.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo de clave maestra.');
+        }
     });
 
-    function Delete(btn) {
-        var id = btn.value;
-        var route = "/admon/diplomados/eliminar/" + btn.value;
-        swal({
-            title: '¿Estás seguro?',
-            text: "Será eliminado permanentemente!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, borralo!',
-            showLoaderOnConfirm: true,
-
-            preConfirm: function () {
-                return new Promise(function (resolve) {
-
-                    $.ajax({
-                            url: route,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            type: 'DELETE',
-                            dataType: 'json',
-                            data: {
-                                id: id
-                            },
-                        })
-                        .done(function (response) {
-                            reload();
-                            swal('Eliminado!', response.message, response.status);
-                        })
-                        .fail(function () {
-                            swal('Oops...', 'Algo salió mal con la petición!', 'error ');
-                        });
-                });
-            },
-            allowOutsideClick: false
-        });
+    function DeleteMod(btn) {
+        $("#id-delete").val(btn);
     }
+
+    $("#deleteAccount").click(function () {
+        var id = $("#id-delete").val();
+        var route = "/admon/diplomados/eliminar/";
+        //checkPsd
+        var psd = $("#psdMasterDelete").val();
+        var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+        if (psd != "") {
+            $.get(route_psd, function (res) {
+                if (res.success == true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            id: id
+                        },
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $("#message-error-edit").fadeOut();
+                            $("#modalDelete").modal('toggle');
+                            reload();
+                            $("#psdMasterDelete").val("");
+                            toastr.success('Eliminado!', 'Bien hecho!')
+                        },
+                        error: function (data) {
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+                            $("#error-edit").html(errorString);
+                            $("#message-error-edit").fadeIn();
+                        }
+                    })
+                } else {
+                    alert('Clave maestra incorrecta.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo de clave maestra.');
+        }
+    });
+
 </script>
 
 @endsection

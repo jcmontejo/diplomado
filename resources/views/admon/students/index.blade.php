@@ -27,6 +27,7 @@
 </div>
 <!-- /.card -->
 @include('admon.students.modal-edit')
+@include('admon.students.modal-delete')
 @endsection
 @section('js')
 <script>
@@ -69,8 +70,8 @@
             "buttons": ['excel', 'pdf'],
             processing: true,
             serverSide: true,
-            
-            ajax: '{!! url('/admon/alumnos/datos') !!}',
+
+            ajax: '/admon/alumnos/datos',
             columns: [{
                     data: 'curp',
                     name: 'curp'
@@ -150,59 +151,77 @@
         var facebook = $('#facebook').val();
         var route = "/control-escolar/alumnos/actualizar/" + value;
 
-        $.ajax({
-            url: route,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'PUT',
-            dataType: 'json',
-            data: {
-                curp: curp,
-                name: name,
-                last_name: last_name,
-                mother_last_name: mother_last_name,
-                birthdate: birthdate,
-                sex: sex,
-                phone: phone,
-                address: address,
-                state: state,
-                city: city,
-                email: email,
-                facebook: facebook,
-                profession: profession,
-                status: status
-            },
-            beforeSend: function () {
-                $("#preloader").css("display", "block");
-            },
-            success: function () {
-                $("#preloader").css("display", "none");
-                $("#modalEdit .close").click();
-                reload();
-                toastr.success('Has actualizado al alumno exitosamente!', 'Bien hecho!')
-            },
-            error: function (data) {
-                if (data.status === 500) {
-                    $("#preloader").css("display", "none");
-                    swal("Error!", "Estas introduciendo una CURP incorrecta, favor de verificar.",
-                        "error");
-                }
-                if (data.status === 400) {
-                    $("#preloader").css("display", "none");
-                    swal("Error!", "Ya existe un registro con la misma CURP.", "error");
-                }
-                $("#preloader").css("display", "none");
-                var response = JSON.parse(data.responseText);
-                var errorString = "<ul>";
-                $.each(response.errors, function (key, value) {
-                    errorString += "<li>" + value + "</li>";
-                });
+        //checkPsd
+        var psd = $("#psdMasterEdit").val();
+        var route_psd = "/admon/consultar/contrasenia/" + psd;
 
-                $("#error-edit").html(errorString);
-                $("#message-error-edit").fadeIn();
-            }
-        });
+        if (psd != "") {
+            $.get(route_psd, function (res) {
+                if (res.success == true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'PUT',
+                        dataType: 'json',
+                        data: {
+                            curp: curp,
+                            name: name,
+                            last_name: last_name,
+                            mother_last_name: mother_last_name,
+                            birthdate: birthdate,
+                            sex: sex,
+                            phone: phone,
+                            address: address,
+                            state: state,
+                            city: city,
+                            email: email,
+                            facebook: facebook,
+                            profession: profession,
+                            status: status
+                        },
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $("#modalEdit .close").click();
+                            reload();
+                            $("#psdMasterEdit").val("");
+                            toastr.success('Has actualizado al alumno exitosamente!',
+                                'Bien hecho!')
+                        },
+                        error: function (data) {
+                            if (data.status === 500) {
+                                $("#preloader").css("display", "none");
+                                swal("Error!",
+                                    "Estas introduciendo una CURP incorrecta, favor de verificar.",
+                                    "error");
+                            }
+                            if (data.status === 400) {
+                                $("#preloader").css("display", "none");
+                                swal("Error!", "Ya existe un registro con la misma CURP.",
+                                    "error");
+                            }
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+
+                            $("#error-edit").html(errorString);
+                            $("#message-error-edit").fadeIn();
+                        }
+                    });
+                } else {
+                    alert('Clave maestra incorrecta.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo de clave maestra.');
+        }
     });
 
     function Delete(btn) {
@@ -245,5 +264,61 @@
             allowOutsideClick: false
         });
     }
+
+    function DeleteMod(btn) {
+        $("#id-delete").val(btn);
+    }
+
+    $("#deleteAccount").click(function () {
+        var id = $("#id-delete").val();
+        var route = "/admon/alumnos/eliminar/";
+        //checkPsd
+        var psd = $("#psdMasterDelete").val();
+        var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+        if (psd != "") {
+            $.get(route_psd, function (res) {
+                if (res.success == true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            id: id
+                        },
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $("#message-error-edit").fadeOut();
+                            $("#modalDelete").modal('toggle');
+                            reload();
+                            $("#psdMasterDelete").val("");
+                            toastr.success('Eliminado!', 'Bien hecho!')
+                        },
+                        error: function (data) {
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+                            $("#error-edit").html(errorString);
+                            $("#message-error-edit").fadeIn();
+                        }
+                    })
+                } else {
+                    alert('Clave maestra incorrecta.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo de clave maestra.');
+        }
+    });
+
 </script>
 @endsection

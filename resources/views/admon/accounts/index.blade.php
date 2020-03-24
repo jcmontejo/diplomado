@@ -14,21 +14,21 @@
                     Nueva Cuenta</a>
                 <div class="table-responsive">
                     <table class="table" id="accounts">
-                    <thead>
-                        <th>Nombre Cuenta</th>
-                        <th>Saldo</th>
-                        <th>Notas</th>
-                        <th>Acciones</th>
-                    </thead>
-                    <tfoot>
-                        <tr>
+                        <thead>
                             <th>Nombre Cuenta</th>
                             <th>Saldo</th>
                             <th>Notas</th>
                             <th>Acciones</th>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Nombre Cuenta</th>
+                                <th>Saldo</th>
+                                <th>Notas</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>
@@ -37,6 +37,7 @@
 </div>
 @include('admon.accounts.modal-edit')
 @include('admon.accounts.modal-create')
+@include('admon.accounts.modal-delete')
 @endsection
 @section('js')
 <script>
@@ -58,7 +59,7 @@
             },
             processing: true,
             serverSide: true,
-            ajax: '{!! url('/admon/cuentas/datos') !!}',
+            ajax: '/admon/cuentas/datos',
             columns: [{
                     data: 'account_name',
                     name: 'account_name'
@@ -89,45 +90,60 @@
         var account_name = $("#accountnameSave").val();
         var opening_balance = $("#openingbalanceSave").val();
         var note = $("#noteSave").val();
-        var route = "/cuentas/guardar"
+        var route = "/admon/cuentas/guardar"
 
-        $.ajax({
-            url: route,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                account_name: account_name,
-                opening_balance: opening_balance,
-                note: note
-            },
-             beforeSend: function () {
-                $("#preloader").css("display", "block");
-            },
-            success: function () {
-                $("#preloader").css("display", "none");
-                $('#accountnameSave').val('');
-                $('#openingbalanceSave').val('');
-                $('#noteSave').val('');
-                $("#modalCreate").modal('toggle');
-                $('#message-error').css('display', 'none');
-                reload();
-                swal("Bien hecho!", "Has creado una nueva cuenta!", "success");
-            },
-            error: function (data) {
-                $("#preloader").css("display", "none");
-                var response = JSON.parse(data.responseText);
-                var errorString = "<ul>";
-                $.each(response.errors, function (key, value) {
-                    errorString += "<li>" + value + "</li>";
-                });
+        //checkPsd
+        var psd = $("#psdMaster").val();
+        var route_psd = "/admon/consultar/contrasenia/" + psd;
 
-                $("#error-save").html(errorString);
-                $("#message-error-save").fadeIn();
-            }
-        });
+        if (psd != "") {
+            $.get(route_psd, function (res) {
+                if (res.success == true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            account_name: account_name,
+                            opening_balance: opening_balance,
+                            note: note
+                        },
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $('#accountnameSave').val('');
+                            $('#openingbalanceSave').val('');
+                            $('#noteSave').val('');
+                            $("#modalCreate").modal('toggle');
+                            $('#message-error').css('display', 'none');
+                            reload();
+                            $("#psdMaster").val("");
+                            toastr.success('Has creado una nueva cuenta!', 'Bien hecho!')
+                        },
+                        error: function (data) {
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+
+                            $("#error-save").html(errorString);
+                            $("#message-error-save").fadeIn();
+                        }
+                    });
+                } else {
+                    alert('Clave maestra incorrecta.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo de clave maestra.');
+        }
     })
 
     function Show(btn) {
@@ -146,83 +162,113 @@
         var accountname = $("#accountname").val();
         var openingbalance = $("#openingbalance").val();
         var note = $("#note").val();
-        var route = "cuentas/actualizar/" + value;
+        var route = "/admon/cuentas/actualizar/" + value;
 
-        $.ajax({
-            url: route,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'PUT',
-            dataType: 'json',
-            data: {
-                account_name: accountname,
-                opening_balance: openingbalance,
-                note: note
-            },
-             beforeSend: function () {
-                $("#preloader").css("display", "block");
-            },
-            success: function () {
-                $("#preloader").css("display", "none");
-                $("#message-error-edit").fadeOut();
-                $("#modalEdit").modal('toggle');
-                reload();
-                swal("Bien hecho!", "Has actualizado la cuenta exitosamente!", "success");
-            },
-            error: function (data) {
-                $("#preloader").css("display", "none");
-                var response = JSON.parse(data.responseText);
-                var errorString = "<ul>";
-                $.each(response.errors, function (key, value) {
-                    errorString += "<li>" + value + "</li>";
-                });
+        //checkPsd
+        var psd = $("#psdMasterEdit").val();
+        var route_psd = "/admon/consultar/contrasenia/" + psd;
 
-                $("#error-edit").html(errorString);
-                $("#message-error-edit").fadeIn();
-            }
-        });
+        if (psd != "") {
+            $.get(route_psd, function (res) {
+                if (res.success == true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'PUT',
+                        dataType: 'json',
+                        data: {
+                            account_name: accountname,
+                            opening_balance: openingbalance,
+                            note: note
+                        },
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $("#message-error-edit").fadeOut();
+                            $("#modalEdit").modal('toggle');
+                            reload();
+                            $("#psdMasterEdit").val("");
+                            toastr.success('Has actualizado la cuenta exitosamente!', 'Bien hecho!')
+                        },
+                        error: function (data) {
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+
+                            $("#error-edit").html(errorString);
+                            $("#message-error-edit").fadeIn();
+                        }
+                    });
+                } else {
+                    alert('Clave maestra incorrecta.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo de clave maestra.');
+        }
     });
 
-    function Delete(btn) {
-        var id = btn.value;
-        var route = "cuentas/eliminar/" + btn.value;
-        swal({
-            title: '¿Estás seguro?',
-            text: "Será eliminado permanentemente!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, borralo!',
-            showLoaderOnConfirm: true,
-
-            preConfirm: function () {
-                return new Promise(function (resolve) {
-
-                    $.ajax({
-                            url: route,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            type: 'DELETE',
-                            dataType: 'json',
-                            data: {
-                                id: id
-                            },
-                        })
-                        .done(function (response) {
-                            reload();
-                            swal('Eliminado!', response.message, response.status);
-                        })
-                        .fail(function () {
-                            swal('Oops...', 'Algo salió mal con la petición!', 'error ');
-                        });
-                });
-            },
-            allowOutsideClick: false
-        });
+    function DeleteMod(btn) {
+        $("#id-delete").val(btn);
     }
+
+    $("#deleteAccount").click(function () {
+        var id = $("#id-delete").val();
+        var route = "/admon/cuentas/eliminar/";
+        //checkPsd
+        var psd = $("#psdMasterDelete").val();
+        var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+        if (psd != "") {
+            $.get(route_psd, function (res) {
+                if (res.success == true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            id: id
+                        },
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $("#message-error-edit").fadeOut();
+                            $("#modalDelete").modal('toggle');
+                            reload();
+                            $("#psdMasterDelete").val("");
+                            toastr.success('Eliminado!', 'Bien hecho!')
+                        },
+                        error: function (data) {
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+                            $("#error-edit").html(errorString);
+                            $("#message-error-edit").fadeIn();
+                        }
+                    })
+                } else {
+                    alert('Clave maestra incorrecta.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo de clave maestra.');
+        }
+    });
 
 </script>
 @endsection

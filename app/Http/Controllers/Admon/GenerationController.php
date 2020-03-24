@@ -72,7 +72,7 @@ class GenerationController extends Controller
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
                 <a href="/admon/generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a>
                 <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
-                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button>
+                <button class="btn btn-rounded btn-xs btn-danger mb-3" OnClick="DeleteMod('.$id.');" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i> Eliminar</button>
                 </div></td>';
             })
             ->make(true);
@@ -408,11 +408,11 @@ class GenerationController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         try {
             DB::beginTransaction();
-            $generation = Generation::find($id);
+            $generation = Generation::find($request->id);
             $inscriptions = StudentInscription::where('generation_id', '=', $generation->id)->get();
 
             foreach ($inscriptions as $key => $value) {
