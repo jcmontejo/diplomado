@@ -285,29 +285,34 @@ Route::group(['prefix' => 'admon'], function () {
         return view('admon.home');
     });
 
+    Route::get('/consultar/contrasenia/{psd_in}', 'GeneralController@getPasswordMaster');
+
     Route::get('/perfil', function(){
         return view('admon.update');
     });
 
-
     Route::get('/perfil/editar/', 'UserController@edit');
     Route::put('/perfil/actualizar/{id}', 'UserController@update');
 
-    //Cuentas
+    //Cuentas...
     Route::get('/cuentas', 'Admon\AccountController@index');
     Route::get('/cuentas/datos', 'Admon\AccountController@dataAccounts')->name('admon.accounts.data');
     Route::get('/cuentas/crear', 'Admon\AccountController@create');
     Route::post('/cuentas/guardar', 'Admon\AccountController@store');
     Route::get('/cuentas/editar/{id}', 'Admon\AccountController@edit');
     Route::put('/cuentas/actualizar/{id}', 'Admon\AccountController@update');
-    Route::delete('/cuentas/eliminar/{id}', 'Admon\AccountController@destroy');
+    Route::post('/cuentas/eliminar/', 'Admon\AccountController@destroy');
 
-    //Alumnos
+    //Alumnos..
     Route::get('/alumnos/lista', 'Admon\StudentController@index');
     Route::get('/alumnos/datos', 'Admon\StudentController@dataStudents');
     Route::get('/alumnos/editar/{id}', 'Admon\StudentController@edit');
     Route::put('/alumnos/actualizar/{id}', 'Admon\StudentController@update');
+    
     Route::get('/alumnos/expediente/{id}', 'Admon\StudentController@proceedings');
+    Route::get('/alumnos/consultar/inscripcion/{id}', 'Admon\StudentController@checkInscription');
+    Route::put('/alumnos/inscripcion/actualizar/{id}', 'Admon\StudentController@updateIns');
+    Route::post('/alumnos/eliminar/', 'Admon\StudentController@destroy');
     //Docentes
     Route::get('/docentes/lista', 'Admon\TeacherController@index');
     Route::get('/docentes/datos', 'Admon\TeacherController@dataTeachers');
@@ -315,7 +320,7 @@ Route::group(['prefix' => 'admon'], function () {
     Route::post('/docentes/guardar', 'Admon\TeacherController@store');
     Route::get('/docentes/editar/{id}', 'Admon\TeacherController@edit');
     Route::put('/docentes/actualizar/{id}', 'Admon\TeacherController@update');
-    Route::delete('/docentes/eliminar/{id}', 'Admon\TeacherController@destroy');
+    Route::post('/docentes/eliminar/', 'Admon\TeacherController@destroy');
     //Diplomados
     Route::get('/diplomados/lista', 'Admon\DiplomatController@index');
     Route::get('/diplomados/datos', 'Admon\DiplomatController@dataDiplomats')->name('admon.diplomats.data');
@@ -323,7 +328,7 @@ Route::group(['prefix' => 'admon'], function () {
     Route::post('/diplomados/guardar', 'Admon\DiplomatController@store');
     Route::get('/diplomados/editar/{id}', 'Admon\DiplomatController@edit');
     Route::put('/diplomados/actualizar/{id}', 'Admon\DiplomatController@update');
-    Route::delete('/diplomados/eliminar/{id}', 'Admon\DiplomatController@destroy');
+    Route::post('/diplomados/eliminar/', 'Admon\DiplomatController@destroy');
     //Generaciones
     Route::get('/generaciones/lista', 'Admon\GenerationController@index');
     Route::get('/generaciones/datos', 'Admon\GenerationController@dataGenerations');
@@ -332,7 +337,7 @@ Route::group(['prefix' => 'admon'], function () {
     Route::get('/generaciones/editar/{id}', 'Admon\GenerationController@edit');
     Route::put('/generaciones/actualizar/{id}', 'Admon\GenerationController@update');
     
-    Route::delete('/generaciones/eliminar/{id}', 'Admon\GenerationController@destroy');
+    Route::post('/generaciones/eliminar/', 'Admon\GenerationController@destroy');
 
     Route::get('/generaciones/alumnos/buscar', 'Admon\GenerationController@findStudent');
     Route::get('/generaciones/alumnos/inscritos/{id}', 'Admon\GenerationController@studentsInscription');
@@ -523,6 +528,8 @@ Route::group(['prefix' => 'ventas'], function () {
 
     Route::get('/alumnos/datos', 'Sales\StudentController@dataStudents')->name('students.data');
     Route::post('/alumnos/checkCurp', 'Sales\StudentController@checkCurp');
+    Route::get('/alumnos/checkCurpTwo/{crp}', 'Sales\StudentController@checkCurpTwo');
+
     Route::get('/alumnos/crear', 'Sales\StudentController@create');
     //Buscar alumno
     Route::get('/alumnos/buscar/{search}', 'Sales\StudentController@search');

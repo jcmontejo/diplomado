@@ -2,7 +2,6 @@
 <div class="modal" id="modalEditarPrimerPago">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Editar primer pago</h4>
@@ -13,10 +12,10 @@
                 <form>
                     <input type="hidden" id="primer_pago_debt_id">
                     <input type="hidden" id="primer_pago_total_debt">
-                    <div class="form-group col-md-12 field">
-                        <label for="exampleInputEmail1">Digita clave maestra</label>
-                        <input type="password" class="form-control form-control-lg" onblur="checkPassword();"
-                            id="password" placeholder="************">
+                    <div class="form-group col-md-12">
+                        <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                        <input type="password" class="form-control form-control-lg" id="psdMasterEditPayInit"
+                            placeholder="****************">
                     </div>
                     <div class="form-group col-md-12 editarPago">
                         <label for="exampleInputPassword1">Monto de Pago</label>
@@ -29,8 +28,7 @@
             <div class="modal-footer actionsPago">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-power-off"></i>
                     Cancelar</button>
-                <input type="submit" class="btn btn-success" id="procesarEditarPrimerPago" disabled="disabled"
-                    value="Actualizar">
+                <input type="submit" class="btn btn-success" id="procesarEditarPrimerPago" value="Actualizar">
             </div>
         </div>
     </div>

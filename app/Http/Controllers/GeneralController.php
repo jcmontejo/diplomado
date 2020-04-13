@@ -9,6 +9,7 @@ use App\Diplomat;
 use App\Generation;
 use App\Http\Requests\StoreGeneration;
 use App\Low;
+use App\Password;
 use App\Student;
 use App\StudentInscription;
 use App\Teacher;
@@ -27,8 +28,10 @@ class GeneralController extends Controller
 
     public function dataGenerations()
     {
-        $generations = Generation::select(['id', 'name_diplomat', 'docent', 'number_generation', 'number_students',
-            'cost', 'commision', 'full_price', 'created_at']);
+        $generations = Generation::select([
+            'id', 'name_diplomat', 'docent', 'number_generation', 'number_students',
+            'cost', 'commision', 'full_price', 'created_at'
+        ]);
 
         return Datatables::of($generations)
             ->addColumn('action', function ($generation) {
@@ -43,7 +46,7 @@ class GeneralController extends Controller
     public function studentsInscription($id)
     {
         $generation = Generation::find($id);
-        
+
         $students = DB::table('student_inscriptions')
             ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
             ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
@@ -66,7 +69,7 @@ class GeneralController extends Controller
             )
             ->get();
 
-        
+
         // $cost = DB::table('student_inscriptions')
         //     ->where('student_inscriptions.generation_id', '=', $id)
         //     ->sum('final_cost');
@@ -84,5 +87,22 @@ class GeneralController extends Controller
         return view('sellers.students', compact('students', 'generation', 'cost', 'debt_global'));
         // return $students;
 
+    }
+
+    public function getPasswordMaster($psd_in)
+    {
+        $psd = Password::where('name', '=', 'MasterKey')->first();
+
+        if ($psd->password === $psd_in) {
+            return response()->json([
+                'success' => true,
+                'psd' => $psd->password
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'psd' => $psd->password
+            ]);
+        }
     }
 }

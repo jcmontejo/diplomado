@@ -12,9 +12,9 @@
                     </div>
                     <form id="form"> 
                         <div class="form-row">
-                            <div class="form-group col-md-12 field">
-                                <label for="exampleInputEmail1">Digita clave maestra</label>
-                                <input type="password" class="form-control form-control-lg" onblur="checkPassword();" id="password" placeholder="************">
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                                <input type="password" class="form-control form-control-lg" id="psdMasterEdit" placeholder="****************">
                             </div>
                             <div class="form-group col-md-4">
                                 <input type="hidden" id="id">
@@ -62,7 +62,7 @@
             </div>
             <div class="modal-footer actions">
                 <button type="button" class="btn btn-secondary mt-4 pr-4 pl-4" data-dismiss="modal">Cerrar</button>
-                <input type="submit" id="updateTeacher" class="btn btn-primary mt-4 pr-4 pl-4" name="saveDiplomat" disabled value="Actualizar">
+                <input type="submit" id="updateTeacher" class="btn btn-primary mt-4 pr-4 pl-4" name="saveDiplomat" value="Actualizar">
             </div>
         </div>
     </div>

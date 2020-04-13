@@ -29,7 +29,7 @@
             <!-- Modal footer -->
             <div class="modal-footer actions">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-power-off"></i> Cancelar</button>
-                <input type="submit" class="btn btn-success" id="procesarConvenio" disabled="disabled" value="Procesas Convenio">
+                <input type="submit" class="btn btn-success" id="procesarConvenio" value="Procesas Convenio">
             </div>
         </div>
     </div>

@@ -9,6 +9,10 @@
                 <div class="col-12">
                     <form id="form">
                         <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                                <input type="password" class="form-control form-control-lg" id="psdMasterEdit" placeholder="****************">
+                            </div>
                             <div class="form-group col-md-6">
                                 <label for="exampleInputEmail1">Fecha de Inicio</label>
                                 <input type="hidden" id="idEdit">

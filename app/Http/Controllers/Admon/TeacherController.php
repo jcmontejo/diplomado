@@ -23,7 +23,7 @@ class TeacherController extends Controller
             ->addColumn('action', function ($teacher) {
                 $id = $teacher->id;
                 return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
-                <button class="btn btn-rounded btn-xs btn-danger mb-3" value="' . $id . '" OnClick="Delete(this);"><i class="fa fa-trash"></i> Eliminar</button></div></td>';
+                <button class="btn btn-rounded btn-xs btn-danger mb-3" OnClick="DeleteMod('.$id.');" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i> Eliminar</button></div></td>';
             })
             ->make(true);
     }
@@ -54,9 +54,9 @@ class TeacherController extends Controller
         return response()->json(["message" => "success"]);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        Teacher::find($id)->delete();
+        Teacher::find($request->id)->delete();
 
         return response()->json([
             'success' => 'Record has been deleted successfully!',

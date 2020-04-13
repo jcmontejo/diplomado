@@ -9,7 +9,8 @@
                 <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
                     <strong>Alumno Actualizado Correctamente.</strong>
                 </div>
-                <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createStudent"><i class="fas fa-plus"></i> Agregar
+                <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createStudent"><i
+                        class="fas fa-plus"></i> Agregar
                     Nuevo Alumno</a>
                 <div class="table-responsive">
                     <table class="table" id="students">
@@ -57,7 +58,7 @@
             $("#file-study").attr("href", "");
         });
 
-         $('select[name="diplomat_id"]').on('change', function () {
+        $('select[name="diplomat_id"]').on('change', function () {
             var diplomatID = $(this).val();
             if (diplomatID) {
                 $.ajax({
@@ -193,7 +194,7 @@
             "buttons": ['excel', 'pdf'],
             processing: true,
             serverSide: true,
-            ajax: '{!! url('/ventas/alumnos/datos') !!}',
+            ajax: '/ventas/alumnos/datos',
             columns: [{
                     data: 'curp',
                     name: 'curp'
@@ -277,7 +278,7 @@
 
     $("#searchStudent").click(function () {
         var search = $("#search").val();
-        var route = '{{url('/ventas/alumnos/buscar')}}/' + search;
+        var route = '{{url(' / ventas / alumnos / buscar ')}}/' + search;
         if (search) {
             $.ajax({
                 url: route,
@@ -407,47 +408,63 @@
         // End
         var route = "/ventas/alumnos/guardar"
 
-        $.ajax({
-            url: route,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            dataType: 'json',
-            data: form_data,
-            contentType: false, // The content type used when sending data to the server.
-            cache: false, // To unable request pages to be cached
-            processData: false,
-            beforeSend: function () {
-                $("#preloader").css("display", "block");
-            },
-            success: function () {
-                $("#preloader").css("display", "none");
-                $('#nameSave').val('');
-                $('#lastnameSave').val('');
-                $('#motherlastnameSave').val('');
-                $('#birthdateSave').val('');
-                $('#sexSave').val('');
-                $('#phoneSave').val('');
-                $('#addressSave').val('');
-                $('#emailSave').val('');
-                $("#modalCreate").modal('toggle');
-                $('#message-error').css('display', 'none');
-                reload();
-                swal("Bien hecho!", "Has registrado un nuevo alumno!", "success");
-            },
-            error: function (data) {
-                $("#preloader").css("display", "none");
-                var response = JSON.parse(data.responseText);
-                var errorString = "<ul>";
-                $.each(response.errors, function (key, value) {
-                    errorString += "<li>" + value + "</li>";
-                });
 
-                $("#error-save").html(errorString);
-                $("#message-error-save").fadeIn();
-            }
-        });
+        //checkPsd.
+        var crp = $("#curpStudent").val();
+        var route_crp = "/ventas/alumnos/checkCurp";
+
+        if (crp != "") {
+            $.get(route_crp, function (res) {
+                if (res.exists != true) {
+                    $.ajax({
+                        url: route,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        data: form_data,
+                        contentType: false, // The content type used when sending data to the server.
+                        cache: false, // To unable request pages to be cached
+                        processData: false,
+                        beforeSend: function () {
+                            $("#preloader").css("display", "block");
+                        },
+                        success: function () {
+                            $("#preloader").css("display", "none");
+                            $('#nameSave').val('');
+                            $('#lastnameSave').val('');
+                            $('#motherlastnameSave').val('');
+                            $('#birthdateSave').val('');
+                            $('#sexSave').val('');
+                            $('#phoneSave').val('');
+                            $('#addressSave').val('');
+                            $('#emailSave').val('');
+                            $("#modalCreate").modal('toggle');
+                            $('#message-error').css('display', 'none');
+                            reload();
+                            swal("Bien hecho!", "Has registrado un nuevo alumno!",
+                                "success");
+                        },
+                        error: function (data) {
+                            $("#preloader").css("display", "none");
+                            var response = JSON.parse(data.responseText);
+                            var errorString = "<ul>";
+                            $.each(response.errors, function (key, value) {
+                                errorString += "<li>" + value + "</li>";
+                            });
+
+                            $("#error-save").html(errorString);
+                            $("#message-error-save").fadeIn();
+                        }
+                    });
+                } else {
+                    alert('La CURP ya se encuentra registrada.');
+                }
+            });
+        } else {
+            alert('Por favor llena el campo CURP.');
+        }
     })
 
     function Show(btn) {
@@ -670,7 +687,7 @@
         var curp = $(element).val();
         $.ajax({
             type: "POST",
-            url: '{{url('/ventas/alumnos/checkCurp')}}',
+            url: '{{url(' / ventas / alumnos / checkCurp ')}}',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -758,10 +775,10 @@
                 $("#preloader").css("display", "block");
             },
             success: function (res) {
-                if (res.exists){
-                    toastr.error('Este alumno ya se encuentra registrado!','Ooops!')
+                if (res.exists) {
+                    toastr.error('Este alumno ya se encuentra registrado!', 'Ooops!')
                     $("#preloader").css("display", "none");
-                }else{
+                } else {
                     $("#preloader").css("display", "none");
                     $('#nameInscription').val('');
                     $('#lastnameInscription').val('');
@@ -770,8 +787,8 @@
                     $("#modalInscription .close").click();
                     $('#message-error-inscription').css('display', 'none');
                     reload();
-                    toastr.success('Has re inscrito al alumno exitosamente!','Bien hecho!')
-                }               
+                    toastr.success('Has re inscrito al alumno exitosamente!', 'Bien hecho!')
+                }
             },
             error: function (data) {
                 if (data.status === 400) {
@@ -805,7 +822,7 @@
         var bandera = $("#bandera").val();
 
         if (bandera == 1) {
-            
+
             //Reinscripcion
             var student_id = $("#idStudent").val();
             var generation_re = $("#generation_id_old").val();
@@ -815,7 +832,7 @@
 
             $.ajax({
                 type: "POST",
-                url: '{{url('/ventas/alumnos/revisar/')}}',
+                url: '{{url(' / ventas / alumnos / revisar / ')}}',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -885,7 +902,7 @@
             var city = $("#cityStudent").val();
             var email = $("#emailStudent").val();
             var profession = $("#professionStudent").val();
-            
+
             //Datos diplomado
             var generation_id = $("#generation_id_N").val();
             var discount = $("#discount_N").val();
@@ -897,7 +914,15 @@
             var account_type = $("#account_type_N").val();
             var payment_method = $("#payment_method_N").val();
             // End
-            $.ajax({
+
+            //checkCurp
+            var crp = $("#curpStudent").val();
+            var route_crp = "/ventas/alumnos/checkCurpTwo/" + crp;
+
+            if (crp != "") {
+                $.get(route_crp, function (res) {
+                    if (res.exists != true) {
+                        $.ajax({
                             url: route,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -906,29 +931,29 @@
                             dataType: 'json',
                             data: {
                                 //Datos alumno
-                                curp : curp,
-                                name : name,
-                                last_name : last_name,
-                                mother_last_name : mother_last_name,
-                                facebook : facebook,
-                                birthdate : birthdate,
-                                sex : sex,
-                                phone : phone,
-                                address : address,
-                                state : state,
-                                city : city,
-                                email : email,
-                                profession : profession,
+                                curp: curp,
+                                name: name,
+                                last_name: last_name,
+                                mother_last_name: mother_last_name,
+                                facebook: facebook,
+                                birthdate: birthdate,
+                                sex: sex,
+                                phone: phone,
+                                address: address,
+                                state: state,
+                                city: city,
+                                email: email,
+                                profession: profession,
                                 //Datos diplomado
-                                generation_id : generation_id,
-                                discount : discount,
-                                number_payments : number_payments,
-                                amount_of_payments : amount_of_payments,
-                                first_payment : first_payment,
-                                periodicity : periodicity,
-                                account : account,
-                                account_type : account_type,
-                                payment_method : payment_method,
+                                generation_id: generation_id,
+                                discount: discount,
+                                number_payments: number_payments,
+                                amount_of_payments: amount_of_payments,
+                                first_payment: first_payment,
+                                periodicity: periodicity,
+                                account: account,
+                                account_type: account_type,
+                                payment_method: payment_method,
                             },
                             beforeSend: function () {
                                 $("#preloader").css("display", "block");
@@ -953,6 +978,13 @@
                                 $("#message-error-save-N").fadeIn();
                             }
                         });
+                    } else {
+                        alert('La CURP: '+ res.crp +' ya se encuentra registrada.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo CURP.');
+            }
         }
     })
 

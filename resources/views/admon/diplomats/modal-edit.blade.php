@@ -13,6 +13,10 @@
                     <form id="form">
                         <div class="form-row">
                             <div class="form-group col-md-12">
+                                <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                                <input type="password" class="form-control form-control-lg" id="psdMasterEdit" placeholder="****************">
+                            </div>
+                            <div class="form-group col-md-12">
                                 <input type="hidden" id="id">
                                 <label for="exampleInputEmail1">Nombre Diplomado</label>
                                 <input type="text" class="form-control form-control-lg" id="name" placeholder="Introduce nombre de diplomado">
