@@ -48,9 +48,9 @@ class StudentController extends Controller
         return Datatables::of($students)
             ->addColumn('action', function ($student) {
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
-                <a href="/admon/alumnos/expediente/'.$student->id.'" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Expediente</a>
+                <a href="/admon/alumnos/expediente/' . $student->id . '" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Expediente</a>
                 <button class="btn btn-sm btn-primary btn-flat" value="' . $student->id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
-                <button class="btn btn-sm btn-danger btn-flat" OnClick="DeleteMod('.$student->id.');" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i> Eliminar</button>
+                <button class="btn btn-sm btn-danger btn-flat" OnClick="DeleteMod(' . $student->id . ');" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i> Eliminar</button>
                 </div>
                 </td>';
             })
@@ -58,7 +58,7 @@ class StudentController extends Controller
     }
 
     public function proceedings($id)
-    {   
+    {
         $student = Student::find($id);
         $inscriptions = StudentInscription::where('student_inscriptions.student_id', '=', $student->id)
             ->join('diplomats', 'diplomats.id', 'student_inscriptions.diplomat_id')
@@ -70,7 +70,11 @@ class StudentController extends Controller
                 'student_inscriptions.created_at as created_at',
                 'student_inscriptions.final_cost as final_cost',
                 'debts.id as debt_id',
-                'debts.amount as amount'
+                'debts.amount as debt',
+                'student_inscriptions.first_payment as first_payment',
+                'student_inscriptions.discount as discount',
+                'student_inscriptions.number_of_payments as number_of_payments',
+                'student_inscriptions.id as id_ins'
             )
             ->get();
         return view('admon.students.timeline', compact('student', 'inscriptions'));
@@ -194,9 +198,53 @@ class StudentController extends Controller
             return response()->json([
                 'success' => 'Record has been deleted successfully!',
             ]);
-
         } catch (Exception $e) {
             DB::rollBack();
         }
+    }
+
+    public function checkInscription($id)
+    {
+        $inscription = StudentInscription::find($id);
+        return response()->json($inscription);
+    }
+
+    public function updateIns(Request $request, $id)
+    {
+        $inscription = StudentInscription::find($id);
+        $inscription->final_cost = $request->final_cost;
+        $inscription->first_payment = $request->first_payment;
+        $inscription->number_of_payments = $request->number_of_payments;
+        $inscription->amount_of_payments = $request->amount_of_payments;
+        $inscription->save();
+
+        $debt = Debt::where('generation_id', '=', $inscription->id)->first();
+        $debt->amount = $inscription->final_cost - $inscription->first_payment;
+        $debt->save();
+
+        $payments = Payment::where('debt_id', '=', $debt->id)->count();
+
+        if ($request->number_of_payments > $payments) {
+            $rest = $request->number_of_payments - $payments;
+            $last_pay = Payment::where('debt_id', '=', $debt->id)->latest('id')->first();
+            for ($i = 0; $i < $rest; $i++) {
+
+                $payment = new Payment();
+                $payment->concept = 'COLEGIATURA';
+                $payment->number_payment = $last_pay->number_payment + 1;
+                $payment->date = '2020-12-31';
+                $payment->amount_paid = 0;
+                $payment->student_id = $inscription->student_id;
+                $payment->generation_id = $inscription->generation_id;
+                $payment->diplomat_id = $inscription->diplomat_id;
+                $payment->status = 'PENDIENTE';
+                $payment->debt_id = $debt->id;
+                $payment->save();
+            }
+        }
+
+        return response()->json([
+            "message" => "success"
+        ]);
     }
 }

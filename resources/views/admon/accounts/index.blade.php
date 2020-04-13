@@ -164,7 +164,7 @@
         var note = $("#note").val();
         var route = "/admon/cuentas/actualizar/" + value;
 
-        //checkPsd
+        //checkPsd.
         var psd = $("#psdMasterEdit").val();
         var route_psd = "/admon/consultar/contrasenia/" + psd;
 

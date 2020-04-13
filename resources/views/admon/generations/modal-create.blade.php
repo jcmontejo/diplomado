@@ -1,11 +1,11 @@
-<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal hide fade" id="modalCreate" aria-hidden="true" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Registrar Generación</h5>
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 800px">
                 <div class="col-12">
                     <div id='message-error-save' class="alert alert-danger alert-dismissible fade show" role='alert' style="display: none">
                         <strong id="error-save"></strong>
@@ -19,7 +19,7 @@
                             </div>
                             <div class="form-group col-12">
                                 <label for="exampleInputEmail1">Nombre Diplomado</label>
-                                <select class="form-control form-control-lg" id="namediplomatSave">
+                                <select class="form-control form-control-lg js-example-basic-single" id="namediplomatSave">
                                     @forelse ($diplomats as $diplomat)
                                     <option value="{{$diplomat->id}}">{{$diplomat->name}}</option>
                                     @empty

@@ -25,8 +25,8 @@ class GenerationController extends Controller
 {
     public function index(Request $request)
     {
-        $diplomats = Diplomat::all();
-        $docents = Teacher::all();
+        $diplomats = Diplomat::orderBy('name')->get();
+        $docents = Teacher::orderBy('name')->get();
         return view('admon.generations.index', compact('diplomats', 'docents'));
     }
 

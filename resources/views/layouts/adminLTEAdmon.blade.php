@@ -32,6 +32,10 @@
     <link rel="stylesheet" href="{{asset('toastr/toastr.min.css')}}">
     {{-- SweetAlert --}}
     <link rel="stylesheet" href="{{asset('/css/sweetalert2.min.css')}}">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{asset('/css/select2-bootstrap4.css')}}">
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js" defer></script>
     <style>
         .loading {
             background: lightgrey;
@@ -177,6 +181,12 @@
     <script src="{{asset('/js/sweetalert2.min.js')}}"></script>
     @yield('js')
     <script>
+        $(document).ready(function() {
+            $('select').select2({
+                theme: 'bootstrap4',
+            });
+        });
+
         function checkMasterKey()
         {
             var psd = $("#psdMaster").val();

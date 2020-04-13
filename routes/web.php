@@ -308,7 +308,10 @@ Route::group(['prefix' => 'admon'], function () {
     Route::get('/alumnos/datos', 'Admon\StudentController@dataStudents');
     Route::get('/alumnos/editar/{id}', 'Admon\StudentController@edit');
     Route::put('/alumnos/actualizar/{id}', 'Admon\StudentController@update');
+    
     Route::get('/alumnos/expediente/{id}', 'Admon\StudentController@proceedings');
+    Route::get('/alumnos/consultar/inscripcion/{id}', 'Admon\StudentController@checkInscription');
+    Route::put('/alumnos/inscripcion/actualizar/{id}', 'Admon\StudentController@updateIns');
     Route::post('/alumnos/eliminar/', 'Admon\StudentController@destroy');
     //Docentes
     Route::get('/docentes/lista', 'Admon\TeacherController@index');
@@ -525,6 +528,8 @@ Route::group(['prefix' => 'ventas'], function () {
 
     Route::get('/alumnos/datos', 'Sales\StudentController@dataStudents')->name('students.data');
     Route::post('/alumnos/checkCurp', 'Sales\StudentController@checkCurp');
+    Route::get('/alumnos/checkCurpTwo/{crp}', 'Sales\StudentController@checkCurpTwo');
+
     Route::get('/alumnos/crear', 'Sales\StudentController@create');
     //Buscar alumno
     Route::get('/alumnos/buscar/{search}', 'Sales\StudentController@search');
