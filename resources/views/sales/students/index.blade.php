@@ -278,7 +278,7 @@
 
     $("#searchStudent").click(function () {
         var search = $("#search").val();
-        var route = '{{url(' / ventas / alumnos / buscar ')}}/' + search;
+        var route = '/ventas/alumnos/buscar/' + search;
         if (search) {
             $.ajax({
                 url: route,
@@ -681,13 +681,11 @@
         });
     })
 
-
-
     function checkCurp(element) {
         var curp = $(element).val();
         $.ajax({
             type: "POST",
-            url: '{{url(' / ventas / alumnos / checkCurp ')}}',
+            url: '/ventas/alumnos/checkCurp',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
