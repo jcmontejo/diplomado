@@ -1,6 +1,7 @@
 @extends('layouts.adminLTESales')
 @section('content')
 <div class="row">
+    
     <!-- data table start -->
     <div class="col-12 mt-5">
         <div class="card">
