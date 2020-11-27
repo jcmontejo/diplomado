@@ -21,7 +21,7 @@ Route::get('/clear-cache', function () {
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('error');
 });
 
 Auth::routes();
@@ -560,4 +560,8 @@ Route::group(['prefix' => 'ventas'], function () {
     Route::get('/alumnos/datos/generaciones', 'Sales\GeneralController@index');
     Route::get('/alumnos/datos/generaciones/todos', 'Sales\GeneralController@dataGenerations')->name('sales.sellers.generations');
     Route::get('/alumnos/datos/generaciones/alumnos/inscritos/{id}', 'Sales\GeneralController@studentsInscription');
+});
+
+Route::get('error', function(){
+    return view('error');
 });

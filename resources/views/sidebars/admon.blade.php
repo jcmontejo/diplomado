@@ -74,6 +74,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{url('/admon/generaciones/lista')}}" class="nav-link">
+                        <i class="nav-icon fas fa-cash-register"></i>
+                        <p>
+                            Pagos docentes
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{url('/admon/alumnos/lista')}}" class="nav-link">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
