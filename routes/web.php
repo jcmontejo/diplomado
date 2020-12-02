@@ -21,7 +21,7 @@ Route::get('/clear-cache', function () {
 });
 
 Route::get('/', function () {
-    return view('error');
+    return view('welcome');
 });
 
 Auth::routes();
