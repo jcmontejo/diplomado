@@ -52,8 +52,11 @@
             <h3 class="header-title">GENERACIÓN: {{$generation->number_generation}}</h3>
             <div class="table-responsive">
                 <table class="table display" id="students">
+
                     <thead>
                         <th>NP</th>
+                        <th>Matricula</th>
+                        <th>Folio</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -138,6 +141,8 @@
                         @endphp
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->folio}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>
@@ -341,6 +346,8 @@
                 <table class="table display" id="students1">
                     <thead>
                         <th>NP</th>
+                        <th>Matricula</th>
+                        <th>Folio</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -370,6 +377,8 @@
                         @if ($payment_1 AND empty($agreement_1) AND $student->total_debt > 0)
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->enrollment}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>
@@ -401,6 +410,8 @@
                 <table class="table display" id="students1">
                     <thead>
                         <th>NP</th>
+                        <th>Matricula</th>
+                        <th>Folio</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -430,6 +441,8 @@
                         @if ($payment_2 AND empty($agreement_2) AND $student->total_debt > 0)
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->enrollment}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>
@@ -461,6 +474,8 @@
                 <table class="table display" id="students1">
                     <thead>
                         <th>NP</th>
+                        <th>Matricula</th>
+                        <th>Folio</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -490,6 +505,8 @@
                         @if ($payment_3 AND empty($agreement_3) AND $student->total_debt > 0)
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->enrollment}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>
@@ -521,6 +538,8 @@
                 <table class="table display" id="students1">
                     <thead>
                         <th>NP</th>
+                        <th>Matricula</th>
+                        <th>Folio</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -550,6 +569,8 @@
                         @if ($payment_4 AND empty($agreement_4) AND $student->total_debt > 0)
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->enrollment}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>
@@ -581,6 +602,8 @@
                 <table class="table display" id="students1">
                     <thead>
                         <th>NP</th>
+                        <th>Matricula</th>
+                        <th>Folio</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -610,6 +633,8 @@
                         @if ($payment_5 and empty($agreement_5) AND $student->total_debt > 0)
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->enrollment}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>
@@ -641,6 +666,8 @@
                 <table class="table display" id="students1">
                     <thead>
                         <th>NP</th>
+                        <th>Matricula</th>
+                        <th>Folio</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -670,6 +697,8 @@
                         @if ($payment_6 and empty($agreement_6) AND $student->total_debt > 0)
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->enrollment}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>
@@ -701,6 +730,8 @@
                 <table class="table display" id="students1">
                     <thead>
                         <th>NP</th>
+                        <th>Matricula</th>
+                        <th>Folio</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -729,6 +760,8 @@
                         @endphp
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->enrollment}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>
@@ -740,6 +773,8 @@
                             <td>${{number_format($student->final_cost - $student->total_debt,2)}}</td>
                             <td>${{number_format($student->total_debt,2 )}}</td>
                             <td>
+                                <button class="btn btn-xs btn-success" value="{{$student->id_inscription}}"
+                                    OnClick="Up(this);"><i class="fas fa-trash"></i> Reactivar</button>
                                 <button class="btn btn-xs btn-danger" value="{{$student->id_inscription}}"
                                     OnClick="Delete(this);"><i class="fas fa-trash"></i> Eliminar</button>
                             </td>

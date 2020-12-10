@@ -294,7 +294,7 @@ class StudentController extends Controller
                 $number = Student::max('id') + 1;
 
                 $student = new Student();
-                $student->enrollment = '000000' . $number;
+                //$student->enrollment = '000000' . $number;
                 $student->curp = $request->curp;
                 $student->name = $request->name;
                 $student->last_name = $request->last_name;
@@ -318,6 +318,9 @@ class StudentController extends Controller
                     $student->color = 'green';
                 }
                 $student->user_id = $user->id;
+                $student->save();
+
+                $student->enrollment = 'SER00000000'.$student->id;
                 $student->save();
 
                 if ($request->hasFile('file_address')) {
@@ -1006,7 +1009,7 @@ class StudentController extends Controller
                 $number = Student::max('id') + 1;
 
                 $student = new Student();
-                $student->enrollment = '000000' . $number;
+                $student->enrollment = 'SER00000000' . $number;
                 $student->curp = $request->curp;
                 $student->name = $request->name;
                 $student->last_name = $request->last_name;
@@ -1030,6 +1033,9 @@ class StudentController extends Controller
                     $student->color = 'green';
                 }
                 $student->user_id = $user->id;
+                $student->save();
+
+                $student->enrollment = 'SER00000000'.$student->id;
                 $student->save();
 
 

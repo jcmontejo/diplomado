@@ -15,6 +15,9 @@ class Teacher extends Model
         'phone',
         'email',
         'address',
-        'joining_date'
+        'joining_date',
+        'key_bank',
+        'number_target_bank',
+        'name_bank'
     ];
 }

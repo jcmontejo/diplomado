@@ -33,6 +33,9 @@ class StoreTeacher extends FormRequest
             'email' => 'required|email',
             'address' => 'required',
             'joining_date' => 'required',
+            'key_bank' => 'required',
+            'number_target_bank' => 'required',
+            'name_bank' => 'required'
         ];
 
     }
@@ -50,6 +53,9 @@ class StoreTeacher extends FormRequest
             'email.required' => 'El campo correo electrónico es obligatorio.',
             'address.required' => 'El campo dirección es obligatorio.',
             'joining_date.required' => 'El campo fecha de ingreso es obligatorio.',
+            'key_bank.required' => 'El campo clabe interbancaria es obligatorio.',
+            'number_target_bank.required' => 'El campo número de tarjeta es obligatorio.',
+            'name_bank.required' => 'El campo número nombre de banco es obligatorio.',
         ];
 
     }

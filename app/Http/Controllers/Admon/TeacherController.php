@@ -17,7 +17,7 @@ class TeacherController extends Controller
 
     public function dataTeachers()
     {
-        $teachers = Teacher::select(['id', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'email', 'address', 'joining_date']);
+        $teachers = Teacher::select(['id', 'name', 'last_name', 'mother_last_name', 'birthdate', 'sex', 'phone', 'email', 'address', 'joining_date','name_bank', 'number_target_bank', 'key_bank']);
 
         return Datatables::of($teachers)
             ->addColumn('action', function ($teacher) {
@@ -50,6 +50,7 @@ class TeacherController extends Controller
     {
         $teacher = Teacher::find($id);
         $teacher->fill($request->all());
+
         $teacher->save();
         return response()->json(["message" => "success"]);
     }

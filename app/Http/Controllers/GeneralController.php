@@ -17,6 +17,7 @@ use DB;
 use Illuminate\Support\Facades\Input;
 use Mail;
 use PDF;
+use PHPUnit\Framework\MockObject\Builder\Stub;
 use Yajra\Datatables\Datatables;
 
 class GeneralController extends Controller
@@ -89,6 +90,7 @@ class GeneralController extends Controller
 
     }
 
+
     public function getPasswordMaster($psd_in)
     {
         $psd = Password::where('name', '=', 'MasterKey')->first();
@@ -104,5 +106,16 @@ class GeneralController extends Controller
                 'psd' => $psd->password
             ]);
         }
+    }
+
+    public function enrollment()
+    {
+        $students = Student::all();
+
+        foreach ($students as $key => $student) {
+            $student->enrollment = 'SER00000000'.$student->id;
+            $student->save();
+        }
+        return "success";
     }
 }

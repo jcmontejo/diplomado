@@ -26,7 +26,7 @@ class StoreDiplomat extends FormRequest
         return [
             'name' => 'required|max:250',
             'key' => 'required|max:30',
-            'cost' => 'required|numeric',
+            //'cost' => 'required|numeric',
         ];
     }
 
@@ -35,7 +35,7 @@ class StoreDiplomat extends FormRequest
         return [
             'name.required' => 'El nombre del diplomado es obligatorio',
             'key.required' => 'La clave del diplomado es obligatorio',
-            'cost.required' => 'El costo del diplomado es obligatorio',
+            //'cost.required' => 'El costo del diplomado es obligatorio',
         ];
     }
 }

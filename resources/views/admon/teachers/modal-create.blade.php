@@ -67,6 +67,21 @@
                                 <input type="date" class="form-control form-control-lg" id="joiningdateSave"
                                     placeholder="">
                             </div>
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">Nombre de Banco*</label>
+                                <input type="text" class="form-control form-control-lg" id="nameBankSave"
+                                    placeholder="">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="exampleInputPassword1">Número de Tarjeta*</label>
+                                <input type="text" class="form-control form-control-lg" id="numberTargetBankSave"
+                                    placeholder="">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="exampleInputPassword1">Clabe Interbancaria*</label>
+                                <input type="text" class="form-control form-control-lg" id="keyBankSave"
+                                    placeholder="">
+                            </div>
                         </div>
                     </form>
                 </div>

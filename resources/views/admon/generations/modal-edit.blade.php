@@ -1,6 +1,7 @@
 <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
+
             <div class="modal-header">
                 <h5 class="modal-title">Editar Generación</h5>
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
@@ -37,6 +38,16 @@
                             <div class="form-group col-md-6">
                                 <label for="exampleInputPassword1">COSTO MÁXIMO</label>
                                 <input type="number" class="form-control form-control-lg" id="maximum_costEdit">
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="exampleInputEmail1">Nombre Docente</label>
+                                <select class="form-control form-control-lg" id="docentEdit">
+                                    @forelse ($docents as $docent)
+                                    <option value="{{$docent->id}}">{{$docent->name}} {{$docent->last_name}} {{$docent->mother_last_name}}</option>
+                                    @empty
+                                    <option value="0">No hay docentes registrados.</option>
+                                    @endforelse
+                                </select>
                             </div>
                         </div>
                     </form>

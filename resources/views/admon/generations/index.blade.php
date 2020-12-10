@@ -1,5 +1,6 @@
 @extends('layouts.adminLTEAdmon')
 @section('content')
+
 <div class="row">
     <!-- data table start -->
     <div class="col-12">
@@ -228,6 +229,7 @@
             $("#costEdit").val(res.cost);
             $("#maximum_costEdit").val(res.maximum_cost);
             $("#number_generationEdit").val(res.number_generation);
+            $("#docentEdit").val(res.docent_id).change();
             $("#idEdit").val(res.id);
         });
     }
@@ -240,6 +242,7 @@
         var cost = $("#costEdit").val();
         var maximum_cost = $("#maximum_costEdit").val();
         var number_generation = $("#number_generationEdit").val();
+        var docent_id = $("#docentEdit").val();
 
         var route = "/admon/generaciones/actualizar/" + value;
 
@@ -264,6 +267,7 @@
                             cost: cost,
                             maximum_cost: maximum_cost,
                             number_generation: number_generation,
+                            docent_id: docent_id
                         },
                         beforeSend: function () {
                             $("#preloader").css("display", "block");

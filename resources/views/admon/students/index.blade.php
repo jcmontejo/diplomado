@@ -13,6 +13,7 @@
             <table id="students" class="table table-bordered table-striped">
                 <thead>
                     <tr>
+                        <th>Matricula</th>
                         <th>Curp</th>
                         <th>Nombre(s)</th>
                         <th>Apellido paterno</th>
@@ -193,7 +194,12 @@
             serverSide: true,
 
             ajax: '/admon/alumnos/datos',
-            columns: [{
+            columns: [
+                {
+                    data: 'enrollment',
+                    name: 'enrollment'
+                },
+                {
                     data: 'curp',
                     name: 'curp'
                 },

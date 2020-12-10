@@ -1,5 +1,6 @@
 @extends('layouts.adminLTEAdmon')
 @section('content')
+
 <div class="row">
     <!-- data table start -->
     <div class="col-12 mt-5">
@@ -24,6 +25,9 @@
                             <th>Correo Electrónico</th>
                             <th>Dirección</th>
                             <th>Fecha de Ingreso</th>
+                            <th>Banco</th>
+                            <th>Nº Tarjeta</th>
+                            <th>Cuenta Clabe</th>
                             <th>Acciones</th>
                         </thead>
                     </table>
@@ -95,6 +99,18 @@
                     name: 'joining_date'
                 },
                 {
+                    data: 'name_bank',
+                    name: 'name_bank'
+                },
+                {
+                    data: 'number_target_bank',
+                    name: 'number_target_bank'
+                },
+                {
+                    data: 'key_bank',
+                    name: 'key_bank'
+                },
+                {
                     data: 'action',
                     name: 'action',
                     orderable: false,
@@ -118,6 +134,9 @@
         var email = $("#emailSave").val();
         var address = $("#addressSave").val();
         var joiningdate = $("#joiningdateSave").val();
+        var key_bank = $("#keyBankSave").val();
+        var number_target_bank = $("#numberTargetBankSave").val();
+        var name_bank = $("#nameBankSave").val();
         var route = "/control-escolar/docentes/guardar"
 
         //checkPsd
@@ -143,7 +162,10 @@
                             phone: phone,
                             email: email,
                             address: address,
-                            joining_date: joiningdate
+                            joining_date: joiningdate,
+                            key_bank: key_bank,
+                            number_target_bank: number_target_bank,
+                            name_bank: name_bank
                         },
                         beforeSend: function () {
                             $("#preloader").css("display", "block");
@@ -200,6 +222,9 @@
             $("#email").val(res.email);
             $("#address").val(res.address);
             $("#joiningdate").val(res.joining_date);
+            $("#nameBankEdit").val(res.name_bank);
+            $("#numberTargetBankEdit").val(res.number_target_bank);
+            $("#keyBankEdit").val(res.key_bank);
             $("#id").val(res.id);
         });
     }
@@ -215,6 +240,9 @@
         var email = $('#email').val();
         var address = $("#address").val();
         var joiningdate = $("#joiningdate").val();
+        var key_bank = $("#keyBankEdit").val();
+        var number_target_bank = $("#numberTargetBankEdit").val();
+        var name_bank = $("#nameBankEdit").val();
         var route = "/control-escolar/docentes/actualizar/" + value;
 
         //checkPsd
@@ -240,7 +268,10 @@
                             phone: phone,
                             email: email,
                             address: address,
-                            joining_date: joiningdate
+                            joining_date: joiningdate,
+                            key_bank: key_bank,
+                            number_target_bank: number_target_bank,
+                            name_bank: name_bank
                         },
                         beforeSend: function () {
                             $("#preloader").css("display", "block");

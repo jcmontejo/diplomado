@@ -18,16 +18,12 @@
                         <thead>
                             <th>Nombre Diplomado</th>
                             <th>Clave Diplomado</th>
-                            <th>Costo (BASE)</th>
-                            <th>Costo Máximo (VENDEDORES)</th>
                             <th>Acciones</th>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th>Nombre Diplomado</th>
                                 <th>Clave Diplomado</th>
-                                <th>Costo (BASE)</th>
-                                <th>Costo Máximo (VENDEDORES)</th>
                                 <th>Acciones</th>
                             </tr>
                         </tfoot>
@@ -72,14 +68,6 @@
                     name: 'key'
                 },
                 {
-                    data: 'cost',
-                    name: 'cost'
-                },
-                {
-                    data: 'maximum_cost',
-                    name: 'maximum_cost'
-                },
-                {
                     data: 'action',
                     name: 'action',
                     orderable: false,
@@ -96,8 +84,8 @@
     $("#saveDiplomat").click(function () {
         var name = $("#nameSave").val();
         var key = $("#keySave").val();
-        var cost = $("#costSave").val();
-        var maximum_cost = $("#maximum_costSave").val();
+        //var cost = $("#costSave").val();
+        //var maximum_cost = $("#maximum_costSave").val();
         var route = "/admon/diplomados/guardar"
 
         //checkPsd
@@ -116,9 +104,9 @@
                         dataType: 'json',
                         data: {
                             name: name,
-                            key: key,
-                            cost: cost,
-                            maximum_cost: maximum_cost
+                            key: key
+                            //cost: cost,
+                            //maximum_cost: maximum_cost
                         },
                         beforeSend: function () {
                             $("#preloader").css("display", "block");
@@ -127,7 +115,7 @@
                             $("#preloader").css("display", "none");
                             $('#nameSave').val('');
                             $('#keySave').val('');
-                            $('#costSave').val('');
+                            //$('#costSave').val('');
                             $("#modalCreate").modal('toggle');
                             $('#message-error').css('display', 'none');
                             reload();

@@ -361,6 +361,32 @@ Route::group(['prefix' => 'admon'], function () {
     Route::get('/generaciones/enviar/recibo/dos/{id}', 'Admon\GenerationController@sendVoucherTwo');
     Route::post('/generaciones/editar/pago/', 'Admon\GenerationController@editPay');
     Route::post('/generaciones/editar/pago/alterno', 'Admon\GenerationController@editPayTwo');
+
+    //Referencias
+    Route::get('/CATreferencias/listado', 'CatReferencesController@index');
+    Route::get('/CATreferencias/datos', 'CatReferencesController@data');
+    Route::post('/CATreferencias/guardar', 'CatReferencesController@store');
+    Route::get('/CATreferencias/editar/{id}', 'CatReferencesController@get');
+    Route::put('/CATreferencias/actualizar/{id}', 'CatReferencesController@update');
+    Route::delete('/CATreferencias/eliminar/{id}', 'CatReferencesController@delete');
+
+     //Clasificación
+     Route::get('/CATclasificaciones/listado', 'CatClasificationController@index');
+     Route::get('/CATclasificaciones/datos', 'CatClasificationController@data');
+     Route::post('/CATclasificaciones/guardar', 'CatClasificationController@store');
+     Route::get('/CATclasificaciones/editar/{id}', 'CatClasificationController@get');
+     Route::put('/CATclasificaciones/actualizar/{id}', 'CatClasificationController@update');
+     Route::delete('/CATclasificaciones/eliminar/{id}', 'CatClasificationController@delete');
+
+     //Egresos
+     Route::get('/CATegresos/listado', 'CatExpensesController@index');
+     Route::get('/CATegresos/datos', 'CatExpensesController@data');
+     Route::post('/CATegresos/guardar', 'CatExpensesController@store');
+     Route::get('/CATegresos/editar/{id}', 'CatExpensesController@get');
+     Route::put('/CATegresos/actualizar/{id}', 'CatExpensesController@update');
+     Route::delete('/CATegresos/eliminar/{id}', 'CatExpensesController@delete');
+
+     Route::get('matricular-alumnos', 'GeneralController@enrollment');
 });
 
 //Auxiliar de Admon
@@ -565,3 +591,5 @@ Route::group(['prefix' => 'ventas'], function () {
 Route::get('error', function(){
     return view('error');
 });
+
+Route::get('matricular-alumnos', 'GeneralController@enrollment');

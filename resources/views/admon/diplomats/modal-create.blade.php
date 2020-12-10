@@ -20,18 +20,18 @@
                                 <label for="exampleInputEmail1">Nombre Diplomado</label>
                                 <input type="text" class="form-control form-control-lg" id="nameSave" placeholder="Introduce nombre de diplomado">
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-12">
                                 <label for="exampleInputPassword1">Clave Diplomado</label>
                                 <input type="text" class="form-control form-control-lg" id="keySave" placeholder="Introduce clave de diplomado">
                             </div>
-                            <div class="form-group col-md-4">
+                            <!--<div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Costo (BASE)</label>
                                 <input type="number" value="0" min="0" class="form-control form-control-lg" id="costSave">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="exampleInputPassword1">Costo Máximo (VENDEDORES)</label>
                                 <input type="number" value="0" min="0" class="form-control form-control-lg" id="maximum_costSave">
-                            </div>
+                            </div>-->
                         </div>
                     </form>
                 </div>

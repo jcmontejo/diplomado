@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Diplomat;
+use App\Generation;
 use App\Http\Requests\StoreDiplomat;
 use Yajra\Datatables\Datatables;
 
@@ -28,6 +29,7 @@ class DiplomatController extends Controller
             ->make(true);
     }
 
+
     public function create()
     {
         return view('admon.diplomats.create');
@@ -37,7 +39,13 @@ class DiplomatController extends Controller
     {
         if ($request->ajax()) {
             $validated = $request->validated();
-            Diplomat::create($request->all());
+            //Diplomat::create($request->all());
+            $diplomat = new Diplomat();
+            $diplomat->name = $request->name;
+            $diplomat->key = $request->key;
+            $diplomat->cost = 0;
+            $diplomat->maximum_cost = 0;
+            $diplomat->save();
 
             return response()->json([
                 "message" => "success",
@@ -56,6 +64,14 @@ class DiplomatController extends Controller
         $diplomat = Diplomat::find($id);
         $diplomat->fill($request->all());
         $diplomat->save();
+
+        $generations = Generation::where('diplomat_id', '=', $diplomat->id)->get();
+
+        foreach ($generations as $key => $generation) {
+            $generation->name_diplomat = $diplomat->name;
+            $generation->save();
+        }
+        
         return response()->json(["message" => "success"]);
     }
 
