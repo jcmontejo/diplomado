@@ -78,14 +78,18 @@ class GenerationController extends Controller
 
         $students = DB::table('student_inscriptions')
             ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
+            ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
+            ->join('generations', 'student_inscriptions.generation_id', '=', 'generations.id')
             ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
             ->where('student_inscriptions.generation_id', '=', $id)
             ->where('student_inscriptions.status', '=', 'Alta')
-            ->where('name', 'like', '%' . $request->session()->get('search') . '%')
+            //->where('name', 'like', '%' . $request->session()->get('search') . '%')
+            
             ->select(
                 DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
                 'students.email as email',
                 'students.enrollment',
+                DB::raw('CONCAT(diplomats.key, generations.start_date, students.enrollment) AS folio'),
                 'students.curp',
                 'students.phone as phone',
                 'students.documents as documents',
@@ -140,10 +144,16 @@ class GenerationController extends Controller
             ->where('student_inscriptions.generation_id', '=', $id)
             ->sum('debts.amount');
 
+        $docent_pay = DB::table('docent_pays')
+                ->where('generation_id', '=', $id)
+                ->first();
+
+            
         if ($request->ajax()) {
-            return view('escolar.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+
+            return view('escolar.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global', 'docent_pay'));
         } else {
-            return view('escolar.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+            return view('escolar.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global', 'docent_pay'));
         }
         // return $students;
     }

@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputEmail4">Clasificación *</label>
-                        <select class="form-control" name="productItem" id="productItem">
+                        <select class="form-control" name="txtReference" id="txtReference">
                             @foreach ($cat_references as $cat_reference)
                             <option value="{{$cat_reference->id}}">{{$cat_reference->name}}</option>
                             @endforeach
@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputEmail4">Referencia *</label>
-                        <select class="form-control" name="productItem" id="productItem">
+                        <select class="form-control" name="txtClasification" id="txtClasification">
                             @foreach ($cat_clasifications as $cat_clasification)
                             <option value="{{$cat_clasification->id}}">{{$cat_clasification->name}}</option>
                             @endforeach

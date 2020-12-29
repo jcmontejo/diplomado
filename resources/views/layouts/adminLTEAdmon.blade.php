@@ -75,6 +75,24 @@
             /* border: 1px solid #2980b9; */
             background-size: 28px 28px;
         }
+
+        .float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:red;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+
+.my-float{
+	margin-top:22px;
+    color: #FFF;
+}
     </style>
 </head>
 

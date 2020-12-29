@@ -51,6 +51,8 @@
                 <table class="table display" id="students">
                     <thead>
                         <th>NP</th>
+                        <th>MATRICULA</th>
+                        <th>FOLIO</th>
                         <th>NOMBRE DEL ALUMNO</th>
                         <th>CURP</th>
                         <th>EMAIL</th>
@@ -68,6 +70,8 @@
                         @foreach ($students as $indexKey => $student)
                         <tr>
                             <td>{{$indexKey+1}}</td>
+                            <td>{{$student->enrollment}}</td>
+                            <td>{{$student->folio}}</td>
                             <td>{{$student->full_name}}</td>
                             <td>{{$student->curp}}</td>
                             <td>{{$student->email}}</td>

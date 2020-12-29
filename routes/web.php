@@ -386,6 +386,17 @@ Route::group(['prefix' => 'admon'], function () {
      Route::put('/CATegresos/actualizar/{id}', 'CatExpensesController@update');
      Route::delete('/CATegresos/eliminar/{id}', 'CatExpensesController@delete');
 
+     //Pagos a docentes
+     Route::get('/CATpagosDocentes/listado', 'CatPaymentDocentController@index');
+     Route::get('/CATpagosDocentes/datos', 'CatPaymentDocentController@data');
+     Route::get('/CATpagosDocentes/datos/pagos/{id}', 'CatPaymentDocentController@dataPays');
+     Route::post('/CATpagosDocentes/guardar', 'CatPaymentDocentController@store');
+     Route::post('/CATpagosDocentes/guardar/nuevoPago', 'CatPaymentDocentController@storeApply');
+     Route::get('/CATpagosDocentes/editar/{id}', 'CatPaymentDocentController@get');
+     Route::put('/CATpagosDocentes/actualizar/{id}', 'CatPaymentDocentController@update');
+     Route::delete('/CATpagosDocentes/eliminar/{id}', 'CatPaymentDocentController@delete');
+     Route::get('/CATpagosDocentes/esquema/{id}', 'CatPaymentDocentController@getScheme');
+
      Route::get('matricular-alumnos', 'GeneralController@enrollment');
 });
 
@@ -457,6 +468,7 @@ Route::group(['prefix' => 'auxiliar'], function () {
 Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-alumnos'], function () {
     //Alumnos
     Route::get('/alumnos/lista', 'Escolar\StudentController@index');
+    
     Route::get('/alumnos/datos', 'Escolar\StudentController@dataStudents');
     Route::get('/alumnos/editar/{id}', 'Escolar\StudentController@edit');
     Route::put('/alumnos/actualizar/{id}', 'Escolar\StudentController@update');

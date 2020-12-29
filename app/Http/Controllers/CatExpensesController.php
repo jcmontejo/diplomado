@@ -35,6 +35,7 @@ class CatExpensesController extends Controller
             ->join('cat_references', 'cat_expenses.cat_reference', '=', 'cat_references.id')
             ->join('cat_clasifications', 'cat_expenses.cat_clasification', '=', 'cat_clasifications.id')
             ->select(
+                'cat_expenses.id as id',
                 'cat_expenses.date as date',
                 'accounts.account_name as account',
                 'cat_expenses.concept as concept',
@@ -72,9 +73,14 @@ class CatExpensesController extends Controller
     {
         if ($request->ajax()) {
             try {
-                $medicine = new CatExpense();
-                $medicine->name = $request->name;
-                $medicine->save();
+                $cat = new CatExpense();
+                $cat->date = $request->date;
+                $cat->amount = $request->amount;
+                $cat->concept = $request->concept;
+                $cat->account_id = $request->account_id;
+                $cat->cat_reference = $request->cat_reference;
+                $cat->cat_clasification = $request->cat_clasification;
+                $cat->save();
 
                 return response()->json("success");
             } catch (\Exception $e) {
@@ -95,7 +101,12 @@ class CatExpensesController extends Controller
             try {
 
                 $cat = CatExpense::find($id);
-                $cat->name = $request->name;
+                $cat->date = $request->date;
+                $cat->amount = $request->amount;
+                $cat->concept = $request->concept;
+                $cat->account_id = $request->account_id;
+                $cat->cat_reference = $request->cat_reference;
+                $cat->cat_clasification = $request->cat_clasification;
                 $cat->save();
 
                 return response()->json("success");
@@ -108,8 +119,8 @@ class CatExpensesController extends Controller
     public function delete($id)
     {
         $cat = CatExpense::find($id);
-        $cat->erased = 1;
-        $cat->save();
+        $cat->delete();
+
         return response()->json("sucess");
     }
 }

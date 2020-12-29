@@ -10,6 +10,7 @@
             <table id="students" class="table table-bordered table-striped">
                 <thead>
                     <tr>
+                        <th>Matricula</th>
                         <th>Curp</th>
                         <th>Nombre(s)</th>
                         <th>Apellido paterno</th>
@@ -69,8 +70,13 @@
             "buttons": ['excel', 'pdf'],
             processing: true,
             serverSide: true,
+
             ajax: '{!! url('/control-escolar/alumnos/datos') !!}',
             columns: [{
+                    data: 'enrollment',
+                    name: 'enrollment'
+                },
+                {
                     data: 'curp',
                     name: 'curp'
                 },

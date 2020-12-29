@@ -95,6 +95,7 @@ class GenerationController extends Controller
             ->where('student_inscriptions.generation_id', '=', $id)
             ->where('student_inscriptions.status', '=', 'Alta')
             //->where('name', 'like', '%' . $request->session()->get('search') . '%')
+            
             ->select(
                 DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
                 'students.email as email',

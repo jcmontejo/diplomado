@@ -66,6 +66,12 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
+                                    <a href="{{url('/admon/CATpagosDocentes/listado')}}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Pagos Docentes</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="{{url('/admon/CATegresos/listado')}}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Egresos</p>
