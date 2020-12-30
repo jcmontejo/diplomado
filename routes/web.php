@@ -393,6 +393,7 @@ Route::group(['prefix' => 'admon'], function () {
      Route::post('/CATpagosDocentes/guardar', 'CatPaymentDocentController@store');
      Route::post('/CATpagosDocentes/guardar/nuevoPago', 'CatPaymentDocentController@storeApply');
      Route::get('/CATpagosDocentes/editar/{id}', 'CatPaymentDocentController@get');
+     Route::get('/CATpagosDocentes/editar/esquema/{id}', 'CatPaymentDocentController@getScheme');
      Route::put('/CATpagosDocentes/actualizar/{id}', 'CatPaymentDocentController@update');
      Route::delete('/CATpagosDocentes/eliminar/{id}', 'CatPaymentDocentController@delete');
      Route::get('/CATpagosDocentes/esquema/{id}', 'CatPaymentDocentController@getScheme');

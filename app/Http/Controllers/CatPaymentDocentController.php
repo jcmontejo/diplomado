@@ -12,7 +12,7 @@ use DB;
 
 class CatPaymentDocentController extends Controller
 {
-     /**
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -55,9 +55,20 @@ class CatPaymentDocentController extends Controller
         $cats = CatApplyPayDocent::where('generation_id', '=', $id)->get();
 
         return Datatables::of($cats)
+            ->addColumn('action', function ($cat) {
+                if ($cat->status == 1) {
+                    return '<div class="btn-group">
+                <button type="button" class="btn btn-primary" value="' . $cat->id . '" onClick="editCatPaidOut(' . $cat->id . ');" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa fa-money-bill"></i>
+                </button>
+                </div>';
+                } else {
+                    return '---';
+                }
+            })
             ->make(true);
     }
 
+    //here
     public function store(Request $request)
     {
         if ($request->ajax()) {
@@ -67,8 +78,37 @@ class CatPaymentDocentController extends Controller
                 $cat->cost_student = $request->cost_student;
                 $cat->cost_week = $request->cost_week;
                 $cat->weeks = $request->weeks;
+                $cat->number_payments = $request->number_payments;
                 $cat->generation_id = $request->generation_id;
                 $cat->save();
+
+                if ($cat->type_scheme != 1) {
+                    $a = ceil($cat->cost_week * $cat->weeks);
+                    $b = ceil($a / $cat->number_payments);
+
+                    for ($i = 0; $i < $cat->number_payments; $i++) {
+                        $cat_a = new CatApplyPayDocent();
+                        $cat_a->number = $i + 1;
+                        $cat_a->amount_expected = $b;
+                        $cat_a->amount_paid_out = 0;
+                        $cat_a->rest = $a - $cat_a->amount_paid_out;
+                        $cat_a->generation_id = $cat->generation_id;
+                        $cat_a->save();
+                    }
+                } else {
+                    $a = ceil($cat->cost_student * $request->total_students);
+                    $b = ceil($a / $request->number_payments);
+
+                    for ($i = 0; $i < $request->number_payments; $i++) {
+                        $cat_a = new CatApplyPayDocent();
+                        $cat_a->number = $i + 1;
+                        $cat_a->amount_expected = $b;
+                        $cat_a->amount_paid_out = 0;
+                        $cat_a->rest = $a - $cat_a->amount_paid_out;
+                        $cat_a->generation_id = $cat->generation_id;
+                        $cat_a->save();
+                    }
+                }
 
                 return response()->json("success");
             } catch (\Exception $e) {
@@ -81,13 +121,96 @@ class CatPaymentDocentController extends Controller
     {
         if ($request->ajax()) {
             try {
-                $cat = new CatApplyPayDocent();
-                $cat->date = $request->date;
-                $cat->amount = $request->amount;
-                $cat->generation_id = $request->generation_id;
-                $cat->save();
+                $scheme = CatScheme::find($request->scheme);
+                if ($scheme->type_scheme == 1) {
 
-                return response()->json("success");
+                    $a = ceil($scheme->cost_student * $request->total_students);
+                    $b = ceil($a / $scheme->number_payments);
+
+                    $cat = CatApplyPayDocent::find($request->id);
+                    $cat->date = $request->date;
+                    $cat->amount_paid_out = $request->amount;
+                    //$cat->rest = $a - $cat->amount_paid_out;
+                    $cat->status = 0;
+                    $cat->generation_id = $request->generation_id;
+                    $cat->save();
+
+                    $applys = CatApplyPayDocent::where('generation_id', '=', $request->generation_id)->where('status', '=', 0)->get();
+                    $sum_applys = ceil($applys->sum('amount_paid_out'));
+                    $count_applys = count($applys);
+                    $rest_paids = $scheme->number_payments - $count_applys;
+                    $rest_amount = ceil($a - $sum_applys);
+                    if ($rest_paids != 0) {
+                        $divider = ceil($rest_amount / $rest_paids);
+                    } else {
+                        $divider = 0;
+                    }
+
+                    //here apply paid only
+                    if ($rest_paids <= 0) {
+                        $cat->rest = 0;
+                        $cat->save();
+                    } else {
+                        $cat->rest = $a - $sum_applys;
+                        $cat->save();
+                    }
+
+
+                    $no_applys = CatApplyPayDocent::where('generation_id', '=', $request->generation_id)->where('status', '=', 1)->get();
+                    if ($no_applys) {
+                        foreach ($no_applys as $key => $value) {
+                            $value->amount_expected = $divider;
+                            $value->amount_paid_out = 0;
+                            $value->rest = $rest_amount;
+                            $value->save();
+                        }
+                    }
+                } else {
+
+                    $a = ceil($scheme->cost_week * $scheme->weeks);
+                    $b = ceil($a / $scheme->number_payments);
+
+                    $cat = CatApplyPayDocent::find($request->id);
+                    $cat->date = $request->date;
+                    $cat->amount_paid_out = $request->amount;
+                    //$cat->rest = $a - $cat->amount_paid_out;
+                    $cat->status = 0;
+                    $cat->generation_id = $request->generation_id;
+                    $cat->save();
+
+                    $applys = CatApplyPayDocent::where('generation_id', '=', $request->generation_id)->where('status', '=', 0)->get();
+                    $sum_applys = ceil($applys->sum('amount_paid_out'));
+                    $count_applys = count($applys);
+                    $rest_paids = $scheme->number_payments - $count_applys;
+                    $rest_amount = ceil($a - $sum_applys);
+                    if ($rest_paids != 0) {
+                        $divider = ceil($rest_amount / $rest_paids);
+                    } else {
+                        $divider = 0;
+                    }
+
+                    //here apply paid only
+                    if ($rest_paids <= 0) {
+                        $cat->rest = 0;
+                        $cat->save();
+                    } else {
+                        $cat->rest = $a - $sum_applys;
+                        $cat->save();
+                    }
+
+
+                    $no_applys = CatApplyPayDocent::where('generation_id', '=', $request->generation_id)->where('status', '=', 1)->get();
+                    if ($no_applys) {
+                        foreach ($no_applys as $key => $value) {
+                            $value->amount_expected = $divider;
+                            $value->amount_paid_out = 0;
+                            $value->rest = $rest_amount;
+                            $value->save();
+                        }
+                    }
+                }
+
+                return response()->json($sum_applys);
             } catch (\Exception $e) {
                 return response()->json($e->getMessage());
             }
@@ -108,7 +231,7 @@ class CatPaymentDocentController extends Controller
                 DB::raw('CONCAT(teachers.name , teachers.last_name , teachers.mother_last_name) AS teacher')
             )
             ->where('generations.id', '=', $id)->first();
-        
+
         $total_ins = \DB::table('student_inscriptions')->where('generation_id', '=', $id)->count();
         $total_down = \DB::table('student_inscriptions')->where('generation_id', '=', $id)->where('status', '=', 'Baja')->count();
         $rest = $total_ins - $total_down;
@@ -125,22 +248,50 @@ class CatPaymentDocentController extends Controller
         } else {
             return response()->json(["exist" => 0]);
         }
-        
     }
 
     public function update(Request $request, $id)
     {
         if ($request->ajax()) {
             try {
-
-                $cat = CatExpense::find($id);
-                $cat->date = $request->date;
-                $cat->amount = $request->amount;
-                $cat->concept = $request->concept;
-                $cat->account_id = $request->account_id;
-                $cat->cat_reference = $request->cat_reference;
-                $cat->cat_clasification = $request->cat_clasification;
+                $cat = CatScheme::find($id);
+                $cat->type_scheme = $request->type_scheme;
+                $cat->cost_student = $request->cost_student;
+                $cat->cost_week = $request->cost_week;
+                $cat->weeks = $request->weeks;
+                $cat->number_payments = $request->number_payments;
+                $cat->generation_id = $request->generation_id;
                 $cat->save();
+
+                $paids_old = CatApplyPayDocent::where('generation_id', '=', $request->generation_id)->delete();
+
+                if ($cat->type_scheme != 1) {
+                    $a = ceil($cat->cost_week * $cat->weeks);
+                    $b = ceil($a / $cat->number_payments);
+
+                    for ($i = 0; $i < $cat->number_payments; $i++) {
+                        $cat_a = new CatApplyPayDocent();
+                        $cat_a->number = $i + 1;
+                        $cat_a->amount_expected = $b;
+                        $cat_a->amount_paid_out = 0;
+                        $cat_a->rest = $a - $cat_a->amount_paid_out;
+                        $cat_a->generation_id = $cat->generation_id;
+                        $cat_a->save();
+                    }
+                } else {
+                    $a = ceil($cat->cost_student * $request->total_students);
+                    $b = ceil($a / $request->number_payments);
+
+                    for ($i = 0; $i < $request->number_payments; $i++) {
+                        $cat_a = new CatApplyPayDocent();
+                        $cat_a->number = $i + 1;
+                        $cat_a->amount_expected = $b;
+                        $cat_a->amount_paid_out = 0;
+                        $cat_a->rest = $a - $cat_a->amount_paid_out;
+                        $cat_a->generation_id = $cat->generation_id;
+                        $cat_a->save();
+                    }
+                }
 
                 return response()->json("success");
             } catch (\Exception $e) {
@@ -148,12 +299,15 @@ class CatPaymentDocentController extends Controller
             }
         }
     }
-    
-    public function delete($id)
-    {
-        $cat = CatExpense::find($id);
-        $cat->delete();
 
-        return response()->json("sucess");
+    public function verifyAmount(Request $request)
+    {
+        if ($cat->type_scheme != 1) {
+            $a = ceil($cat->cost_week * $cat->weeks);
+            $b = ceil($a / $cat->number_payments);
+        } else {
+            $a = ceil($cat->cost_student * $request->total_students);
+            $b = ceil($a / $request->number_payments);
+        }
     }
 }

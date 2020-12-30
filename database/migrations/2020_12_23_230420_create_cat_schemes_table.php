@@ -24,6 +24,7 @@ class CreateCatSchemesTable extends Migration
             $table->decimal('total_payment_weeks', 18,2)->nullable();
             $table->decimal('total_pay')->nullable();
             $table->decimal('total_rest')->nullable();
+            $table->integer('number_payments')->nullable();
 
             $table->unsignedInteger('generation_id')->unsigned();
             $table->foreign('generation_id')

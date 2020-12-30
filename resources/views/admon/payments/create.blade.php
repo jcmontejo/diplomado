@@ -46,30 +46,34 @@
                     style="display: none">
                     <strong id="error-save"></strong>
                 </div>
-                    <input type="hidden" id="id_cat">
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label for="inputEmail4">Tipo de Pago</label>
-                            <select name="type_scheme" id="type_scheme" class="form-control">
-                                <option value="1">Por alumno</option>
-                                <option value="2">Por semana</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="inputEmail4">Costo por alumno</label>
-                            <input type="number" step="1" min="1" class="form-control" id="cost_student"
-                                required="required">
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="inputEmail4">Costo por semana</label>
-                            <input type="number" step="1" min="1" class="form-control" id="cost_week"
-                                required="required">
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="inputEmail4">Número de semanas</label>
-                            <input type="number" step="1" min="1" class="form-control" id="weeks" required="required">
-                        </div>
+                <input type="hidden" id="id_cat">
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Tipo de Pago</label>
+                        <select name="type_scheme" id="type_scheme" class="form-control">
+                            <option value="1">Por alumno</option>
+                            <option value="2">Por semana</option>
+                        </select>
                     </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Costo por alumno</label>
+                        <input type="number" step="1" min="1" class="form-control" id="cost_student"
+                            required="required">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Costo por semana</label>
+                        <input type="number" step="1" min="1" class="form-control" id="cost_week" required="required">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Número de semanas</label>
+                        <input type="number" step="1" min="1" class="form-control" id="weeks" required="required">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Número de pagos</label>
+                        <input type="number" step="1" min="1" class="form-control" id="number_payments"
+                            required="required">
+                    </div>
+                </div>
                 <button type="button" class="btn btn-success" id="saveCat" onclick="storeScheme();">
                     <i class="fas fa-check-circle"></i>
                     Guardar</button>
@@ -93,12 +97,14 @@
                                     <th>Pago por semana</th>
                                     <th>Número de semanas</th>
                                     <th>Total a pagar</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
                                         <span id="t_scheme"></span>
+                                        <input type="hidden" id="ID_scheme">
                                     </td>
                                     <td>
                                         <span id="t_cost_student"></span>
@@ -112,12 +118,16 @@
                                     <td>
                                         <span id="t_total_pay"></span>
                                     </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" onclick="getSchemeTwo();"><i
+                                                class="fas fa-edit"></i></button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-8">
                             <!-- DataTales Example -->
                             <div id="block-table-pays" style="display: none;">
                                 <div class="card shadow-lg">
@@ -127,8 +137,12 @@
                                                 cellspacing="0">
                                                 <thead>
                                                     <tr>
+                                                        <th>Nº Pago</th>
                                                         <th>Fecha de pago</th>
+                                                        <th>Pago esperado</th>
                                                         <th>Monto pagado</th>
+                                                        <th>Monto restante</th>
+                                                        <th>Estatus</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
@@ -136,7 +150,7 @@
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <th colspan="2" style="text-align:left">Total:</th>
+                                                        <th colspan="7" style="text-align:left">Total:</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -145,26 +159,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="card shadow-lg">
-                                <div class="card-body">
-                                    <div id='message-error-save' class="alert alert-danger alert-dismissible fade show"
-                                        role='alert' style="display: none">
-                                        <strong id="error-save"></strong>
-                                    </div>
+                        <div class="col-4">
+                            <div id="block-paid_out" style="display: none;">
+                                <div class="card shadow-lg">
+                                    <div class="card-body">
+                                        <div id='message-error-save'
+                                            class="alert alert-danger alert-dismissible fade show" role='alert'
+                                            style="display: none">
+                                            <strong id="error-save"></strong>
+                                        </div>
                                         <div class="form-row">
+                                            <input type="hidden" id="ID_paid_out">
                                             <div class="form-group col-md-12">
                                                 <label for="inputEmail4">Fecha de pago</label>
                                                 <input type="date" class="form-control" id="date_pay">
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <label for="inputEmail4">Monto de pago</label>
-                                                <input type="number" min="1" step="1" class="form-control" id="amount_pay">
+                                                <input type="number" min="1" step="1" class="form-control"
+                                                    id="amount_pay">
                                             </div>
                                         </div>
-                                    <button type="button" class="btn btn-success btn-block" id="saveApply" onclick="saveApply();"><i
-                                            class="fas fa-check-circle"></i>
-                                        Guardar</button>
+                                        <button type="button" class="btn btn-success btn-block" id="saveApply"><i
+                                                class="fas fa-check-circle"></i>
+                                            Guardar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -173,5 +192,46 @@
             </div>
         </div>
     </div>
-    <a class="float" onclick="cancel();" data-bs-toggle="tooltip" data-bs-placement="top" title="Cerrar Generación"><i class="fas fa-exclamation-triangle my-float"></i></a>
+    <div id="block-edit-scheme" style="display: none;">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Tipo de Pago</label>
+                        <input type="hidden" id="ID_scheme_to_edit">
+                        <select name="type_scheme" id="type_scheme_e" class="form-control">
+                            <option value="1">Por alumno</option>
+                            <option value="2">Por semana</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Costo por alumno</label>
+                        <input type="number" step="1" min="1" class="form-control" id="cost_student_e"
+                            required="required">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Costo por semana</label>
+                        <input type="number" step="1" min="1" class="form-control" id="cost_week_e" required="required">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Número de semanas</label>
+                        <input type="number" step="1" min="1" class="form-control" id="weeks_e" required="required">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputEmail4">Número de pagos</label>
+                        <input type="number" step="1" min="1" class="form-control" id="number_payments_e"
+                            required="required">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-success" id="updateScheme" onclick="updateScheme();">
+                    <i class="fas fa-check-circle"></i>
+                    Actualizar</button>
+                    <button class="btn btn-danger" id="cancelSchemeEdit" onclick="cancelSchemeEdit();"><i
+                        class="fas fa-exclamation-triangle"></i>
+                    Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <a class="float" onclick="cancel();" data-bs-toggle="tooltip" data-bs-placement="top" title="Cerrar Generación"><i
+            class="fas fa-times-circle my-float"></i></a>
 </div>

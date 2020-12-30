@@ -15,8 +15,12 @@ class CreateCatApplyPayDocentsTable extends Migration
     {
         Schema::create('cat_apply_pay_docents', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('date');
-            $table->decimal('amount', 18,2);
+            $table->integer('number');
+            $table->date('date')->nullable();
+            $table->decimal('amount_expected', 18,2)->nullable();
+            $table->decimal('amount_paid_out', 18,2)->nullable();
+            $table->decimal('rest', 18,2)->nullable();
+            $table->integer('status')->default(1);
             
             $table->unsignedInteger('generation_id')->unsigned();
             $table->foreign('generation_id')
