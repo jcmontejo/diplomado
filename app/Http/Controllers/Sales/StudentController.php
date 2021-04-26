@@ -1243,6 +1243,7 @@ class StudentController extends Controller
                 $inscription->metodo_de_pago = $metodo_de_pago;
                 $inscription->id_vendedor = Auth::user()->id;
                 $inscription->save();
+                
 
                 // Add Debt and Payments to student
                 $date = Carbon::now();

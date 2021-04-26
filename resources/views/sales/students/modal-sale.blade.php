@@ -1,8 +1,8 @@
 <div class="modal fade" id="modalSale" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title justify-content-center">Procesar Inscripción...</h5>
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title justify-content-center">Inscribir nuevo estudiante</h5>
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
@@ -31,7 +31,7 @@
                     </div>
                     </form>
                     <hr>
-                    <div class="mb-2 bg-dark text-white text-center">DATOS DEL ALUMNO</div>
+                    <div class="mb-2 bg-dark text-white text-center">ALTA DE NUEVO ESTUDIANTE</div>
                     <form id="formRate">
                         <div class="form-row col-md-12">
                             <div id='message-error-save' class="alert alert-danger alert-dismissible fade show"
@@ -357,10 +357,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger mt-4 pr-4 pl-4" data-dismiss="modal"><i
-                        class="fas fa-power-off"></i> Cerrar</button>
-                <a href="#" id="saveSale" class="btn btn-success mt-4 pr-4 pl-4" name="saveSale"><i
-                        class="fas fa-check"></i> Procesar</a>
+                <button class="btn btn-success btn-block" id="btn_diplomado" style="display: none;">
+                    <i class="fas fa-user-plus"></i> INSCRIBIR A DIPLOMADO
+                </button>
+                <button class="btn btn-success btn-block" id="btn_seminario" style="display: none;">
+                    <i class="fas fa-user-plus"></i> INSCRIBIR A SEMINARIO
+                </button>
+                <!--<a href="#" id="saveSale" class="btn btn-success mt-4 pr-4 pl-4" name="saveSale"><i
+                        class="fas fa-check"></i> Procesar</a>-->
             </div>
         </div>
     </div>
