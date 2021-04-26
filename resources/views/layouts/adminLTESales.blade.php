@@ -36,6 +36,8 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{asset('/css/select2-bootstrap4.css')}}">
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js" defer></script>
+    {{-- Notiflix --}}
+    <link rel="stylesheet" href="{{asset('/notiflix/notiflix-2.3.2.min.css')}}">
     <style>
         .loading {
             background: lightgrey;
@@ -296,6 +298,9 @@
     <script src="{{asset('toastr/toastr.min.js')}}"></script>
     {{-- SweetAlert --}}
     <script src="{{asset('/js/sweetalert2.min.js')}}"></script>
+    {{-- Notiflix --}}
+    <script src="{{asset('/notiflix/notiflix-2.3.2.min.js')}}"></script>
+    <script src="{{asset('/notiflix/notiflix-aio-2.3.2.min.js')}}"></script>
     <script>
         $(document).ready(function() {
             $('select').select2({
