@@ -205,9 +205,9 @@
     @yield('js')
     <script>
         $(document).ready(function() {
-            $('select').select2({
+            /*$('select').select2({
                 theme: 'bootstrap4',
-            });
+            });*/
         });
 
         function checkMasterKey()

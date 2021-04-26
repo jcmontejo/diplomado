@@ -121,6 +121,29 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-bookmark"></i>
+                                <p>
+                                    Seminarios
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{url('/admon/CATseminarios/listado')}}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Lista de Seminarios</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{url('/admon/CATgrupos/listado')}}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Grupos</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="{{url('/admon/alumnos/lista')}}" class="nav-link">
                                 <i class="nav-icon fas fa-users"></i>

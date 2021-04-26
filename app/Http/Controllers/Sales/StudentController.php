@@ -6,17 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Account;
 use App\AccountType;
 use App\Debt;
+use App\DeudaSeminario;
 use App\Diplomat;
 use App\Document;
 use App\Generation;
+use App\GrupoSeminario;
 use App\Http\Requests\DocumentAddStore;
 use App\Http\Requests\EditStudent;
 use App\Http\Requests\StoreStudent;
 use App\Incentive;
+use App\InscripcionSeminarioGrupo;
 use App\Notifications\NEWInscription;
+use App\PagoSeminario;
 use App\Payment;
 use App\PaymentMethod;
 use App\PaymentReceived;
+use App\Seminario;
 use App\Student;
 use App\StudentInscription;
 use App\User;
@@ -36,8 +41,10 @@ class StudentController extends Controller
         $accounts = Account::all();
         $methods = PaymentMethod::all();
         $account_types = AccountType::all();
+        $seminarios = Seminario::all();
+        $grupos = GrupoSeminario::all();
 
-        return view('sales.students.index', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types'));
+        return view('sales.students.index', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types', 'seminarios', 'grupos'));
     }
 
     public function prospects(Request $request)
@@ -1051,6 +1058,59 @@ class StudentController extends Controller
         }
     }
 
+    public function nStudentSeminario(StoreStudent $request)
+    {
+        try {
+            DB::beginTransaction();
+            if ($request->ajax()) {
+                $validated = $request->validated();
+                $user = Auth::user();
+
+                $number = Student::max('id') + 1;
+
+                $student = new Student();
+                $student->enrollment = 'SER00000000' . $number;
+                $student->curp = $request->curp;
+                $student->name = $request->name;
+                $student->last_name = $request->last_name;
+                $student->mother_last_name = $request->mother_last_name;
+                $student->facebook = $request->facebook;
+                $student->interested = 'null';
+                $student->birthdate = $request->birthdate;
+                $student->sex = $request->sex;
+                $student->phone = $request->phone;
+                $student->address = $request->address;
+                $student->state = $request->state;
+                $student->city = $request->city;
+                $student->email = $request->email;
+                $student->profession = $request->profession;
+                $student->status = 100;
+                if ($student->status <= 30) {
+                    $student->color = 'red';
+                } elseif ($student->status >= 40 and $student->status <= 80) {
+                    $student->color = 'yellow';
+                } elseif ($student->status >= 90) {
+                    $student->color = 'green';
+                }
+                $student->user_id = $user->id;
+                $student->save();
+
+                $student->enrollment = 'SER00000000'.$student->id;
+                $student->save();
+
+
+                $this->nSeminario($student->id, $request->seminario_id, $request->grupo_id, $request->descuento, $request->numero_de_pagos, $request->monto_de_pagos, $request->primer_pago, $request->cuenta_destino, $request->tipo_cuota, $request->metodo_de_pago);
+                DB::commit();
+                return response()->json([
+                    "message" => "success",
+                ]);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
     public function nInscription($student_id, $generation_id, $discount, $number_payments, $amount_of_payments, $first_payment, $periodicity, $account, $account_type, $payment_method){
         try {
             DB::beginTransaction();
@@ -1144,6 +1204,71 @@ class StudentController extends Controller
 
                 $this->incentive($inscription->id, $generation->id, $student->id, $inscription->discount);
                 //$inscription->notify(new NEWInscription($inscription));
+                DB::commit();
+
+                return true;
+            } else {
+                DB::rollBack();
+
+                return false;
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
+    public function nSeminario($student_id, $seminario_id, $grupo_id, $descuento, $numero_de_pagos, $monto_de_pagos, $primer_pago, $cuenta_destino, $tipo_cuota, $metodo_de_pago){
+        try {
+            DB::beginTransaction();
+            if ($this->checkStudent($student_id)) {
+                $student = Student::find($student_id);
+                $student->status = 1;
+                $student->save();
+
+                $grupo = GrupoSeminario::find($grupo_id);
+                $seminario = Seminario::find($seminario_id);
+
+                // Student Inscription 
+                $inscription = new InscripcionSeminarioGrupo();
+                $inscription->descuento = $descuento;
+                $inscription->costo_final = $seminario->precio_venta - ($descuento + $primer_pago);;
+                $inscription->primer_pago = $primer_pago;
+                $inscription->numero_de_pagos = $numero_de_pagos;
+                $inscription->monto_de_pagos = $monto_de_pagos;
+                $inscription->comentarios = 'null';
+                $inscription->seminario_id = $seminario_id;
+                $inscription->grupo_id = $grupo_id;
+                $inscription->student_id = $student->id;
+                $inscription->metodo_de_pago = $metodo_de_pago;
+                $inscription->id_vendedor = Auth::user()->id;
+                $inscription->save();
+
+                // Add Debt and Payments to student
+                $date = Carbon::now();
+
+                $debt = new DeudaSeminario();
+                $debt->monto = $inscription->costo_final;
+                $debt->inscripcion_id = $inscription->id;
+                $debt->save();
+
+                for ($i = 1; $i <= $numero_de_pagos; $i++) {
+                    $date = $date->addWeeks(2);
+                    if ($date->dayOfWeek === Carbon::SUNDAY) {
+                        $date->addDay();
+                    }
+                    $datePayment[$i] = $date->toDateString();
+
+                    $payment = new PagoSeminario();
+                    $payment->monto = 0;
+                    $payment->fecha_de_pago = $datePayment[$i];
+                    $payment->numero_de_pago = $i;
+                    $payment->deuda_id = $debt->id;
+                    $payment->save();
+                }
+
+                $mytime = Carbon::now();
+
                 DB::commit();
 
                 return true;

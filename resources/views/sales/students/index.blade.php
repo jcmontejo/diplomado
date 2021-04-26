@@ -10,6 +10,7 @@
                 <div id="msj-success" class="alert alert-success alert-dismissible" role="alert" style="display:none">
                     <strong>Alumno Actualizado Correctamente.</strong>
                 </div>
+
                 <a href="#" class="btn btn-rounded btn-primary mb-3 float-right" id="createStudent"><i
                         class="fas fa-plus"></i> Agregar
                     Nuevo Alumno</a>
@@ -160,6 +161,19 @@
             } else {
                 $('select[name="generation_id_old"]').empty();
                 //$('select[name="old_data_id"]').empty();
+            }
+        });
+
+        $('select[name="tipo_inscripcion"]').on('change', function () {
+            var tipo = $(this).val();
+            if (tipo == 1) {
+                $("#data-diplomat").css("display", "block");
+                $("#data-seminarios").css("display", "none");
+            }
+            if (tipo == 2) {
+                $("#data-seminarios").css("display", "block");
+                $("#data-diplomat").css("display", "none");
+                $("#bandera").val(2);
             }
         });
     });
@@ -819,6 +833,8 @@
     $("#saveSale").click(function () {
         //Bandera
         var bandera = $("#bandera").val();
+        let route_diplomat =  '{{url("/ventas/alumnos/procesar/nuevainscripcion")}}';
+        let alt_route = '{{url("ventas/alumnos/procesar/nuevainscripcionseminario")}}';
 
         if (bandera == 1) {
 
@@ -831,7 +847,7 @@
 
             $.ajax({
                 type: "POST",
-                url: '{{url(' / ventas / alumnos / revisar / ')}}',
+                url: '{{url('/ventas/alumnos/revisar/')}}',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -886,7 +902,6 @@
                 error: function (jqXHR, exception) {}
             });
         } else {
-            var route = '/ventas/alumnos/procesar/nuevainscripcion';
             //Datos alumno
             var curp = $("#curpStudent").val();
             var name = $("#nameStudent").val();
@@ -912,6 +927,17 @@
             var account = $("#accountDestination_N").val();
             var account_type = $("#account_type_N").val();
             var payment_method = $("#payment_method_N").val();
+
+            //Datos seminario
+            var seminario_id = $("#seminario_id").val();
+            var grupo_id = $("#grupo_id").val();
+            var descuento = $("#descuento").val();
+            var numero_de_pagos = $("#numero_de_pagos").val();
+            var monto_de_pagos = $("#monto_de_pagos").val();
+            var primer_pago = $("#primer_pago").val();
+            var cuenta_destino = $("#cuenta_destino").val();
+            var tipo_cuota = $("#tipo_cuota").val();
+            var metodo_de_pago = $("#metodo_de_pago").val();
             // End
 
             //checkCurp
@@ -921,8 +947,9 @@
             if (crp != "") {
                 $.get(route_crp, function (res) {
                     if (res.exists != true) {
-                        $.ajax({
-                            url: route,
+                        if (bandera == 1) {
+                            $.ajax({
+                            url: route_diplomat,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -953,6 +980,16 @@
                                 account: account,
                                 account_type: account_type,
                                 payment_method: payment_method,
+                                //Datos seminario
+                                seminario_id: seminario_id,
+                                grupo_id: grupo_id,
+                                descuento: descuento,
+                                numero_de_pagos: numero_de_pagos,
+                                monto_de_pagos: monto_de_pagos, 
+                                primer_pago: primer_pago,
+                                cuenta_destino: cuenta_destino, 
+                                tipo_cuota: tipo_cuota,
+                                metodo_de_pago: metodo_de_pago
                             },
                             beforeSend: function () {
                                 $("#preloader").css("display", "block");
@@ -977,6 +1014,74 @@
                                 $("#message-error-save-N").fadeIn();
                             }
                         });
+                        } else {
+                            $.ajax({
+                            url: alt_route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                //Datos alumno
+                                curp: curp,
+                                name: name,
+                                last_name: last_name,
+                                mother_last_name: mother_last_name,
+                                facebook: facebook,
+                                birthdate: birthdate,
+                                sex: sex,
+                                phone: phone,
+                                address: address,
+                                state: state,
+                                city: city,
+                                email: email,
+                                profession: profession,
+                                //Datos diplomado
+                                generation_id: generation_id,
+                                discount: discount,
+                                number_payments: number_payments,
+                                amount_of_payments: amount_of_payments,
+                                first_payment: first_payment,
+                                periodicity: periodicity,
+                                account: account,
+                                account_type: account_type,
+                                payment_method: payment_method,
+                                //Datos seminario
+                                seminario_id: seminario_id,
+                                grupo_id: grupo_id,
+                                descuento: descuento,
+                                numero_de_pagos: numero_de_pagos,
+                                monto_de_pagos: monto_de_pagos, 
+                                primer_pago: primer_pago,
+                                cuenta_destino: cuenta_destino, 
+                                tipo_cuota: tipo_cuota,
+                                metodo_de_pago: metodo_de_pago
+                            },
+                            beforeSend: function () {
+                                $("#preloader").css("display", "block");
+                            },
+                            success: function () {
+                                $("#preloader").css("display", "none");
+                                $("#modalSale .close").click();
+                                $('#message-error-save-N').css('display', 'none');
+                                reload();
+                                toastr.success(
+                                    'Has re inscrito al alumno exitosamente!',
+                                    'Bien hecho!')
+                            },
+                            error: function (data) {
+                                var response = JSON.parse(data.responseText);
+                                var errorString = "<ul>";
+                                $.each(response.errors, function (key, value) {
+                                    errorString += "<li>" + value + "</li>";
+                                });
+                                $("#preloader").css("display", "none");
+                                $("#error-save-N").html(errorString);
+                                $("#message-error-save-N").fadeIn();
+                            }
+                        });
+                        }
                     } else {
                         alert('La CURP: '+ res.crp +' ya se encuentra registrada.');
                     }

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title justify-content-center">Procesar Inscripción..</h5>
+                <h5 class="modal-title justify-content-center">Procesar Inscripción...</h5>
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
@@ -140,8 +140,17 @@
                             </div>
                         </div>
                     </form>
+                    <div class="form-group col-md-12">
+                        <label for="exampleInputPassword1">Tipo de Inscripción</label>
+                        <select name="tipo_inscripcion" id="tipo_inscripcion"
+                            class="form-control form-control-lg">
+                            <option>--- Selecciona ---</option>
+                            <option value="1">Inscripción a Diplomado </option>
+                            <option value="2">Inscripción a Seminario </option>
+                        </select>
+                    </div>
                     <hr>
-                    <div id="data-diplomat">
+                    <div id="data-diplomat" style="display: none;">
                         <div class="mb-2 bg-dark text-white text-center">DATOS DEL DIPLOMADO</div>
                         <div class="form-row col-md-12">
                             <div class="form-group col-md-8">
@@ -264,6 +273,85 @@
                             <select name="generation_id_old" id="generation_id_old" class="form-control form-control-lg">
                                 <option value="">--- Selecciona una de las BAJAS antes ---</option>
                             </select>
+                        </div>
+                    </div>
+                    <div id="data-seminarios" style="display: none;">
+                        <div class="mb-2 bg-primary text-white text-center">DATOS DEL SEMINARIO</div>
+                        <div class="form-row col-md-12">
+                            <div class="form-group col-md-8">
+                                <input type="hidden" id="id">
+                                <label for="exampleInputEmail1">Selecciona Seminario</label>
+                                <select name="seminario_id" id="seminario_id" class="form-control form-control-lg">
+                                    <option value="">--- Selecciona Seminario ---</option>
+                                    @forelse ($seminarios as $seminario)
+                                    <option value="{{$seminario->id}}">{{$seminario->nombre}} [${{$seminario->precio_venta}}]</option>
+                                    @empty
+                                    <option value="0">No hay seminarios registrados.</option>
+                                    @endforelse
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="exampleInputPassword1">Selecciona Grupo</label>
+                                <select name="grupo_id" id="grupo_id" class="form-control form-control-lg">
+                                    <option value="">--- Selecciona Grupo ---</option>
+                                    @forelse ($grupos as $grupo)
+                                    <option value="{{$grupo->id}}">{{$grupo->nombre}}</option>
+                                    @empty
+                                    <option value="0">No hay grupos registrados.</option>
+                                    @endforelse
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="">Descuento</label>
+                                <input type="number" value="0" min="1" step="1" id="descuento" name="descuento"
+                                    class="form-control form-control-lg">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="">Número de Pagos</label>
+                                <input type="number" value="1" min="1" max="10" step="1" id="numero_de_pagos"
+                                    name="numero_de_pagos" class="form-control form-control-lg">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="">¿De cuanto seran los pagos?</label>
+                                <input type="text" name="monto_de_pagos" id="monto_de_pagos"
+                                    class="form-control form-control-lg">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="">Monto Primer Pago</label>
+                                <input type="number" value="0" min="0" name="primer_pago" id="primer_pago"
+                                    class="form-control form-control-lg">
+                            </div>
+                            <div class="form-group col-md-8">
+                                <label for="">Cuenta Receptora</label>
+                                <select name="cuenta_destino" id="cuenta_destino"
+                                    class="form-control form-control-lg">
+                                    @forelse ($accounts as $account)
+                                    <option value="{{$account->id}}">{{$account->account_name}}</option>
+                                    @empty
+                                    <option>NO HAY CUENTAS REGISTRADAS</option>
+                                    @endforelse
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Tipo de Cuota</label>
+                                <select name="tipo_cuota" id="tipo_cuota" class="form-control form-control-lg">
+                                    @forelse ($account_types as $type)
+                                    <option value="{{$type->id}}">{{$type->account_type}}</option>
+                                    @empty
+                                    <option>NO HAY TIPOS DE CUOTAS REGISTRADAS</option>
+                                    @endforelse
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Método de Pago</label>
+                                <select name="metodo_de_pago" id="metodo_de_pago" class="form-control form-control-lg">
+                                    @forelse ($methods as $method)
+                                    <option value="{{$method->id}}">{{$method->name}}</option>
+                                    @empty
+                                    <option>NO HAY MÉTODOS REGISTRADAS</option>
+                                    @endforelse
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>

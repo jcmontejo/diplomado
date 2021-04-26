@@ -14,7 +14,7 @@
                     <table class="table table-bordered" id="cats" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Referencia</th>
+                                <th>Nombre</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -25,8 +25,8 @@
             </div>
         </div>
     </div>
-    @include('admon.clasifications.create')
-    @include('admon.clasifications.edit')
+    @include('admon.grupos.create')
+    @include('admon.grupos.edit')
 </div><!-- /.container-fluid -->
 @endsection
 @section('js')
@@ -54,10 +54,10 @@
             lengthChange: true,
             processing: true,
             serverSide: true,
-            ajax: "{{url('/admon/CATclasificaciones/datos')}}",
+            ajax: "{{url('/admon/CATgrupos/datos')}}",
             columns: [{
-                data: 'name',
-                name: 'name'
+                data: 'nombre',
+                name: 'nombre'
             },
             {
                 data: 'action',
@@ -82,11 +82,11 @@
 
   function getCat() {
     var id = $("#id_cat").val();
-    var route = '{{url('/admon/CATclasificaciones/editar')}}/' + id;
+    var route = '{{url('/admon/CATgrupos/editar')}}/' + id;
     Notiflix.Loading.Dots('Procesando...');
     $.get(route, function (data) {
         Notiflix.Loading.Remove();
-        $("#txtNameEdit").val(data.cat.name);
+        $("#txNombreEdit").val(data.cat.nombre);
     });
 }
 
@@ -99,9 +99,9 @@ function cancel() {
 }
 
 function storeCat() {
-    var name = $("#txName").val();
+    var nombre = $("#txNombre").val();
 
-    var route = "/admon/CATclasificaciones/guardar";
+    var route = "/admon/CATgrupos/guardar";
 
     var form = $("#form-cat");
 
@@ -113,7 +113,7 @@ function storeCat() {
         type: 'POST',
         dataType: 'json',
         data: {
-            name: name
+            nombre: nombre
         },
         beforeSend: function () {
             Notiflix.Loading.Dots('Procesando...');
@@ -121,7 +121,7 @@ function storeCat() {
         success: function () {
             Notiflix.Loading.Remove();
             $('#message-error-save').css('display', 'none');
-            Notiflix.Report.Success('Bien hecho', 'Has guardado una nueva clasificación.', 'Click' ); 
+            Notiflix.Report.Success('Bien hecho', 'Has guardado un nuevo grupo.', 'Click' ); 
             reload();
             document.getElementById("form-cat").reset();
             $("#block-table").css("display", "block");
@@ -143,9 +143,9 @@ function storeCat() {
 
 function updateCat() {
    var id = $("#id_cat").val();
-   var name = $("#txtNameEdit").val();
+   var nombre = $("#txNombreEdit").val();
 
-   var route = "/admon/CATclasificaciones/actualizar/" + id;
+   var route = "/admon/CATgrupos/actualizar/" + id;
 
 
    $.ajax({
@@ -156,7 +156,7 @@ function updateCat() {
     type: 'PUT',
     dataType: 'json',
     data: {
-        name: name
+        nombre: nombre
     },
     beforeSend: function () {
         Notiflix.Loading.Dots('Procesando...');
@@ -185,10 +185,10 @@ function updateCat() {
 
 function DeleteCat(btn) {
     var id = btn.value;
-    var route = "/admon/CATclasificaciones/eliminar/" + id;
+    var route = "/admon/CATgrupos/eliminar/" + id;
     Notiflix.Confirm.Show(
-        'Cat Clasificaciones', 
-        '¿Esta seguro de eliminar esta clasificación?',
+        'Cat Referencias', 
+        '¿Esta seguro de eliminar este registro?',
         'Si',
         'No',
         function(){

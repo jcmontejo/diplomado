@@ -339,13 +339,21 @@ Route::group(['prefix' => 'admon'], function () {
     
     Route::post('/generaciones/eliminar/', 'Admon\GenerationController@destroy');
 
+
     Route::get('/generaciones/alumnos/buscar', 'Admon\GenerationController@findStudent');
-    Route::get('/generaciones/alumnos/inscritos/{id}', 'Admon\GenerationController@studentsInscription');
+    Route::get('/generaciones/alumnos/inscritos/{id}', 'Admon\GenerationController@listStudentsGeneration');
+    Route::get('/generaciones/alumnos/inscritos/datos/{id}', 'Admon\GenerationController@studentsInscription');
     Route::get('/generaciones/alumnos/{id}', 'Admon\GenerationController@students');
     Route::get('/generaciones/alumnos/consultar/{id}', 'Admon\GenerationController@search');
     Route::put('/generaciones/alumnos/baja/{id}', 'Admon\GenerationController@down');
     Route::put('/generaciones/alumnos/alta/{id}', 'Admon\GenerationController@up');
     Route::delete('/generaciones/eliminar/alumno/{id}', 'Admon\GenerationController@deleteStudent');
+    // Routes for news functions for payments
+    Route::get('/generaciones/alumnos/traerDatos/{id}', 'Admon\GenerationController@getDataPayments');
+    Route::get('/generaciones/alumnos/traerDatosGenerales/{id}', 'Admon\GenerationController@getDataPaymentGeneral');
+    Route::get('/generaciones/alumnos/traerPagos/{id}', 'Admon\GenerationController@getPayments');
+    Route::post('/generaciones/alumnos/pagos/recibir', 'Admon\GenerationController@received');
+    Route::post('/recibir/convenio', 'AgreementController@processAgreement');
 
     Route::POST('/generaciones/alumnos/descuento/', 'Admon\GenerationController@discount');
 
@@ -399,6 +407,28 @@ Route::group(['prefix' => 'admon'], function () {
      Route::get('/CATpagosDocentes/esquema/{id}', 'CatPaymentDocentController@getScheme');
 
      Route::get('matricular-alumnos', 'GeneralController@enrollment');
+
+    //Seminarios
+     Route::get('/CATseminarios/listado', 'SeminarioController@index');
+     Route::get('/CATseminarios/datos', 'SeminarioController@data');
+     Route::post('/CATseminarios/guardar', 'SeminarioController@store');
+     Route::get('/CATseminarios/editar/{id}', 'SeminarioController@get');
+     Route::put('/CATseminarios/actualizar/{id}', 'SeminarioController@update');
+     Route::delete('/CATseminarios/eliminar/{id}', 'SeminarioController@delete');
+
+     //Grupos Seminarios
+     Route::get('/CATgrupos/listado', 'GrupoSeminarioController@index');
+     Route::get('/CATgrupos/datos', 'GrupoSeminarioController@data');
+     Route::post('/CATgrupos/guardar', 'GrupoSeminarioController@store');
+     Route::get('/CATgrupos/editar/{id}', 'GrupoSeminarioController@get');
+     Route::put('/CATgrupos/actualizar/{id}', 'GrupoSeminarioController@update');
+     Route::delete('/CATgrupos/eliminar/{id}', 'GrupoSeminarioController@delete');
+     Route::get('/CATgrupos/estudiantes/{id}', 'GrupoSeminarioController@showStudents');
+     Route::get('/CATgrupos/datos/pagos/{id}', 'GrupoSeminarioController@dataStudents');
+     Route::post('/CATgrupos/recibir/pago/', 'GrupoSeminarioController@storePayment');
+     Route::post('/CATgrupos/agregar/pago/', 'GrupoSeminarioController@newPayment');
+     Route::delete('/CATgrupos/estudiante/eliminar/{id}', 'GrupoSeminarioController@deleteStudent');
+
 });
 
 //Auxiliar de Admon
@@ -594,6 +624,7 @@ Route::group(['prefix' => 'ventas'], function () {
     Route::post('/alumnos/revisar', 'Sales\StudentController@checkStudentInscription');
     Route::post('/alumnos/procesar/reinscripcion', 'Sales\StudentController@incscriptionStudentOld');
     Route::post('/alumnos/procesar/nuevainscripcion', 'Sales\StudentController@nStudent');
+    Route::post('/alumnos/procesar/nuevainscripcionseminario', 'Sales\StudentController@nStudentSeminario');
 
     // Rutas extras ventas
     Route::get('/alumnos/datos/generaciones', 'Sales\GeneralController@index');

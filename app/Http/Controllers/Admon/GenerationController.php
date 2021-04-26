@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admon;
 
+use App\Account;
 use App\Debt;
 use App\Diplomat;
 use App\Generation;
@@ -54,14 +55,14 @@ class GenerationController extends Controller
 
     public function dataGenerations()
     {
-        
+
         $generations = Generation::select([
             'id', 'name_diplomat', 'docent', 'number_generation', 'number_students',
             'cost', 'maximum_cost', 'commision', 'full_price', 'created_at'
         ])->orderBy('name_diplomat');
 
         return Datatables::of($generations)
-            ->addColumn('total_inscriptions', function ($generation){
+            ->addColumn('total_inscriptions', function ($generation) {
                 $data = StudentInscription::where('generation_id', '=', $generation->id)->count();
 
                 return $data;
@@ -72,21 +73,21 @@ class GenerationController extends Controller
                 return '<td><div class="btn-group" role="group" aria-label="Basic example">
                 <a href="/admon/generaciones/alumnos/inscritos/' . $id . '" class="btn btn-rounded btn-xs btn-info mb-3"><i class="fa fa-eye"></i> Detalles</a>
                 <button class="btn btn-rounded btn-xs btn-primary mb-3" value="' . $id . '" OnClick="Show(this);" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
-                <button class="btn btn-rounded btn-xs btn-danger mb-3" OnClick="DeleteMod('.$id.');" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i> Eliminar</button>
+                <button class="btn btn-rounded btn-xs btn-danger mb-3" OnClick="DeleteMod(' . $id . ');" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i> Eliminar</button>
                 </div></td>';
             })
             ->make(true);
     }
 
-    public function listStudentsGeneration()
-    { }
-
-    public function studentsInscription($id, Request $request)
+    public function listStudentsGeneration($id)
     {
-        $request->session()->put('search', $request->has('search') ? $request->get('search') : ($request->session()->has('search') ? $request->session()->get('search') : ''));
-
         $generation = Generation::find($id);
 
+        return view('admon.generations.list-students-generation', compact('generation'));
+    }
+
+    public function studentsInscription($id)
+    {
         $students = DB::table('student_inscriptions')
             ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
             ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
@@ -94,8 +95,6 @@ class GenerationController extends Controller
             ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
             ->where('student_inscriptions.generation_id', '=', $id)
             ->where('student_inscriptions.status', '=', 'Alta')
-            //->where('name', 'like', '%' . $request->session()->get('search') . '%')
-            
             ->select(
                 DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
                 'students.email as email',
@@ -113,60 +112,20 @@ class GenerationController extends Controller
                 'debts.amount as total_debt',
                 'debts.id as debt_id'
             )
-            ->paginate(100);
+            ->get();
 
-            $students_low = DB::table('student_inscriptions')
-            ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
-            ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
-            ->where('student_inscriptions.generation_id', '=', $id)
-            ->where('student_inscriptions.status', '=', 'Baja')
-            ->where('name', 'like', '%' . $request->session()->get('search') . '%')
-            ->select(
-                DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
-                'students.email as email',
-                'students.enrollment',
-                'students.curp',
-                'students.phone as phone',
-                'students.documents as documents',
-                DB::raw('CONCAT(student_inscriptions.number_of_payments," PAGOS DE ",student_inscriptions.amount_of_payments) as observations'),
-                'student_inscriptions.discount as discount',
-                'student_inscriptions.first_payment as first_payment',
-                'student_inscriptions.id as id_inscription',
-                'student_inscriptions.final_cost as final_cost',
-                'student_inscriptions.status as status',
-                'debts.amount as total_debt',
-                'debts.id as debt_id'
-            )
-            ->paginate(100);
-
-
-        // $cost = DB::table('student_inscriptions')
-        //     ->where('student_inscriptions.generation_id', '=', $id)
-        //     ->sum('final_cost');
-
-
-        $cost = DB::table('student_inscriptions')
-            ->where('student_inscriptions.generation_id', '=', $id)
-            ->sum('final_cost');
-
-        $debt_global = DB::table('student_inscriptions')
-            ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
-            ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
-            ->where('student_inscriptions.generation_id', '=', $id)
-            ->sum('debts.amount');
-
-        $docent_pay = DB::table('docent_pays')
-                ->where('generation_id', '=', $id)
-                ->first();
-
-            
-        if ($request->ajax()) {
-
-            return view('admon.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global', 'docent_pay'));
-        } else {
-            return view('admon.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global', 'docent_pay'));
-        }
-        // return $students;
+        return Datatables::of($students)
+            ->addColumn('payments', function ($student) {
+                $id = $student->id_inscription;
+                return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="showPayments(' . $id . ');" class="btn btn-rounded btn-xs btn-success mb-3" data-toggle="modal" data-target="#modalListPayments"><i class="fa fa-edit"></i>Pagos</button></div></td>';
+            })
+            ->addColumn('action', function ($student) {
+                $id = $student->id_inscription;
+                return '<td><div class="btn-group" role="group" aria-label="Basic example"><button value="' . $id . '" OnClick="Show(this);" class="btn btn-rounded btn-xs btn-info mb-3" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-edit"></i> Editar</button>
+                <button class="btn btn-rounded btn-xs btn-danger mb-3" OnClick="DeleteMod(' . $id . ');" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i> Eliminar</button></div></td>';
+            })
+            ->rawColumns(['payments', 'action'])
+            ->make(true);
     }
 
     public function recentsInscription()
@@ -379,9 +338,9 @@ class GenerationController extends Controller
         $generation->save();
 
         $docent = Teacher::where('id', '=', $request->docent_id)->first();
-        $generation->docent = $docent->name.' '.$docent->last_name.' '.$docent->mother_last_name;
+        $generation->docent = $docent->name . ' ' . $docent->last_name . ' ' . $docent->mother_last_name;
         $generation->save();
-        
+
         return response()->json(["message" => "success"]);
     }
 
@@ -431,14 +390,14 @@ class GenerationController extends Controller
                 $debt = Debt::where('generation_id', '=', $ins->id)->first();
 
                 $payments = DB::table('payments')
-                ->where('debt_id', '=', $debt->id)->delete();
+                    ->where('debt_id', '=', $debt->id)->delete();
 
                 $payment_receiveds = DB::table('payment_receiveds')
-                ->where('debt_id', '=', $debt->id)->delete();
+                    ->where('debt_id', '=', $debt->id)->delete();
 
                 $agreements = DB::table('agreements')
-                ->join('debts', 'agreements.debt_id', '=', 'debts.id')
-                ->where('debts.id', '=', $debt->id)->delete();
+                    ->join('debts', 'agreements.debt_id', '=', 'debts.id')
+                    ->where('debts.id', '=', $debt->id)->delete();
 
                 $debt->delete();
 
@@ -596,9 +555,219 @@ class GenerationController extends Controller
                 "debt" => $debt,
                 "payment" => $payment,
                 "payment_received" => $payment_received
-                ]);
+            ]);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
+        }
+    }
+
+    // news functions for payments
+    public function getDataPayments($id)
+    {
+        $inscription = StudentInscription::find($id);
+        $debt = Debt::where('generation_id', '=', $inscription->id)->first();
+        $payments = Payment::where('debt_id', '=', $debt->id)->get();
+        return response()->json([
+            'inscription' => $inscription,
+            'debt' => $debt,
+            'payments' => $payments
+        ]);
+    }
+
+    public function getDataPaymentGeneral($id)
+    {
+        $inscription = StudentInscription::find($id);
+        $debt = Debt::where('generation_id', '=', $inscription->id)->first();
+        $payments = Payment::where('debt_id', '=', $debt->id)->get();
+        return response()->json([
+            'inscription' => $inscription,
+            'debt' => $debt,
+            'payments' => $payments
+        ]);
+    }
+
+    public function getPayments($id)
+    {
+        $inscription = StudentInscription::find($id);
+        $debt = Debt::where('generation_id', '=', $inscription->id)->first();
+        $payments = Payment::where('debt_id', '=', $debt->id)->get();
+
+        return Datatables::of($payments)
+            ->addColumn('description', function ($payment) {
+                return 'Pago número ' . $payment->number_payment;
+            })
+            ->addColumn('payment', function ($payment) {
+                $id = $payment->id;
+                if ($payment->status != 'PAGADO') {
+                    return '<td><div class="btn-group" role="group"><a href="#" value="' . $id . '" OnClick="applyPayment(' . $id . ');" class="btn btn-rounded btn-xs btn-success mb-3"><i class="fa fa-edit"></i>Pagar</a></div></td>';
+                } else {
+                    return 'Pago aplicado';
+                }
+            })
+            ->addColumn('agreement', function ($payment) {
+                $id = $payment->id;
+                if ($payment->status != 'PAGADO') {
+                    return '<td><div class="btn-group" role="group"><a href="#" value="' . $id . '" OnClick="applyAgreement(' . $id . ');" class="btn btn-rounded btn-xs btn-primary mb-3"><i class="fa fa-edit"></i>Convenio</a></div></td>';
+                } else {
+                    return 'Pago aplicado';
+                }
+            })
+            ->rawColumns(['description', 'payment', 'agreement'])
+            ->make(true);
+    }
+
+    public function received(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $payment = Payment::find($request->id_payment);
+            //Get Data
+            $debt = DB::table('debts')
+                ->where('id', '=', $payment->debt_id)
+                ->where('status', '=', 'ACTIVA')
+                ->first();
+
+            $inscription = StudentInscription::find($debt->generation_id);
+
+            $diplomat = Diplomat::find($inscription->diplomat_id);
+            $generation = Generation::find($inscription->generation_id);
+
+            if ($this->checkNumberPayment($payment->number_payment, $debt->id)) {
+                $number_payment = $payment->number_payment;
+            } else {
+                DB::rollBack();
+                return response()
+                    ->json([
+                        'message' => 'Pago ya procesado antes.',
+                        'status' => 406,
+                    ], 406);
+            }
+
+            $received = new PaymentReceived();
+            $received->diplomat_id = $diplomat->id;
+            $received->generation_id = $generation->id;
+            $received->student_id = $inscription->student_id;
+            $received->date_payment = $request->date_payment;
+            $received->observation = 'null';
+            $received->payment_method = $request->payment_method;
+            $received->destination_account = $request->destination_account;
+            $received->account_type = $request->account_type;
+            $received->amount = $request->amount;
+            $received->discount = 0;
+            $received->total = $request->amount;
+            $received->type = '1';
+            $received->number_pay = $number_payment;
+            $received->debt_id = $debt->id;
+            $received->save();
+
+            $payment_process = Payment::where('debt_id', '=', $debt->id)
+                ->where('number_payment', '=', $number_payment)
+                ->first();
+
+            $agreement = DB::table('agreements')
+                ->where('debt_id', $debt->id)
+                ->where('num_pay', $number_payment)
+                ->update(['status' => 0]);
+
+            if ($payment_process) {
+                $payment_process->amount_paid = $received->amount;
+                $payment_process->date = $received->date_payment;
+                $payment_process->status = 'PAGADO';
+                $payment_process->income_id = $received->id;
+                $payment_process->save();
+            }
+
+            if ($this->adjustDebt($debt->id, $received->total)) {
+                $this->sumAccount($received->destination_account, $received->total);
+
+                DB::commit();
+                return response()->json([
+                    "message" => "success",
+                ]);
+            } else {
+                DB::rollBack();
+                return response()
+                    ->json([
+                        'message' => 'Cantidad mayor a la deuda.',
+                        'error' => 1,
+                    ],400);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()]);
+        }
+    }
+
+    public function processAgreement(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            //Get Data
+            $debt = DB::table('debts')
+                ->where('id', '=', $request->debt_id)
+                ->where('status', '=', 'ACTIVA')
+                ->first();
+
+            $inscription = StudentInscription::find($debt->generation_id);
+
+            $diplomat = Diplomat::find($inscription->diplomat_id);
+            $generation = Generation::find($inscription->generation_id);
+
+            $agreement = new Agreement();
+            $agreement->date = $request->date_payment;
+            $agreement->amount = $request->amount;
+            $agreement->num_pay = $request->number_payment;
+            $agreement->debt_id = $debt->id;
+            $agreement->save();
+
+            DB::commit();
+            return response()->json([
+                "message" => "success",
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+    }
+
+    public function adjustDebt($debt, $amount)
+    {
+        $debt = Debt::find($debt);
+        if ($amount <= $debt->amount) {
+            $debt->amount = $debt->amount - $amount;
+            $debt->save();
+
+            if ($debt->amount == 0) {
+                $debt->status = 'PAGADA';
+                $debt->save();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function sumAccount($account, $amount)
+    {
+        $account = Account::find($account);
+        $account->opening_balance = $account->opening_balance + $amount;
+        $account->save();
+
+        return true;
+    }
+
+    public function checkNumberPayment($number_payment, $debt)
+    {
+        $payment_process = Payment::where('debt_id', '=', $debt)
+            ->where('number_payment', '=', $number_payment)
+            ->where('status', '=', 'PENDIENTE')
+            ->first();
+
+        if ($payment_process) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
