@@ -15,9 +15,9 @@ class CreateInscripcionSeminarioGruposTable extends Migration
     {
         Schema::create('inscripcion_seminario_grupos', function (Blueprint $table) {
             $table->increments('id');
-            $table->decimal('descuento',);
-            $table->decimal('costo_final',);
-            $table->decimal('primer_pago',);
+            $table->decimal('descuento');
+            $table->decimal('costo_final');
+            $table->decimal('primer_pago');
             $table->integer('numero_de_pagos');
             $table->decimal('monto_de_pagos');
             $table->integer('metodo_de_pago');
