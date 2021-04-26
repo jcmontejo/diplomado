@@ -7,6 +7,10 @@
             </div>
             <form id="form-cat" novalidate="">
                 <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                        <input type="password" class="form-control form-control-lg" id="psdMaster" placeholder="****************">
+                    </div>
                     <div class="form-group col-md-4">
                         <label for="inputEmail4">Nombre Seminario</label>
                         <input type="text" class="form-control" id="txNombre" placeholder="EJE.: Seminario ABC" required>

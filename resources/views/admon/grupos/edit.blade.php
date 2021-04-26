@@ -8,9 +8,13 @@
             <form id="form-medicine" novalidate="">
                <input type="hidden" name="id_cat" id="id_cat">
                 <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                        <input type="password" class="form-control form-control-lg" id="psdMasterEdit" placeholder="****************">
+                    </div>
                     <div class="form-group col-md-4">
                         <label for="inputEmail4">Nombre</label>
-                        <input type="text" class="form-control" id="txNombreEdit" required>
+                        <input type="text" class="form-control form-control-lg" id="txNombreEdit" required>
                     </div>
                 </div>
             </form>

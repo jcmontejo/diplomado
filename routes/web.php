@@ -415,6 +415,7 @@ Route::group(['prefix' => 'admon'], function () {
      Route::get('/CATseminarios/editar/{id}', 'SeminarioController@get');
      Route::put('/CATseminarios/actualizar/{id}', 'SeminarioController@update');
      Route::delete('/CATseminarios/eliminar/{id}', 'SeminarioController@delete');
+     Route::post('/CATseminarios/eliminar/', 'SeminarioController@destroy');
 
      //Grupos Seminarios
      Route::get('/CATgrupos/listado', 'GrupoSeminarioController@index');
@@ -423,6 +424,7 @@ Route::group(['prefix' => 'admon'], function () {
      Route::get('/CATgrupos/editar/{id}', 'GrupoSeminarioController@get');
      Route::put('/CATgrupos/actualizar/{id}', 'GrupoSeminarioController@update');
      Route::delete('/CATgrupos/eliminar/{id}', 'GrupoSeminarioController@delete');
+     Route::post('/CATgrupos/eliminar/', 'GrupoSeminarioController@destroy');
      Route::get('/CATgrupos/estudiantes/{id}', 'GrupoSeminarioController@showStudents');
      Route::get('/CATgrupos/datos/pagos/{id}', 'GrupoSeminarioController@dataStudents');
      Route::post('/CATgrupos/recibir/pago/', 'GrupoSeminarioController@storePayment');
@@ -624,6 +626,7 @@ Route::group(['prefix' => 'ventas'], function () {
     Route::post('/alumnos/revisar', 'Sales\StudentController@checkStudentInscription');
     Route::post('/alumnos/procesar/reinscripcion', 'Sales\StudentController@incscriptionStudentOld');
     Route::post('/alumnos/procesar/nuevainscripcion', 'Sales\StudentController@nStudent');
+    
     Route::post('/alumnos/procesar/nuevainscripcionseminario', 'Sales\StudentController@nStudentSeminario');
 
     // Rutas extras ventas

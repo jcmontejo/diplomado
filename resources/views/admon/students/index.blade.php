@@ -33,6 +33,7 @@
 @include('admon.students.modal-edit')
 @include('admon.students.modal-delete')
 
+
 @include('sales.students.modal-edit')
 @include('sales.students.modal-create')
 @include('sales.students.modal-adddocuments')
@@ -184,7 +185,7 @@
         buttons: [
             'excel', 'pdf'
         ],
-        
+
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },

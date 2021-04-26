@@ -32,7 +32,7 @@ class SeminarioController extends Controller
                 return '<div class="btn-group">
           <button type="button" class="btn btn-primary" value="' . $cat->id . '" onClick="editCat(' . $cat->id . ');" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa fa-edit"></i>
           </button>
-          <button type="button" value="' . $cat->id . '" OnClick="DeleteCat(this);" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash"></i>
+          <button type="button" value="' . $cat->id . '" OnClick="DeleteMod('.$cat->id.');" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i>
           </button>
           </div>';
             })
@@ -97,6 +97,14 @@ class SeminarioController extends Controller
     {
         $cat = Seminario::find($id);
         $cat->delete();
+        return response()->json("sucess");
+    }
+
+    public function destroy(Request $request)
+    {
+        $cat = Seminario::find($request->id);
+        $cat->delete();
+        
         return response()->json("sucess");
     }
 }

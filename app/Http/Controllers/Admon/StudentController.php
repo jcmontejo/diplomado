@@ -11,6 +11,7 @@ use App\Debt;
 use App\Diplomat;
 use App\Document;
 use App\Generation;
+use App\GrupoSeminario;
 use App\Http\Requests\DocumentAddStore;
 use App\Http\Requests\EditStudent;
 use App\Http\Requests\StoreStudent;
@@ -19,6 +20,7 @@ use App\Notifications\NEWInscription;
 use App\Payment;
 use App\PaymentMethod;
 use App\PaymentReceived;
+use App\Seminario;
 use App\Student;
 use App\StudentInscription;
 use App\User;
@@ -37,8 +39,10 @@ class StudentController extends Controller
         $accounts = Account::all();
         $methods = PaymentMethod::all();
         $account_types = AccountType::all();
+        $seminarios = Seminario::all();
+        $grupos = GrupoSeminario::all();
 
-        return view('admon.students.index', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types'));
+        return view('admon.students.index', compact('generations', 'diplomats', 'accounts', 'methods', 'account_types', 'seminarios', 'grupos'));
     }
 
     public function dataStudents()
