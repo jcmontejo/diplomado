@@ -93,6 +93,19 @@
 	margin-top:22px;
     color: #FFF;
 }
+
+.bg-header-card{
+    color: #ffffff;
+    Font: 16px;
+    Background: #118ab2;
+    padding: 12px 20px;
+}
+
+.bg-success-custom {
+    background-color: #06d6a0!important;
+}
+
+
     </style>
 </head>
 

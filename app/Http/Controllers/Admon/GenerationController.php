@@ -20,7 +20,11 @@ use Mail;
 use PDF;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
-
+use App\PagoDocente;
+use App\PagoRecibidoDiplomado;
+use App\PaymentMethod;
+use App\User;
+use Carbon\Carbon;
 
 class GenerationController extends Controller
 {
@@ -82,8 +86,148 @@ class GenerationController extends Controller
     public function listStudentsGeneration($id)
     {
         $generation = Generation::find($id);
+        $metodos = PaymentMethod::all();
+        $cuentas = Account::all();
 
-        return view('admon.generations.list-students-generation', compact('generation'));
+        $estudiantes = DB::table('student_inscriptions')
+            ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
+            ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
+            ->join('generations', 'student_inscriptions.generation_id', '=', 'generations.id')
+            ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
+            ->where('student_inscriptions.generation_id', '=', $id)
+            ->where('student_inscriptions.status', '=', 'Alta')
+            ->select(
+                DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as estudiante'),
+                'students.email as email',
+                'students.enrollment as matricula',
+                DB::raw('CONCAT(diplomats.key, generations.start_date, students.enrollment) AS folio'),
+                'students.curp',
+                'students.phone as phone',
+                DB::raw('CONCAT(student_inscriptions.number_of_payments," PAGOS DE ",student_inscriptions.amount_of_payments) as observations'),
+                'student_inscriptions.discount as descuento',
+                'student_inscriptions.first_payment as primer_pago',
+                'student_inscriptions.id as ID',
+                'student_inscriptions.final_cost as costo_final',
+                'student_inscriptions.status as status',
+                'debts.amount as debe',
+                'debts.id as debt_id'
+            )
+            ->get();
+
+        return view('admon.generations.estudiantes-inscritos', compact('estudiantes','generation', 'metodos', 'cuentas'));
+    }
+
+    public function dataStudents($id)
+    {
+        $inscription = StudentInscription::find($id);
+        $student = Student::where('id', '=', $inscription->student_id)->first();
+        $debt = Debt::where('generation_id', '=', $inscription->id)->first();
+        $vendedor = User::where('id', '=', $student->user_id)->first();
+        $payments = Payment::where('debt_id', '=', $debt->id)->get();
+        $diplomado = Diplomat::where('id', '=', $inscription->diplomat_id)->first();
+        $generacion = Generation::where('id', '=', $inscription->generation_id)->first();
+
+        return response()->json([
+            'inscripcion' => $inscription,
+            'estudiante' => $student,
+            'diplomado' => $diplomado,
+            'vendedor' => $vendedor,
+            'generacion' => $generacion,
+            'deuda' => $debt,
+            'pagos' => $payments
+        ]);
+    }
+
+    public function newPayment(Request $request)
+    {
+        $fecha = Carbon::now()->toDateString();
+
+        $inscripcion = StudentInscription::find($request->id_inscripcion);
+        $deuda = Debt::where('generation_id', '=', $request->id_inscripcion)->first();
+
+        $ultimo_pago = Payment::where('debt_id', '=', $deuda->id)->latest('id')->first();
+
+        $nuevo_pago = new Payment();
+        $nuevo_pago->concept = 'COLEGIATURA';
+        $nuevo_pago->number_payment = $ultimo_pago->number_payment + 1;
+        $nuevo_pago->date = $fecha;
+        $nuevo_pago->amount_paid = 0;
+        $nuevo_pago->student_id = $inscripcion->student_id;
+        $nuevo_pago->generation_id = $inscripcion->generation_id;
+        $nuevo_pago->diplomat_id = $inscripcion->diplomat_id;
+        $nuevo_pago->status = 'PENDIENTE';
+        $nuevo_pago->debt_id = $deuda->id;
+        $nuevo_pago->save();
+
+        return response()->json($inscripcion);
+    }
+
+    function storePayment(Request $request)
+    {
+        try {
+            $pago = Payment::findOrFail($request->id_pago);
+            $deuda = Debt::where('id', '=', $pago->debt_id)->first();
+            $inscripcion = StudentInscription::where('id', '=', $deuda->generation_id)->first();
+
+            $pago_recibido = new PagoRecibidoDiplomado();
+            $pago_recibido->numero_de_pago = $pago->number_payment;
+            $pago_recibido->fecha_pago = $request->fecha_pago;
+            $pago_recibido->monto_recibido = $request->monto;
+            $pago_recibido->metodo_de_pago = $request->metodo_pago;
+            $pago_recibido->cuenta_destino = $request->cuenta_destino;
+            $pago_recibido->inscripcion_id = $inscripcion->id;
+            $pago_recibido->deuda_id = $deuda->id;
+            $pago_recibido->generacion_id = $inscripcion->generation_id;
+            $pago_recibido->student_id = $inscripcion->student_id;
+            $pago_recibido->save();
+
+            $pago->status = 'PAGADO';
+            $pago->save();
+
+            $deuda->amount = $deuda->amount - $pago_recibido->monto_recibido;
+            $deuda->save();
+
+            if ($deuda->amount <= 0) {
+                $deuda->status = 'PAGADA';
+                $deuda->save();
+
+                $pagos_pendientes = Payment::where('debt_id', '=', $deuda->id)
+                    ->where('status', '=', 'PENDIENTE')
+                    ->get();
+
+                if ($pagos_pendientes) {
+                    foreach ($pagos_pendientes as $key => $pago) {
+                        $pago->status = 'PAGADO';
+                        $pago->save();
+                    }
+                }
+            }
+
+            return response()->json([
+                'i' => $inscripcion,
+                'd' => $deuda,
+                'p' => $pago,
+                'pr' => $pago_recibido
+            ]);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
+
+    public function dataDocent($id)
+    {
+        $generacion = Generation::find($id);
+        $diplomado = Diplomat::where('id', '=', $generacion->diplomat_id)->first();
+        $esquema = PagoDocente::where('generacion_id', '=', $generacion->id)->first();
+        $docente = Teacher::where('id', '=', $esquema->docente_id)->first();
+        
+
+        return response()->json([
+            'g' => $generacion,
+            'd' => $diplomado,
+            'e' => $esquema,
+            'dc' => $docente
+        ]);
     }
 
     public function studentsInscription($id)

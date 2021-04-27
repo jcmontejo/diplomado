@@ -29,7 +29,7 @@ class StoreGeneration extends FormRequest
             'commision' => 'required',
             'full_price' => 'required',
             'start_date' => 'required',
-            'status' => 'required',
+            //'status' => 'required',
             'docent_id' => 'required',
         ];
     }
@@ -41,7 +41,7 @@ class StoreGeneration extends FormRequest
             'number_generation.required' => 'El campo número de generación es obligatorio.',
             'commision.required' => 'El campo importe de comisión es obligatorio.',
             'full_price.required' => 'El campo importe de FULL PRICE es obligatorio.',
-            'status' => 'required',
+            //'status' => 'required',
             'docent_id' => 'required',
             'start_date.required' => 'El campo fecha de inicio es obligatorio.',
         ];

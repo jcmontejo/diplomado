@@ -7,6 +7,7 @@ use App\Diplomat;
 use App\Generation;
 use App\Http\Requests\StoreGeneration;
 use App\Low;
+use App\PagoDocente;
 use App\Student;
 use App\StudentInscription;
 use App\Teacher;
@@ -294,11 +295,24 @@ class GenerationController extends Controller
                 $generation->start_date = $request->start_date;
                 $generation->commision = $request->commision;
                 $generation->full_price = $request->full_price;
-                $generation->status = $request->status;
+                $generation->status = 1;
                 $generation->docent = $docent->name . ' ' . $docent->last_name . ' ' . $docent->mother_last_name;
                 $generation->docent_id = $docent->id;
                 $generation->diplomat_id = $diplomat->id;
                 $generation->save();
+
+                $pago_docente = new PagoDocente();
+                $pago_docente->tipo_pago = $request->tipo_pago;
+                if ($request->tipo_pago != 2) {
+                    $pago_docente->pago_por_estudiante = $request->pago_por_estudiante;
+                } else {
+                    $pago_docente->pago_por_semana = $request->pago_por_semana;
+                    $pago_docente->total_semanas = $request->total_semanas;
+                    $pago_docente->total_a_pagar = $request->pago_por_semana * $request->total_semanas;
+                }
+                $pago_docente->generacion_id = $generation->id;
+                $pago_docente->docente_id = $generation->docent_id;
+                $pago_docente->save();
             }
 
             return response()->json([

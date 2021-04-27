@@ -341,6 +341,7 @@ Route::group(['prefix' => 'admon'], function () {
 
 
     Route::get('/generaciones/alumnos/buscar', 'Admon\GenerationController@findStudent');
+
     Route::get('/generaciones/alumnos/inscritos/{id}', 'Admon\GenerationController@listStudentsGeneration');
     Route::get('/generaciones/alumnos/inscritos/datos/{id}', 'Admon\GenerationController@studentsInscription');
     Route::get('/generaciones/alumnos/{id}', 'Admon\GenerationController@students');
@@ -395,6 +396,7 @@ Route::group(['prefix' => 'admon'], function () {
      Route::delete('/CATegresos/eliminar/{id}', 'CatExpensesController@delete');
 
      //Pagos a docentes
+
      Route::get('/CATpagosDocentes/listado', 'CatPaymentDocentController@index');
      Route::get('/CATpagosDocentes/datos', 'CatPaymentDocentController@data');
      Route::get('/CATpagosDocentes/datos/pagos/{id}', 'CatPaymentDocentController@dataPays');
@@ -430,7 +432,14 @@ Route::group(['prefix' => 'admon'], function () {
      Route::post('/CATgrupos/recibir/pago/', 'GrupoSeminarioController@storePayment');
      Route::post('/CATgrupos/agregar/pago/', 'GrupoSeminarioController@newPayment');
      Route::delete('/CATgrupos/estudiante/eliminar/{id}', 'GrupoSeminarioController@deleteStudent');
+     
 
+     //Pagos de diplomados
+     Route::get('/CATdiplomados/datos/pagos/{id}', 'Admon\GenerationController@dataStudents');
+     Route::post('/CATdiplomados/agregar/pago/', 'Admon\GenerationController@newPayment');
+     Route::post('/CATdiplomados/recibir/pago/', 'Admon\GenerationController@storePayment');
+
+     Route::get('/CATdiplomados/datos/pagos/docentes/{id}', 'Admon\GenerationController@dataDocent');
 });
 
 //Auxiliar de Admon
@@ -469,6 +478,7 @@ Route::group(['prefix' => 'auxiliar'], function () {
     Route::put('/diplomados/actualizar/{id}', 'Auxiliar\DiplomatController@update');
     Route::delete('/diplomados/eliminar/{id}', 'Auxiliar\DiplomatController@destroy');
     //Generaciones
+    
     Route::get('/generaciones/lista', 'Auxiliar\GenerationController@index');
     Route::get('/generaciones/datos', 'Auxiliar\GenerationController@dataGenerations');
     Route::get('/generaciones/crear', 'Auxiliar\GenerationController@create');
