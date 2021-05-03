@@ -131,6 +131,9 @@ class GeneralController extends Controller
             $deuda = DeudaSeminario::where('inscripcion_id', '=', $ins->id)->first();
             $deuda->monto = $seminario->precio_venta - ($ins->descuento + $ins->primer_pago);
             $deuda->save();
+
+            $ins->costo_final = $seminario->precio_venta;
+            $ins->save();
         }
 
         return "ok";
