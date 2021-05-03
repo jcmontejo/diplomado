@@ -440,6 +440,8 @@ Route::group(['prefix' => 'admon'], function () {
      Route::post('/CATdiplomados/recibir/pago/', 'Admon\GenerationController@storePayment');
 
      Route::get('/CATdiplomados/datos/pagos/docentes/{id}', 'Admon\GenerationController@dataDocent');
+
+     Route::get('/testSeminarios', 'GeneralController@corregirSeminarios');
 });
 
 //Auxiliar de Admon
@@ -625,6 +627,7 @@ Route::group(['prefix' => 'ventas'], function () {
     Route::post('/alumnos/subir/documentos', 'Sales\StudentController@uploadDocuments');
     Route::get('/alumnos/consultar/{id}', 'Sales\StudentController@searchStudent');
     Route::post('/alumnos/procesar/inscripcion', 'Sales\StudentController@incscriptionStudent');
+    Route::post('/alumnos/procesar/inscripcion/seminario', 'Sales\StudentController@incscriptionStudentSeminario');
     Route::get('/alumnos/detalles/{porcent}', 'Sales\StudentController@detailsPorcent');
 
     //Buscar generaciones
@@ -643,6 +646,10 @@ Route::group(['prefix' => 'ventas'], function () {
     Route::get('/alumnos/datos/generaciones', 'Sales\GeneralController@index');
     Route::get('/alumnos/datos/generaciones/todos', 'Sales\GeneralController@dataGenerations')->name('sales.sellers.generations');
     Route::get('/alumnos/datos/generaciones/alumnos/inscritos/{id}', 'Sales\GeneralController@studentsInscription');
+    //Ver grupos de seminarios
+    Route::get('/alumnos/datos/seminarios-grupos', 'Sales\GeneralController@verSeminariosGrupos');
+    Route::get('/alumnos/datos/seminarios-grupos/todos', 'Sales\GeneralController@dataSeminarios');
+    Route::get('/alumnos/datos/seminarios-grupos/todos/{id}', 'Sales\GeneralController@showStudents');
 });
 
 Route::get('error', function(){
@@ -650,3 +657,5 @@ Route::get('error', function(){
 });
 
 Route::get('matricular-alumnos', 'GeneralController@enrollment');
+
+

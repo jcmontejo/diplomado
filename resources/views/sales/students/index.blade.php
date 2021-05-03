@@ -17,22 +17,18 @@
                     <div class="table-responsive">
                         <table class="table" id="students">
                             <thead>
+                                <th>Acciones</th>
                                 <th>Curp</th>
                                 <th>Matricula</th>
                                 <th>Nombre Alumno</th>
                                 <th>Apellido Paterno</th>
                                 <th>Apellido Materno</th>
-                                <th>Fecha de Nacimiento</th>
                                 <th>Genero</th>
                                 <th>Teléfono</th>
                                 <th>Dirección</th>
                                 <th>Correo Electrónico</th>
                                 <th>Profesión</th>
-                                <th>Documentos</th>
-                                <th>Fecha/Hora de Creación</th>
-                                <th>Estatus</th>
                                 <th>Vendedor</th>
-                                <th>Acciones</th>
                             </thead>
                         </table>
                     </div>
@@ -48,6 +44,7 @@
     @include('sales.students.modal-documents')
     @include('sales.students.modal-sale')
     @include('sales.students.modal-inscription')
+    @include('sales.students.modal-seminario')
 @endsection
 @section('js')
     <script>
@@ -214,6 +211,12 @@
                 serverSide: true,
                 ajax: '/ventas/alumnos/datos',
                 columns: [{
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
                         data: 'curp',
                         name: 'curp'
                     },
@@ -233,10 +236,7 @@
                         data: 'mother_last_name',
                         name: 'mother_last_name'
                     },
-                    {
-                        data: 'birthdate',
-                        name: 'birthdate'
-                    },
+
                     {
                         data: 'sex',
                         name: 'sex'
@@ -258,32 +258,8 @@
                         name: 'profession'
                     },
                     {
-                        data: 'documents',
-                        "render": function(data, type, row) {
-                            return (data == true) ?
-                                'SI' :
-                                'NO';
-                        }
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    },
-                    {
-                        data: 'now',
-                        name: 'now',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
                         data: 'owner',
                         name: 'owner'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
                     }
                 ]
             });
@@ -560,6 +536,14 @@
             });
         }
 
+        function inscriptionStudentSeminario(btn) {
+            var route = "/ventas/alumnos/consultar/" + btn.value;
+
+            $.get(route, function(res) {
+                $("#id-student-seminario").val(res.id);
+            });
+        }
+
         $("#processInscription").click(function() {
             var student_id = $("#id-student-alt").val();
             var generation_id = $("#generation_id-alt").val();
@@ -651,6 +635,64 @@
             });
         })
 
+        $("#processInscriptionSeminario").click(function() {
+            var student_id = $("#id-student-seminario").val();
+            var seminario_id = $("#seminario_id_n").val();
+            var grupo_id = $("#grupo_id_n").val();
+            var descuento = $("#descuento_n").val();
+            var numero_de_pagos = $("#numero_de_pagos_n").val();
+            var monto_de_pagos = $("#monto_de_pagos_n").val();
+            var primer_pago = $("#primer_pago_n").val();
+            var cuenta_destino = $("#cuenta_destino_n").val();
+            var tipo_cuota = $("#tipo_cuota_n").val();
+            var metodo_de_pago = $("#metodo_de_pago_n").val();
+            var route = "/ventas/alumnos/procesar/inscripcion/seminario";
+
+            $.ajax({
+                url: route,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    //Datos alumno
+                    student_id: student_id,
+                    //Datos seminario
+                    seminario_id: seminario_id,
+                    grupo_id: grupo_id,
+                    descuento: descuento,
+                    numero_de_pagos: numero_de_pagos,
+                    monto_de_pagos: monto_de_pagos,
+                    primer_pago: primer_pago,
+                    cuenta_destino: cuenta_destino,
+                    tipo_cuota: tipo_cuota,
+                    metodo_de_pago: metodo_de_pago
+                },
+                beforeSend: function() {
+                    $("#preloader").css("display", "block");
+                },
+                success: function() {
+                    $("#preloader").css("display", "none");
+                    $("#modalInscriptionSeminario .close").click();
+                    $('#message-error-save-N').css('display', 'none');
+                    reload();
+                    Notiflix.Report.Success('Bien hecho', 'Has inscrito a un nuevo estudiante a un seminario.',
+                        'Click');
+                },
+                error: function(data) {
+                    var response = JSON.parse(data.responseText);
+                    var errorString = "<ul>";
+                    $.each(response.errors, function(key, value) {
+                        errorString += "<li>" + value + "</li>";
+                    });
+                    $("#preloader").css("display", "none");
+                    $("#error-save-N").html(errorString);
+                    $("#message-error-save-N").fadeIn();
+                }
+            });
+        })
+
         $("#btn_seminario").click(function() {
             let route = '{{ url('ventas/alumnos/procesar/nuevainscripcionseminario') }}';
 
@@ -728,7 +770,8 @@
                                 $("#modalSale .close").click();
                                 $('#message-error-save-N').css('display', 'none');
                                 reload();
-                                Notiflix.Report.Success('Bien hecho', 'Has guardado a un nuevo estudiante.', 'Click' ); 
+                                Notiflix.Report.Success('Bien hecho',
+                                    'Has guardado a un nuevo estudiante.', 'Click');
                             },
                             error: function(data) {
                                 var response = JSON.parse(data.responseText);
@@ -798,7 +841,8 @@
                                     $("#preloader").css("display", "none");
                                     $("#modalSale .close").click();
                                     $('#message-error-save').css('display', 'none');
-                                    Notiflix.Report.Success('Bien hecho', 'Has guardado a un nuevo estudiante.', 'Click' ); 
+                                    Notiflix.Report.Success('Bien hecho',
+                                        'Has guardado a un nuevo estudiante.', 'Click');
                                 },
                                 error: function(data) {
                                     var response = JSON.parse(data.responseText);
@@ -890,7 +934,8 @@
                                     $("#modalSale .close").click();
                                     $('#message-error-save-N').css('display', 'none');
                                     reload();
-                                    Notiflix.Report.Success('Bien hecho', 'Has guardado a un nuevo estudiante.', 'Click' ); 
+                                    Notiflix.Report.Success('Bien hecho',
+                                        'Has guardado a un nuevo estudiante.', 'Click');
                                 },
                                 error: function(data) {
                                     var response = JSON.parse(data.responseText);

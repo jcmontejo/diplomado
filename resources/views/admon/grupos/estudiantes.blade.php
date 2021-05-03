@@ -289,7 +289,10 @@
                 $("#id_inscripcion").val(data.inscripcion.id);
 
                 $("#pendientes").empty();
-                $.each(data.pagos, function(key, value) {
+                if (data.deuda.monto <= 0) {
+                    
+                }else{
+                    $.each(data.pagos, function(key, value) {
                     var pendientes = '';
                     if (value.activo) {
                         pendientes +=
@@ -313,7 +316,7 @@
                     pendientes += '</button>';
                     $("#pendientes").append(pendientes);
                 });
-
+                }
             });
         }
 

@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Debt;
+use App\DeudaSeminario;
 use App\Diplomat;
 use App\Generation;
 use App\Http\Requests\StoreGeneration;
+use App\InscripcionSeminarioGrupo;
 use App\Low;
 use App\Password;
+use App\Seminario;
 use App\Student;
 use App\StudentInscription;
 use App\Teacher;
@@ -113,9 +116,23 @@ class GeneralController extends Controller
         $students = Student::all();
 
         foreach ($students as $key => $student) {
-            $student->enrollment = 'SER00000000'.$student->id;
+            $student->enrollment = 'SER00000000' . $student->id;
             $student->save();
         }
         return "success";
+    }
+
+    public function corregirSeminarios()
+    {
+        $inscripciones = InscripcionSeminarioGrupo::all();
+
+        foreach ($inscripciones as $key => $ins) {
+            $seminario = Seminario::where('id', '=', $ins->seminario_id)->first();
+            $deuda = DeudaSeminario::where('inscripcion_id', '=', $ins->id)->first();
+            $deuda->monto = $seminario->precio_venta - ($ins->descuento + $ins->primer_pago);
+            $deuda->save();
+        }
+
+        return "ok";
     }
 }

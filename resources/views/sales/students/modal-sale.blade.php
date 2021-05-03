@@ -313,7 +313,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="">¿De cuanto seran los pagos?</label>
-                                <input type="text" name="monto_de_pagos" id="monto_de_pagos"
+                                <input type="number" min="1" step="any" value="0" name="monto_de_pagos" id="monto_de_pagos"
                                     class="form-control form-control-lg">
                             </div>
                             <div class="form-group col-md-4">

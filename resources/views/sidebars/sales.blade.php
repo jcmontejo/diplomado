@@ -59,6 +59,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{url('/ventas/alumnos/datos/seminarios-grupos')}}" class="nav-link">
+                        <i class="nav-icon fas fa-user-graduate"></i>
+                        <p>
+                            Seminarios
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('logout') }}" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt text-danger"></i>

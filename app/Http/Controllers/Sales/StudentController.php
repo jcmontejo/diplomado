@@ -165,7 +165,8 @@ class StudentController extends Controller
 
                 if ($userNow->hasRole('Vendedor')) {
                     return '<td><div class="btn-group" role="group" aria-label="Basic example">
-                <button class="btn btn-rounded btn-xs btn-success btn-block" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fas fa-plus"></i> Inscribir</button>
+                <button class="btn btn-success" value="' . $id . '" OnClick="inscriptionStudent(this);" data-toggle="modal" data-target="#modalInscription"><i class="fas fa-plus"></i> DIPLOMADO</button>
+                <button class="btn btn-primary" value="' . $id . '" OnClick="inscriptionStudentSeminario(this);" data-toggle="modal" data-target="#modalInscriptionSeminario"><i class="fas fa-plus"></i> SEMINARIO</button>
                 </div>
                 </td>';
                 } elseif ($userNow->hasRole('Administrador')) {
@@ -277,7 +278,7 @@ class StudentController extends Controller
         $student_inscriptions = DB::table("student_inscriptions")
             ->where('id', '=', $id)
             ->first();
-        
+
         $flag = DB::table("generations")
             ->where('id', '=', $student_inscriptions->generation_id)
             ->first();
@@ -327,7 +328,7 @@ class StudentController extends Controller
                 $student->user_id = $user->id;
                 $student->save();
 
-                $student->enrollment = 'SER00000000'.$student->id;
+                $student->enrollment = 'SER00000000' . $student->id;
                 $student->save();
 
                 if ($request->hasFile('file_address')) {
@@ -669,24 +670,24 @@ class StudentController extends Controller
                 if ($exists) {
                     DB::rollBack();
                     return response()->json(array("exists" => true));
-                }else {
+                } else {
                     if ($this->checkStudent($request->student_id)) {
                         $student = Student::find($request->student_id);
                         $student->status = 1;
                         $student->save();
-    
+
                         $generation = Generation::find($request->generation_id);
                         $diplomat = Diplomat::find($generation->diplomat_id);
-    
+
                         // Student Inscription
                         $inscription = new StudentInscription();
                         $inscription->student_id = $student->id;
                         $inscription->diplomat_id = $generation->diplomat_id;
                         $inscription->generation_id = $generation->id;
                         $inscription->discount = $request->discount;
-                        if(empty($generation->maximum_cost)){
+                        if (empty($generation->maximum_cost)) {
                             $inscription->final_cost = $diplomat->maximum_cost - $request->discount;
-                        }else{
+                        } else {
                             $inscription->final_cost = $generation->maximum_cost - $request->discount;
                         }
                         $inscription->number_of_payments = $request->number_payments;
@@ -696,34 +697,34 @@ class StudentController extends Controller
                         $inscription->periodicity = $request->periodicity;
                         $inscription->type_of_inscription = $request->type_of_inscription;
                         $inscription->save();
-    
+
                         $generation->number_students = $generation->number_students + 1;
                         $generation->save();
-    
+
                         // Add Debt and Payments to student
                         $date = new Carbon($generation->start_date);
                         $sum_first_payment = $inscription->discount + $inscription->first_payment;
                         $discount = $inscription->final_cost - $inscription->first_payment;
-    
+
                         //$amount = ($discount / $request->number_payments);
-    
+
                         $debt = new Debt();
-                        if(empty($generation->maximum_cost)){
+                        if (empty($generation->maximum_cost)) {
                             $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
-                        }else{
+                        } else {
                             $debt->amount = $generation->maximum_cost - $sum_first_payment;
                         }
                         $debt->student_id = $student->id;
                         $debt->generation_id = $inscription->id;
                         $debt->save();
-    
+
                         for ($i = 1; $i <= $request->number_payments; $i++) {
                             $date = $date->addWeeks(2);
                             if ($date->dayOfWeek === Carbon::SUNDAY) {
                                 $date->addDay();
                             }
                             $datePayment[$i] = $date->toDateString();
-    
+
                             $payment = new Payment();
                             $payment->concept = 'COLEGIATURA';
                             $payment->number_payment = $i;
@@ -736,9 +737,9 @@ class StudentController extends Controller
                             $payment->debt_id = $debt->id;
                             $payment->save();
                         }
-    
+
                         $mytime = Carbon::now();
-    
+
                         $received = new PaymentReceived();
                         $received->diplomat_id = $diplomat->id;
                         $received->generation_id = $generation->id;
@@ -755,13 +756,13 @@ class StudentController extends Controller
                         $received->number_pay = 0;
                         $received->debt_id = $debt->id;
                         $received->save();
-    
+
                         // $this->received($diplomat->id, $generation->id, $inscription->id, $request->first_payment, $request->account, $request->payment_method, $request->account_type);
-    
+
                         $this->incentive($inscription->id, $generation->id, $student->id, $inscription->discount);
                         //$inscription->notify(new NEWInscription($inscription));
                         DB::commit();
-    
+
                         return response()->json([
                             "message" => "success",
                             $sum_first_payment,
@@ -770,7 +771,7 @@ class StudentController extends Controller
                         ]);
                     } else {
                         DB::rollBack();
-    
+
                         return response()
                             ->json([
                                 'message' => 'Datos del estudiante no estan completos.',
@@ -778,6 +779,25 @@ class StudentController extends Controller
                             ], 400);
                     }
                 }
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
+    public function incscriptionStudentSeminario(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            if ($request->ajax()) {
+                $student = Student::find($request->student_id);
+
+                $this->nSeminario($student->id, $request->seminario_id, $request->grupo_id, $request->descuento, $request->numero_de_pagos, $request->monto_de_pagos, $request->primer_pago, $request->cuenta_destino, $request->tipo_cuota, $request->metodo_de_pago);
+                DB::commit();
+                return response()->json([
+                    "message" => "success",
+                ]);
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -910,11 +930,11 @@ class StudentController extends Controller
             ->where('status', '=', 'Alta')
             ->first();
 
-            if ($exist) {
-                return response()->json(array("exists" => true));
-            } else {
-                return response()->json(array("exists" => false));
-            }
+        if ($exist) {
+            return response()->json(array("exists" => true));
+        } else {
+            return response()->json(array("exists" => false));
+        }
     }
 
     public function incscriptionStudentOld(Request $request)
@@ -937,9 +957,9 @@ class StudentController extends Controller
                 $inscription->diplomat_id = $generation->diplomat_id;
                 $inscription->generation_id = $generation->id;
                 $inscription->discount = $discount_new;
-                if(empty($generation->maximum_cost)){
+                if (empty($generation->maximum_cost)) {
                     $inscription->final_cost = $diplomat->maximum_cost - $request->discount;
-                }else{
+                } else {
                     $inscription->final_cost = $generation->maximum_cost - $request->discount;
                 }
                 $inscription->number_of_payments = $student_inscription->number_of_payments;
@@ -961,9 +981,9 @@ class StudentController extends Controller
                 //$amount = ($discount / $request->number_payments);
 
                 $debt = new Debt();
-                if(empty($generation->maximum_cost)){
+                if (empty($generation->maximum_cost)) {
                     $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
-                }else{
+                } else {
                     $debt->amount = $generation->maximum_cost - $sum_first_payment;
                 }
                 $debt->student_id = $student->id;
@@ -1042,7 +1062,7 @@ class StudentController extends Controller
                 $student->user_id = $user->id;
                 $student->save();
 
-                $student->enrollment = 'SER00000000'.$student->id;
+                $student->enrollment = 'SER00000000' . $student->id;
                 $student->save();
 
 
@@ -1095,7 +1115,7 @@ class StudentController extends Controller
                 $student->user_id = $user->id;
                 $student->save();
 
-                $student->enrollment = 'SER00000000'.$student->id;
+                $student->enrollment = 'SER00000000' . $student->id;
                 $student->save();
 
 
@@ -1111,7 +1131,8 @@ class StudentController extends Controller
         }
     }
 
-    public function nInscription($student_id, $generation_id, $discount, $number_payments, $amount_of_payments, $first_payment, $periodicity, $account, $account_type, $payment_method){
+    public function nInscription($student_id, $generation_id, $discount, $number_payments, $amount_of_payments, $first_payment, $periodicity, $account, $account_type, $payment_method)
+    {
         try {
             DB::beginTransaction();
             if ($this->checkStudent($student_id)) {
@@ -1128,9 +1149,9 @@ class StudentController extends Controller
                 $inscription->diplomat_id = $generation->diplomat_id;
                 $inscription->generation_id = $generation->id;
                 $inscription->discount = $discount;
-                if(empty($generation->maximum_cost)){
+                if (empty($generation->maximum_cost)) {
                     $inscription->final_cost = $diplomat->maximum_cost - $discount;
-                }else{
+                } else {
                     $inscription->final_cost = $generation->maximum_cost - $discount;
                 }
                 $inscription->number_of_payments = $number_payments;
@@ -1152,9 +1173,9 @@ class StudentController extends Controller
                 //$amount = ($discount / $request->number_payments);
 
                 $debt = new Debt();
-                if(empty($generation->maximum_cost)){
+                if (empty($generation->maximum_cost)) {
                     $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
-                }else{
+                } else {
                     $debt->amount = $generation->maximum_cost - $sum_first_payment;
                 }
                 $debt->student_id = $student->id;
@@ -1218,7 +1239,8 @@ class StudentController extends Controller
         }
     }
 
-    public function nSeminario($student_id, $seminario_id, $grupo_id, $descuento, $numero_de_pagos, $monto_de_pagos, $primer_pago, $cuenta_destino, $tipo_cuota, $metodo_de_pago){
+    public function nSeminario($student_id, $seminario_id, $grupo_id, $descuento, $numero_de_pagos, $monto_de_pagos, $primer_pago, $cuenta_destino, $tipo_cuota, $metodo_de_pago)
+    {
         try {
             DB::beginTransaction();
             if ($this->checkStudent($student_id)) {
@@ -1232,7 +1254,7 @@ class StudentController extends Controller
                 // Student Inscription 
                 $inscription = new InscripcionSeminarioGrupo();
                 $inscription->descuento = $descuento;
-                $inscription->costo_final = $seminario->precio_venta - ($descuento + $primer_pago);;
+                $inscription->costo_final = $seminario->precio_venta;
                 $inscription->primer_pago = $primer_pago;
                 $inscription->numero_de_pagos = $numero_de_pagos;
                 $inscription->monto_de_pagos = $monto_de_pagos;
@@ -1243,13 +1265,13 @@ class StudentController extends Controller
                 $inscription->metodo_de_pago = $metodo_de_pago;
                 $inscription->id_vendedor = Auth::user()->id;
                 $inscription->save();
-                
+
 
                 // Add Debt and Payments to student
                 $date = Carbon::now();
 
                 $debt = new DeudaSeminario();
-                $debt->monto = $inscription->costo_final;
+                $debt->monto = $inscription->costo_final - ($descuento + $primer_pago);
                 $debt->inscripcion_id = $inscription->id;
                 $debt->save();
 
