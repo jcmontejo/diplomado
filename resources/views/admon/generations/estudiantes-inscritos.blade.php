@@ -49,6 +49,11 @@
                                                     data-toggle="tooltip" data-placement="top" title="Eliminar"><i
                                                         class="fa fa-trash"></i>
                                                 </button>
+                                                <button type="button" value="{{ $estudiante->ID }}"
+                                                    OnClick="editarDatosEstudiante({{$estudiante->ID}});" class="btn btn-info"
+                                                    data-toggle="tooltip" data-placement="top" title="Editar"><i
+                                                        class="fa fa-user-edit"></i>
+                                                </button>
                                             </div>
                                         </td>
                                         <td>
@@ -401,6 +406,61 @@
         <div id="block-pagos-vendedores" style="display: none;">
 
         </div>
+
+        <div id="block-editar" style="display: none;">
+            <div class="card">
+                <div class="card-header py-3">
+                    <button class="btn btn-rounded btn-danger mb-3 float-right" id="" onclick="reset();"><i
+                            class="fas fa-window-close"></i>
+                        Cancelar</button>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" name="ID_INS_EDITAR" id="ID_INS_EDITAR">
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <input type="hidden" id="id">
+                            <label for="exampleInputEmail1">Selecciona Diplomado</label>
+                            <select name="diplomat_id_e" id="diplomat_id_e" class="form-control form-control-lg">
+                                @forelse ($diplomats as $diplomat)
+                                <option value="{{$diplomat->id}}">{{$diplomat->name}}</option>
+                                @empty
+                                <option value="0">No hay diplomados registrados.</option>
+                                @endforelse
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="exampleInputPassword1">Selecciona Generación</label>
+                            <select name="generation_id_e" id="generation_id_e" class="form-control form-control-lg">
+                                @forelse ($generations as $generation)
+                                <option value="{{$generation->id}}">{{$generation->number_generation}}</option>
+                                @empty
+                                <option value="0">No hay generaciones registrados.</option>
+                                @endforelse
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="">Descuento</label>
+                            <input type="number" value="0" min="1" step="1" id="discount_e" name="discount_e" class="form-control form-control-lg">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="">Número de Pagos</label>
+                            <input type="number" value="1" min="1" max="10" step="1" id="number_payments_e" name="number_payments_e" class="form-control form-control-lg">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="">¿De cuanto seran los pagos?</label>
+                            <input type="text" name="amount_of_payments_e" id="amount_of_payments_e" class="form-control form-control-lg">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="">Monto Primer Pago</label>
+                            <input type="number" value="0" min="0" name="first_payment_e" id="first_payment_e" class="form-control form-control-lg">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante" class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
+                    </div>
+                </div>
+              </div>
+        </div>
         @include('admon.grupos.create')
         @include('admon.grupos.edit')
     </div><!-- /.container-fluid -->
@@ -498,10 +558,85 @@
             $("#block-payments").css("display", "none");
             $("#block-pagos-docentes").css("display", "none");
             $("#block-pagos-vendedores").css("display", "none");
+            $("#block-editar").css("display", "none");
             $("#pagar").css("display", "none");
-            $('#message-error-save').css('display', 'none');
+            $('#message-error-save').css('display', 'none');s
             location.reload();
         }
+
+        function editarDatosEstudiante(id) {
+            $("#ID_INS_EDITAR").val(id);
+            
+            var route = '{{ url('/admon/CATdiplomados/datos/pagos') }}/' + id;
+            Notiflix.Loading.Dots('Procesando...');
+            $("#block-table").css("display", "none");
+            $("#block-editar").css("display", "block");
+
+            $.get(route, function(data) {
+                Notiflix.Loading.Remove();
+                console.log(data);
+                $("#diplomat_id_e").val(data.inscripcion.diplomat_id).change();
+                $("#generation_id_e").val(data.inscripcion.generation_id).change();
+                $("#discount_e").val(data.inscripcion.discount);
+                $("#number_payments_e").val(data.inscripcion.number_of_payments);
+                $("#first_payment_e").val(data.inscripcion.first_payment)
+                $("#amount_of_payments_e").val(data.inscripcion.amount_of_payments);
+            });
+        }
+
+        $("#editarDatosEstudiante").click(function() {
+            var inscripcion_id = $("#ID_INS_EDITAR").val();
+
+            var diplomat_id = $("#diplomat_id_e").val();
+            var generation_id = $("#generation_id_e").val();
+            var discount = $("#discount_e").val();
+            var number_payments = $("#number_payments_e").val();
+            var first_payment = $("#first_payment_e").val();
+            var amount_of_payments = $("#amount_of_payments_e").val();
+
+            var route = "/admon/alumnos/editarInscripcionDiplomado";
+
+            $.ajax({
+                url: route,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    //Datos alumno
+                    inscripcion_id: inscripcion_id,
+                    //Datos seminario
+                    diplomat_id: diplomat_id,
+                    generation_id: generation_id,
+                    discount: discount,
+                    number_payments: number_payments,
+                    first_payment: first_payment,
+                    amount_of_payments: amount_of_payments,
+                },
+                beforeSend: function() {
+                    $("#preloader").css("display", "block");
+                },
+                success: function() {
+                    $("#preloader").css("display", "none");
+                    $("#modalInscriptionSeminario .close").click();
+                    $('#message-error-save-N').css('display', 'none');
+                    Notiflix.Report.Success('Bien hecho', 'Has editado los datos del alumno.',
+                        'Click');
+                        location.reload();
+                },
+                error: function(data) {
+                    var response = JSON.parse(data.responseText);
+                    var errorString = "<ul>";
+                    $.each(response.errors, function(key, value) {
+                        errorString += "<li>" + value + "</li>";
+                    });
+                    $("#preloader").css("display", "none");
+                    $("#error-save-N").html(errorString);
+                    $("#message-error-save-N").fadeIn();
+                }
+            });
+        })
 
         function aplicarPago() {
             var monto_aplicar = $("#montoUNo").val();

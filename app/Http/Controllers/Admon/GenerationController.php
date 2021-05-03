@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admon;
 
 use App\Account;
+use App\AccountType;
 use App\Debt;
 use App\Diplomat;
 use App\Generation;
@@ -88,6 +89,11 @@ class GenerationController extends Controller
         $generation = Generation::find($id);
         $metodos = PaymentMethod::all();
         $cuentas = Account::all();
+        $generations = Generation::all();
+        $diplomats = Diplomat::all();
+        $accounts = Account::all();
+        $methods = PaymentMethod::all();
+        $account_types = AccountType::all();
 
         $estudiantes = DB::table('student_inscriptions')
             ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
@@ -114,7 +120,7 @@ class GenerationController extends Controller
             )
             ->get();
 
-        return view('admon.generations.estudiantes-inscritos', compact('estudiantes','generation', 'metodos', 'cuentas'));
+        return view('admon.generations.estudiantes-inscritos', compact('estudiantes','generation', 'metodos', 'cuentas', 'diplomats', 'generations', 'accounts', 'methods', 'account_types'));
     }
 
     public function dataStudents($id)

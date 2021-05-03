@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\AccountType;
+use App\Debt;
 use App\DeudaSeminario;
+use App\Diplomat;
+use App\Generation;
 use App\GrupoSeminario;
 use App\InscripcionSeminarioGrupo;
 use App\PagoRecibidoSeminario;
@@ -11,6 +15,7 @@ use App\PagoSeminario;
 use App\PaymentMethod;
 use App\Seminario;
 use App\Student;
+use App\StudentInscription;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -43,7 +48,7 @@ class GrupoSeminarioController extends Controller
                 return '<div class="btn-group">
           <button type="button" class="btn btn-primary" value="' . $cat->id . '" onClick="editCat(' . $cat->id . ');" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa fa-edit"></i>
           </button>
-          <button type="button" value="' . $cat->id . '" OnClick="DeleteMod('.$cat->id.');" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i>
+          <button type="button" value="' . $cat->id . '" OnClick="DeleteMod(' . $cat->id . ');" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i>
           </button>
           <a href="/admon/CATgrupos/estudiantes/' . $cat->id . '" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Estudiantes"><i class="fa fa-eye"></i>
           </a>
@@ -71,6 +76,12 @@ class GrupoSeminarioController extends Controller
         $metodos = PaymentMethod::all();
         $cuentas = Account::all();
 
+        $accounts = Account::all();
+        $methods = PaymentMethod::all();
+        $account_types = AccountType::all();
+        $seminarios = Seminario::all();
+        $grupos = GrupoSeminario::all();
+
         $estudiantes = InscripcionSeminarioGrupo::join('seminarios', 'inscripcion_seminario_grupos.seminario_id', '=', 'seminarios.id')
             ->join('students', 'inscripcion_seminario_grupos.student_id', '=', 'students.id')
             ->join('grupo_seminarios', 'inscripcion_seminario_grupos.grupo_id', '=', 'grupo_seminarios.id')
@@ -91,7 +102,7 @@ class GrupoSeminarioController extends Controller
             ->where('inscripcion_seminario_grupos.activo', '=', true)
             ->get();
 
-        return view('admon.grupos.estudiantes', compact('estudiantes', 'grupo', 'metodos', 'cuentas'));
+        return view('admon.grupos.estudiantes', compact('estudiantes', 'grupo', 'metodos', 'cuentas', 'accounts', 'methods', 'account_types', 'seminarios', 'grupos'));
     }
 
     public function dataStudents($id)
@@ -234,7 +245,7 @@ class GrupoSeminarioController extends Controller
     {
         $cat = GrupoSeminario::find($request->id);
         $cat->delete();
-        
+
         return response()->json("sucess");
     }
 
@@ -245,5 +256,89 @@ class GrupoSeminarioController extends Controller
         $estudiante->save();
 
         return response()->json("sucess");
+    }
+
+    public function editarDatosEstudiante(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            if ($request->ajax()) {
+                $grupo = GrupoSeminario::find($request->grupo_id);
+                $seminario = Seminario::find($request->seminario_id);
+
+                // Student Inscription 
+                $inscripcion = InscripcionSeminarioGrupo::find($request->inscripcion_id);
+                $inscripcion->descuento = $request->descuento;
+                $inscripcion->costo_final = $seminario->precio_venta;
+                $inscripcion->primer_pago = $request->primer_pago;
+                $inscripcion->numero_de_pagos = $request->numero_de_pagos;
+                $inscripcion->monto_de_pagos = $request->monto_de_pagos;
+                $inscripcion->comentarios = 'null';
+                $inscripcion->seminario_id = $seminario->id;
+                $inscripcion->grupo_id = $grupo->id;
+                $inscripcion->metodo_de_pago = $request->metodo_de_pago;
+                $inscripcion->save();
+
+
+                // Add Debt and Payments to student
+                $date = Carbon::now();
+
+                $debt = DeudaSeminario::where('inscripcion_id', '=', $inscripcion->id)->first();
+                $debt->monto = $inscripcion->costo_final - ($inscripcion->descuento + $inscripcion->primer_pago);
+                $debt->inscripcion_id = $inscripcion->id;
+                $debt->save();
+
+                DB::commit();
+                return response()->json([
+                    "message" => "success",
+                ]);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
+    public function editarDatosEstudianteDiplomado(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $inscription = StudentInscription::where('id', '=', $request->inscripcion_id)->first();
+            $generation = Generation::find($request->generation_id);
+            $diplomat = Diplomat::find($request->diplomat_id);
+
+            // Student Inscription
+            $inscription->diplomat_id = $diplomat->id;
+            $inscription->discount = $request->discount;
+            if (empty($generation->maximum_cost)) {
+                $inscription->final_cost = $diplomat->maximum_cost - $request->discount;
+            } else {
+                $inscription->final_cost = $generation->maximum_cost - $request->discount;
+            }
+            $inscription->number_of_payments = $request->number_payments;
+            $inscription->first_payment = $request->first_payment;
+            $inscription->comments = 'null';
+            $inscription->amount_of_payments = $request->amount_of_payments;
+            $inscription->save();
+
+            $sum_first_payment = $inscription->discount + $inscription->first_payment;
+            $discount = $inscription->final_cost - $inscription->first_payment;
+
+            $debt = Debt::where('generation_id', '=', $inscription->id)->first();
+            if (empty($generation->maximum_cost)) {
+                $debt->amount = $diplomat->maximum_cost - $sum_first_payment;
+            } else {
+                $debt->amount = $generation->maximum_cost - $sum_first_payment;
+            }
+            $debt->save();
+
+            DB::commit();
+            return response()->json([
+                "message" => "success",
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
     }
 }

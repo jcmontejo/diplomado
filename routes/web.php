@@ -432,6 +432,9 @@ Route::group(['prefix' => 'admon'], function () {
      Route::post('/CATgrupos/recibir/pago/', 'GrupoSeminarioController@storePayment');
      Route::post('/CATgrupos/agregar/pago/', 'GrupoSeminarioController@newPayment');
      Route::delete('/CATgrupos/estudiante/eliminar/{id}', 'GrupoSeminarioController@deleteStudent');
+
+     Route::post('/alumnos/editarInscripcion', 'GrupoSeminarioController@editarDatosEstudiante');
+     Route::post('/alumnos/editarInscripcionDiplomado', 'GrupoSeminarioController@editarDatosEstudianteDiplomado');
      
 
      //Pagos de diplomados
