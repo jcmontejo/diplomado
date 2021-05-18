@@ -172,6 +172,8 @@ class GenerationController extends Controller
     {
         try {
             $pago = Payment::findOrFail($request->id_pago);
+            $pago->convenio = false;
+            $pago->save();
             $deuda = Debt::where('id', '=', $pago->debt_id)->first();
             $inscripcion = StudentInscription::where('id', '=', $deuda->generation_id)->first();
 

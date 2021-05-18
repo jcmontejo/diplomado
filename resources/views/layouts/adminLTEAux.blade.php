@@ -32,6 +32,12 @@
     <link rel="stylesheet" href="{{asset('toastr/toastr.min.css')}}">
     {{-- SweetAlert --}}
     <link rel="stylesheet" href="{{asset('/css/sweetalert2.min.css')}}">
+    {{-- Notiflix --}}
+    <link rel="stylesheet" href="{{asset('/notiflix/notiflix-2.3.2.min.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{asset('/css/select2-bootstrap4.css')}}">
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js" defer></script>
+
     <style>
         .loading {
             background: lightgrey;
@@ -69,6 +75,30 @@
             /* border: 1px solid #2980b9; */
             background-size: 28px 28px;
         }
+
+        .bg-header-card{
+    color: #ffffff;
+    Font: 16px;
+    Background: #118ab2;
+    padding: 12px 20px;
+}
+
+.bg-success-custom {
+    background-color: #06d6a0!important;
+}
+
+.modal-header {
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #0480be;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+ }
+
     </style>
 </head>
 
@@ -175,6 +205,9 @@
     <script src="{{asset('toastr/toastr.min.js')}}"></script>
     {{-- SweetAlert --}}
     <script src="{{asset('/js/sweetalert2.min.js')}}"></script>
+    {{-- Notiflix --}}
+    <script src="{{asset('/notiflix/notiflix-2.3.2.min.js')}}"></script>
+    <script src="{{asset('/notiflix/notiflix-aio-2.3.2.min.js')}}"></script>
     @yield('js')
 </body>
 

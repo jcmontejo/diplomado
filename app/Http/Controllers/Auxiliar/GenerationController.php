@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auxiliar;
 
+use App\Account;
+use App\AccountType;
 use App\Debt;
 use App\Diplomat;
 use App\Generation;
@@ -17,6 +19,9 @@ use Mail;
 use PDF;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
+use App\Payment;
+use App\PaymentMethod;
+use App\User;
 
 class GenerationController extends Controller
 {
@@ -67,85 +72,101 @@ class GenerationController extends Controller
             ->make(true);
     }
 
-    public function listStudentsGeneration()
-    { }
-
-    public function studentsInscription($id, Request $request)
+    public function listStudentsGeneration($id)
     {
-        $request->session()->put('search', $request->has('search') ? $request->get('search') : ($request->session()->has('search') ? $request->session()->get('search') : ''));
-
         $generation = Generation::find($id);
+        $metodos = PaymentMethod::all();
+        $cuentas = Account::all();
+        $generations = Generation::all();
+        $diplomats = Diplomat::all();
+        $accounts = Account::all();
+        $methods = PaymentMethod::all();
+        $account_types = AccountType::all();
 
-        $students = DB::table('student_inscriptions')
+        $estudiantes = DB::table('student_inscriptions')
             ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
+            ->join('diplomats', 'student_inscriptions.diplomat_id', '=', 'diplomats.id')
+            ->join('generations', 'student_inscriptions.generation_id', '=', 'generations.id')
             ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
             ->where('student_inscriptions.generation_id', '=', $id)
             ->where('student_inscriptions.status', '=', 'Alta')
-            ->where('name', 'like', '%' . $request->session()->get('search') . '%')
             ->select(
-                DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
+                DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as estudiante'),
                 'students.email as email',
-                'students.enrollment',
+                'students.enrollment as matricula',
+                DB::raw('CONCAT(diplomats.key, generations.start_date, students.enrollment) AS folio'),
                 'students.curp',
                 'students.phone as phone',
-                'students.documents as documents',
                 DB::raw('CONCAT(student_inscriptions.number_of_payments," PAGOS DE ",student_inscriptions.amount_of_payments) as observations'),
-                'student_inscriptions.discount as discount',
-                'student_inscriptions.first_payment as first_payment',
-                'student_inscriptions.id as id_inscription',
-                'student_inscriptions.final_cost as final_cost',
+                'student_inscriptions.discount as descuento',
+                'student_inscriptions.first_payment as primer_pago',
+                'student_inscriptions.id as ID',
+                'student_inscriptions.final_cost as costo_final',
                 'student_inscriptions.status as status',
-                'debts.amount as total_debt',
+                'debts.amount as debe',
                 'debts.id as debt_id'
             )
-            ->paginate(100);
+            ->get();
 
-            $students_low = DB::table('student_inscriptions')
-            ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
-            ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
-            ->where('student_inscriptions.generation_id', '=', $id)
-            ->where('student_inscriptions.status', '=', 'Baja')
-            ->where('name', 'like', '%' . $request->session()->get('search') . '%')
-            ->select(
-                DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as full_name'),
-                'students.email as email',
-                'students.enrollment',
-                'students.curp',
-                'students.phone as phone',
-                'students.documents as documents',
-                DB::raw('CONCAT(student_inscriptions.number_of_payments," PAGOS DE ",student_inscriptions.amount_of_payments) as observations'),
-                'student_inscriptions.discount as discount',
-                'student_inscriptions.first_payment as first_payment',
-                'student_inscriptions.id as id_inscription',
-                'student_inscriptions.final_cost as final_cost',
-                'student_inscriptions.status as status',
-                'debts.amount as total_debt',
-                'debts.id as debt_id'
-            )
-            ->paginate(100);
+        return view('auxiliar.generations.estudiantes-inscritos', compact('estudiantes', 'generation', 'metodos', 'cuentas', 'diplomats', 'generations', 'accounts', 'methods', 'account_types'));
+    }
 
+    public function dataStudents($id)
+    {
+        $inscription = StudentInscription::find($id);
+        $student = Student::where('id', '=', $inscription->student_id)->first();
+        $debt = Debt::where('generation_id', '=', $inscription->id)->first();
+        $vendedor = User::where('id', '=', $student->user_id)->first();
+        $payments = Payment::where('debt_id', '=', $debt->id)->get();
+        $diplomado = Diplomat::where('id', '=', $inscription->diplomat_id)->first();
+        $generacion = Generation::where('id', '=', $inscription->generation_id)->first();
 
-        // $cost = DB::table('student_inscriptions')
-        //     ->where('student_inscriptions.generation_id', '=', $id)
-        //     ->sum('final_cost');
+        return response()->json([
+            'inscripcion' => $inscription,
+            'estudiante' => $student,
+            'diplomado' => $diplomado,
+            'vendedor' => $vendedor,
+            'generacion' => $generacion,
+            'deuda' => $debt,
+            'pagos' => $payments
+        ]);
+    }
 
+    public function GenerarConvenio(Request $request)
+    {
+        try {
+            $pago = Payment::find($request->id);
+            $deuda = Debt::where('id', '=', $pago->debt_id)->first();
+            $inscripcion = StudentInscription::find($deuda->generation_id);
 
-        $cost = DB::table('student_inscriptions')
-            ->where('student_inscriptions.generation_id', '=', $id)
-            ->sum('final_cost');
+            $pago->convenio = true;
+            $pago->fecha_pago_convenio = $request->fecha;
+            $pago->monto_convenio = $request->monto;
+            $pago->save();
 
-        $debt_global = DB::table('student_inscriptions')
-            ->join('students', 'student_inscriptions.student_id', '=', 'students.id')
-            ->leftJoin('debts', 'debts.generation_id', '=', 'student_inscriptions.id')
-            ->where('student_inscriptions.generation_id', '=', $id)
-            ->sum('debts.amount');
-
-        if ($request->ajax()) {
-            return view('auxiliar.generations.ajax-1', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
-        } else {
-            return view('auxiliar.generations.students-load', compact('students', 'students_low', 'generation', 'cost', 'debt_global'));
+            return response()->json($inscripcion);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
         }
-        // return $students;
+    }
+    
+
+    public function getConvenios()
+    {
+        $convenios = Payment::join('diplomats', 'diplomats.id', '=', 'payments.diplomat_id')
+        ->join('generations', 'generations.id', '=', 'payments.generation_id')
+        ->join('students', 'students.id', '=', 'payments.student_id')
+        ->select(
+            'diplomats.name as diplomado',
+            'generations.number_generation as generacion',
+            DB::raw('CONCAT(students.name," ",students.last_name," ",students.mother_last_name) as estudiante'),
+            'payments.fecha_pago_convenio as fecha',
+            'payments.monto_convenio as monto'
+        )
+        ->where('convenio', '=', true)->get();
+
+        return Datatables::of($convenios)
+            ->make(true);
     }
 
     public function recentsInscription()

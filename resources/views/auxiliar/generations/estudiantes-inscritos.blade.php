@@ -1,4 +1,4 @@
-@extends('layouts.adminLTEAdmon')
+@extends('layouts.adminLTEAux')
 @section('title')
 @section('content')
     <div class="container-fluid">
@@ -50,9 +50,9 @@
                                                         class="fa fa-trash"></i>
                                                 </button>
                                                 <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="editarDatosEstudiante({{$estudiante->ID}});" class="btn btn-info"
-                                                    data-toggle="tooltip" data-placement="top" title="Editar"><i
-                                                        class="fa fa-user-edit"></i>
+                                                    OnClick="editarDatosEstudiante({{ $estudiante->ID }});"
+                                                    class="btn btn-info" data-toggle="tooltip" data-placement="top"
+                                                    title="Editar"><i class="fa fa-user-edit"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -194,9 +194,9 @@
                                                         step="any" class="form-control d-inline" value="">
 
                                                     <!--<div class="input-group-append dropleft">
-                                                                                        <button id="agregarMontoUno" class="btn btn-outline-primary" type="button"
-                                                                                            onclick="aplicarMonto();">Aplicar</button>
-                                                                                    </div>-->
+                                                                                            <button id="agregarMontoUno" class="btn btn-outline-primary" type="button"
+                                                                                                onclick="aplicarMonto();">Aplicar</button>
+                                                                                        </div>-->
                                                 </div>
                                             </div>
                                             <div class="form-group w-100 mb-0">
@@ -254,6 +254,8 @@
                                             <button class="btn btn-block btn-primary p-2" id="btnGoToCheckout"
                                                 onclick="aplicarPago();">Realizar
                                                 pago</button>
+                                            <button class="btn btn-block btn-info p-2" data-toggle="modal" data-target="#modalConvenio"
+                                                onclick="mostrarModalConvenio();">Convenio de Pago</button>
                                             <button class="btn btn-block btn-secondary"
                                                 onclick="cancelarPago();">Cancelar</button>
                                         </div>
@@ -373,8 +375,7 @@
                                             <label class="w-100 font-weight-bold size-14">Selecciona fecha de
                                                 pago</label>
                                             <div class="input-group mb-2">
-                                                <input type="date" class="form-control" name=""
-                                                    id=""
+                                                <input type="date" class="form-control" name="" id=""
                                                     value="{{ \Carbon\Carbon::now()->toDateString() }}">
                                             </div>
                                         </div>
@@ -422,9 +423,9 @@
                             <label for="exampleInputEmail1">Selecciona Diplomado</label>
                             <select name="diplomat_id_e" id="diplomat_id_e" class="form-control form-control-lg">
                                 @forelse ($diplomats as $diplomat)
-                                <option value="{{$diplomat->id}}">{{$diplomat->name}}</option>
+                                    <option value="{{ $diplomat->id }}">{{ $diplomat->name }}</option>
                                 @empty
-                                <option value="0">No hay diplomados registrados.</option>
+                                    <option value="0">No hay diplomados registrados.</option>
                                 @endforelse
                             </select>
                         </div>
@@ -432,37 +433,43 @@
                             <label for="exampleInputPassword1">Selecciona Generación</label>
                             <select name="generation_id_e" id="generation_id_e" class="form-control form-control-lg">
                                 @forelse ($generations as $generation)
-                                <option value="{{$generation->id}}">{{$generation->number_generation}}</option>
+                                    <option value="{{ $generation->id }}">{{ $generation->number_generation }}</option>
                                 @empty
-                                <option value="0">No hay generaciones registrados.</option>
+                                    <option value="0">No hay generaciones registrados.</option>
                                 @endforelse
                             </select>
                         </div>
                         <div class="form-group col-md-4">
                             <label for="">Descuento</label>
-                            <input type="number" value="0" min="1" step="1" id="discount_e" name="discount_e" class="form-control form-control-lg">
+                            <input type="number" value="0" min="1" step="1" id="discount_e" name="discount_e"
+                                class="form-control form-control-lg">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="">Número de Pagos</label>
-                            <input type="number" value="1" min="1" max="10" step="1" id="number_payments_e" name="number_payments_e" class="form-control form-control-lg">
+                            <input type="number" value="1" min="1" max="10" step="1" id="number_payments_e"
+                                name="number_payments_e" class="form-control form-control-lg">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="">¿De cuanto seran los pagos?</label>
-                            <input type="text" name="amount_of_payments_e" id="amount_of_payments_e" class="form-control form-control-lg">
+                            <input type="text" name="amount_of_payments_e" id="amount_of_payments_e"
+                                class="form-control form-control-lg">
                         </div>
                         <div class="form-group col-md-12">
                             <label for="">Monto Primer Pago</label>
-                            <input type="number" value="0" min="0" name="first_payment_e" id="first_payment_e" class="form-control form-control-lg">
+                            <input type="number" value="0" min="0" name="first_payment_e" id="first_payment_e"
+                                class="form-control form-control-lg">
                         </div>
                     </div>
                     <div class="row">
-                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante" class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
+                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante"
+                            class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
                     </div>
                 </div>
-              </div>
+            </div>
         </div>
         @include('admon.grupos.create')
         @include('admon.grupos.edit')
+        @include('auxiliar.generations.modal-convenio')
     </div><!-- /.container-fluid -->
 @endsection
 @section('js')
@@ -475,21 +482,21 @@
             $('#cats').each(function() {
                 dt = $(this).dataTable({
                     lengthMenu: [
-                    [25, 100, -1],
-                    [25, 100, "Todos"]
-                ],
-                pageLength: 25,
-                dom: 'lBfrtip',
-                buttons: [{
-                    extend: 'excel',
-                    text: '<span class="fas fa-file-excel-o"></span> Exportar Excel',
-                    exportOptions: {
-                        modifier: {
-                            search: 'applied',
-                            order: 'applied'
+                        [25, 100, -1],
+                        [25, 100, "Todos"]
+                    ],
+                    pageLength: 25,
+                    dom: 'lBfrtip',
+                    buttons: [{
+                        extend: 'excel',
+                        text: '<span class="fas fa-file-excel-o"></span> Exportar Excel',
+                        exportOptions: {
+                            modifier: {
+                                search: 'applied',
+                                order: 'applied'
+                            }
                         }
-                    }
-                }]
+                    }]
                 });
                 dt.fnDraw();
             })
@@ -511,7 +518,7 @@
                     '<strong>Generación: </strong>' + data.generacion.number_generation);
                 $("#fecha").html('<strong>Fecha de inscripción: </strong>' + data.inscripcion.created_at);
                 $("#costo").text(data.diplomado.cost);
-                $("#vendido").text(data.inscripcion.costo_final);
+                $("#vendido").text(data.inscripcion.final_cost);
                 $("#pagado").text(data.inscripcion.final_cost - data.deuda.amount);
                 $("#debe").text(data.deuda.amount);
                 if (data.deuda.amount <= 0) {
@@ -524,9 +531,15 @@
                 $.each(data.pagos, function(key, value) {
                     var pendientes = '';
                     if (value.status == 'PENDIENTE') {
-                        pendientes +=
+                        if (value.convenio) {
+                            pendientes +=
+                            '<button type="button" onClick="mostrarFormularioPago(' + value.id +
+                            ');" class="btn btn-block btn-outline-warning h-100">';
+                        } else {
+                            pendientes +=
                             '<button type="button" onClick="mostrarFormularioPago(' + value.id +
                             ');" class="btn btn-block btn-outline-secondary h-100">';
+                        }
                     } else {
                         pendientes +=
                             '<button type="button" onClick="mostrarFormularioPago(' + value.id +
@@ -536,8 +549,13 @@
                     pendientes += '<i class="fas fa-cash-register"></i>';
                     pendientes += '</p>';
                     if (value.status == 'PENDIENTE') {
-                        pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.number_payment +
+                        if (value.convenio) {
+                            pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.number_payment +
+                            ' [CONVENIO ACTIVO]<br>Click para pagar</span></p>';
+                        } else {
+                            pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.number_payment +
                             '<br>Click para pagar</span></p>';
+                        }
                     } else {
                         pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.number_payment +
                             '<br>Pago cubierto</span></p>';
@@ -552,6 +570,63 @@
         function mostrarFormularioPago(id) {
             $("#pagar").css("display", "block");
             $("#ID_PAGAR").val(id);
+        }
+
+        function mostrarModalConvenio() {
+            var id = $("#ID_PAGAR").val();
+            console.log(id);
+            $("#id_convenio").val(id);
+        }
+
+        function procesarConvenio() {
+            var id = $("#id_convenio").val();
+            var fecha = $("#fechaConvenio").val();
+            var monto = $("#montoConvenio").val();
+
+            var route = "/auxiliar/generaciones/alumnos/generarConvenio";
+
+            $.ajax({
+                url: route,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    fecha: fecha,
+                    monto: monto
+                },
+                beforeSend: function() {
+                    $("#preloader").css("display", "block");
+                },
+                success: function(data) {
+                    $("#preloader").css("display", "none");
+                    $("#modalInscriptionSeminario .close").click();
+                    $('#message-error-save-N').css('display', 'none');
+                    Notiflix.Report.Success('Bien hecho', 'Has generado un convenio de pago.',
+                        'Click');
+                    datosPagosDiplomados(data.id);
+                    $("#montoUNo").val("");
+                    $("#fechaConvenio").val("");
+                    $("#montoConvenio").val("");
+                    $('body').removeClass('modal-open');
+                    $('body').css('padding-right', '');
+                    $(".modal-backdrop").remove();
+                    $('#modalConvenio').hide();
+                    cancelarPago();
+                },
+                error: function(data) {
+                    var response = JSON.parse(data.responseText);
+                    var errorString = "<ul>";
+                    $.each(response.errors, function(key, value) {
+                        errorString += "<li>" + value + "</li>";
+                    });
+                    $("#preloader").css("display", "none");
+                    $("#error-save-N").html(errorString);
+                    $("#message-error-save-N").fadeIn();
+                }
+            });
         }
 
         function cancelarPago() {
@@ -572,13 +647,14 @@
             $("#block-pagos-vendedores").css("display", "none");
             $("#block-editar").css("display", "none");
             $("#pagar").css("display", "none");
-            $('#message-error-save').css('display', 'none');s
+            $('#message-error-save').css('display', 'none');
+            s
             location.reload();
         }
 
         function editarDatosEstudiante(id) {
             $("#ID_INS_EDITAR").val(id);
-            
+
             var route = '{{ url('/admon/CATdiplomados/datos/pagos') }}/' + id;
             Notiflix.Loading.Dots('Procesando...');
             $("#block-table").css("display", "none");
@@ -635,7 +711,7 @@
                     $('#message-error-save-N').css('display', 'none');
                     Notiflix.Report.Success('Bien hecho', 'Has editado los datos del alumno.',
                         'Click');
-                        location.reload();
+                    location.reload();
                 },
                 error: function(data) {
                     var response = JSON.parse(data.responseText);
@@ -857,7 +933,7 @@
                 $("#diplomado_d").text(data.d.name);
                 $("#generacion_d").text(data.g.number_generation);
                 $("#docente").text(data.dc.name + ' ' + data.dc.last_name + ' ' + data.dc.mother_last_name);
-                $("#a_pagar_final").text('$'+data.e.total_a_pagar);
+                $("#a_pagar_final").text('$' + data.e.total_a_pagar);
             });
         }
 

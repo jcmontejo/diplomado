@@ -493,7 +493,12 @@ Route::group(['prefix' => 'auxiliar'], function () {
     Route::delete('/generaciones/eliminar/{id}', 'Auxiliar\GenerationController@destroy');
 
     Route::get('/generaciones/alumnos/buscar', 'Auxiliar\GenerationController@findStudent');
-    Route::get('/generaciones/alumnos/inscritos/{id}', 'Auxiliar\GenerationController@studentsInscription');
+    //here
+    Route::get('/generaciones/alumnos/inscritos/{id}', 'Auxiliar\GenerationController@listStudentsGeneration');
+    Route::get('/generaciones/alumnos/inscritos/datos/{id}', 'Auxiliar\GenerationController@studentsInscription');
+    Route::post('/generaciones/alumnos/generarConvenio', 'Auxiliar\GenerationController@GenerarConvenio');
+    Route::get('/generaciones/alumnos/traerConvenios', 'Auxiliar\GenerationController@getConvenios');
+    //Route::get('/generaciones/alumnos/inscritos/{id}', 'Auxiliar\GenerationController@studentsInscription');
     Route::get('/generaciones/alumnos/{id}', 'Auxiliar\GenerationController@students');
     Route::get('/generaciones/alumnos/consultar/{id}', 'Auxiliar\GenerationController@search');
     Route::put('/generaciones/alumnos/baja/{id}', 'Auxiliar\GenerationController@down');

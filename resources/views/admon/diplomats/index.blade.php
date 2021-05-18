@@ -53,10 +53,22 @@
 
     function Charge() {
         $('#diplomats').DataTable({
-            dom: 'Bfrtip',
-        buttons: [
-            'excel', 'pdf'
-        ],
+            lengthMenu: [
+                    [25, 100, -1],
+                    [25, 100, "Todos"]
+                ],
+                pageLength: 25,
+                dom: 'lBfrtip',
+                buttons: [{
+                    extend: 'excel',
+                    text: '<span class="fas fa-file-excel-o"></span> Exportar Excel',
+                    exportOptions: {
+                        modifier: {
+                            search: 'applied',
+                            order: 'applied'
+                        }
+                    }
+                }],
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
