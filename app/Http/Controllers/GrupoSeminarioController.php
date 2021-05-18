@@ -39,6 +39,11 @@ class GrupoSeminarioController extends Controller
         return view('admon.grupos.index');
     }
 
+    public function indexAuxiliar()
+    {
+        return view('auxiliar.seminarios.index');
+    }
+
     public function data()
     {
         $rows = GrupoSeminario::select(['id', 'nombre']);
@@ -51,6 +56,20 @@ class GrupoSeminarioController extends Controller
           <button type="button" value="' . $cat->id . '" OnClick="DeleteMod(' . $cat->id . ');" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><i class="fa fa-trash"></i>
           </button>
           <a href="/admon/CATgrupos/estudiantes/' . $cat->id . '" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Estudiantes"><i class="fa fa-eye"></i>
+          </a>
+          </div>';
+            })
+            ->make(true);
+    }
+
+    public function dataAuxiliar()
+    {
+        $rows = GrupoSeminario::select(['id', 'nombre']);
+
+        return Datatables::of($rows)
+            ->addColumn('action', function ($cat) {
+                return '<div class="btn-group">
+          <a href="/auxiliar/CATgrupos/estudiantes/' . $cat->id . '" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Estudiantes"><i class="fa fa-eye"></i>
           </a>
           </div>';
             })
@@ -103,6 +122,41 @@ class GrupoSeminarioController extends Controller
             ->get();
 
         return view('admon.grupos.estudiantes', compact('estudiantes', 'grupo', 'metodos', 'cuentas', 'accounts', 'methods', 'account_types', 'seminarios', 'grupos'));
+    }
+
+    public function showStudentsAuxiliar($id)
+    {
+        $grupo = GrupoSeminario::find($id);
+        $metodos = PaymentMethod::all();
+        $cuentas = Account::all();
+
+        $accounts = Account::all();
+        $methods = PaymentMethod::all();
+        $account_types = AccountType::all();
+        $seminarios = Seminario::all();
+        $grupos = GrupoSeminario::all();
+
+        $estudiantes = InscripcionSeminarioGrupo::join('seminarios', 'inscripcion_seminario_grupos.seminario_id', '=', 'seminarios.id')
+            ->join('students', 'inscripcion_seminario_grupos.student_id', '=', 'students.id')
+            ->join('grupo_seminarios', 'inscripcion_seminario_grupos.grupo_id', '=', 'grupo_seminarios.id')
+            ->join('deuda_seminarios', 'inscripcion_seminario_grupos.id', '=', 'deuda_seminarios.inscripcion_id')
+            ->select([
+                'seminarios.nombre as seminario',
+                'seminarios.clave as clave_seminario',
+                'grupo_seminarios.nombre as grupo',
+                'students.enrollment as matricula',
+                DB::raw('CONCAT(students.last_name,"/", students.mother_last_name," ",students.name) AS estudiante'),
+                'inscripcion_seminario_grupos.costo_final as costo_final',
+                'inscripcion_seminario_grupos.descuento as descuento',
+                'inscripcion_seminario_grupos.primer_pago as primer_pago',
+                'deuda_seminarios.monto as deuda',
+                'inscripcion_seminario_grupos.id as ID'
+            ])
+            ->where('inscripcion_seminario_grupos.grupo_id', '=', $id)
+            ->where('inscripcion_seminario_grupos.activo', '=', true)
+            ->get();
+
+        return view('auxiliar.seminarios.estudiantes', compact('estudiantes', 'grupo', 'metodos', 'cuentas', 'accounts', 'methods', 'account_types', 'seminarios', 'grupos'));
     }
 
     public function dataStudents($id)

@@ -515,6 +515,11 @@ Route::group(['prefix' => 'auxiliar'], function () {
     Route::get('/generaciones/enviar/recibo/{id}', 'Auxiliar\GenerationController@sendVoucher');
     Route::get('/generaciones/enviar/recibo/dos/{id}', 'Auxiliar\GenerationController@sendVoucherTwo');
     Route::post('/generaciones/editar/pago/', 'Auxiliar\GenerationController@editPay');
+
+    //Seminarios
+    Route::get('/CATgrupos/listado', 'GrupoSeminarioController@indexAuxiliar');
+    Route::get('/CATgrupos/datos', 'GrupoSeminarioController@dataAuxiliar');
+    Route::get('/CATgrupos/estudiantes/{id}', 'GrupoSeminarioController@showStudentsAuxiliar');
 });
 
 //Rutas para control escolar
