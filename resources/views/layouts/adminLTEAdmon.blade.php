@@ -105,6 +105,10 @@
     background-color: #06d6a0!important;
 }
 
+.bg-baja {
+    background-color: #c8d606!important;
+}
+
 
     </style>
 </head>

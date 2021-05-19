@@ -34,8 +34,8 @@ $todos = DB::table('todos')->where([
 
         </div>
         <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
+         <!-- Main row -->
+         <div class="row">
             <!-- Left col -->
             <section class="col-lg-12">
                 <!-- Custom tabs (Charts with tabs)-->
@@ -298,31 +298,32 @@ $todos = DB::table('todos')->where([
             },
             processing: true,
             serverSide: true,
-            ajax: '/control-escolar/generaciones/convenios/pendientes/al-dia',
+            ajax: '/auxiliar/generaciones/alumnos/traerConvenios',
 
             columns: [{
-                    data: 'name_diplomat',
-                    name: 'name_diplomat'
+                    data: 'diplomado',
+                    name: 'diplomado'
                 },
                 {
-                    data: 'generation',
-                    name: 'generation'
+                    data: 'generacion',
+                    name: 'generacion'
                 },
                 {
-                    data: 'full_name',
-                    name: 'full_name'
+                    data: 'estudiante',
+                    name: 'estudiante'
                 },
                 {
-                    data: 'fechaEsperada',
-                    name: 'fechaEsperada'
+                    data: 'fecha',
+                    name: 'fecha'
                 },
                 {
-                    data: 'montoPactado',
-                    name: 'montoPactado'
+                    data: 'monto',
+                    name: 'monto'
                 }
             ]
         });
     }
+
 
 </script>
 @endsection

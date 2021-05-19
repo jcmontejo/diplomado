@@ -65,6 +65,7 @@ $todos = DB::table('todos')->where([
 @include('partials.modal-detail-inscription')
 @endsection
 @section('js')
+
 <script>
     $(document).ready(function () {
         Charge();

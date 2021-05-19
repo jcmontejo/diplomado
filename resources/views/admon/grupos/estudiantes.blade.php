@@ -331,10 +331,22 @@
         function reload() {
             $('#cats').each(function() {
                 dt = $(this).dataTable({
-                    dom: 'Bfrtip',
-        buttons: [
-            'excel', 'pdf'
-        ]
+                    lengthMenu: [
+                    [25, 100, -1],
+                    [25, 100, "Todos"]
+                ],
+                pageLength: 25,
+                dom: 'lBfrtip',
+                buttons: [{
+                    extend: 'excel',
+                    text: '<span class="fas fa-file-excel-o"></span> Exportar Excel',
+                    exportOptions: {
+                        modifier: {
+                            search: 'applied',
+                            order: 'applied'
+                        }
+                    }
+                }]
                 });
                 dt.fnDraw();
             })

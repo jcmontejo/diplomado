@@ -38,22 +38,31 @@
                                     <tr @if ($estudiante->debe <= 0) class="bg-success-custom" @endif>
                                         <td>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-primary"
-                                                    value="{{ $estudiante->ID }}"
-                                                    onClick="datosPagosDiplomados({{ $estudiante->ID }});"
-                                                    data-toggle="tooltip" data-placement="top" title="Pagos"><i
-                                                        class="fa fa-cash-register"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                    data-toggle="tooltip" data-placement="top" title="Eliminar"><i
-                                                        class="fa fa-trash"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="editarDatosEstudiante({{$estudiante->ID}});" class="btn btn-info"
-                                                    data-toggle="tooltip" data-placement="top" title="Editar"><i
-                                                        class="fa fa-user-edit"></i>
-                                                </button>
+                                                @if ($estudiante->baja)
+                                                    <button type="button" class="btn btn-warning"
+                                                        value="{{ $estudiante->ID }}"
+                                                        onClick="reactivarAlumno({{ $estudiante->ID }});"
+                                                        data-toggle="tooltip" data-placement="top" title="Pagos"><i
+                                                            class="fa fa-arrow-circle-up"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-primary"
+                                                        value="{{ $estudiante->ID }}"
+                                                        onClick="datosPagosDiplomados({{ $estudiante->ID }});"
+                                                        data-toggle="tooltip" data-placement="top" title="Pagos"><i
+                                                            class="fa fa-cash-register"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
+                                                        data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
+                                                            class="fa fa-trash"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="editarDatosEstudiante({{ $estudiante->ID }});"
+                                                        class="btn btn-info" data-toggle="tooltip" data-placement="top"
+                                                        title="Editar"><i class="fa fa-user-edit"></i>
+                                                    </button>
+                                                @endif
                                             </div>
                                         </td>
                                         <td>
@@ -78,10 +87,14 @@
                                             {{ $estudiante->debe }}
                                         </td>
                                         <td>
-                                            @if ($estudiante->debe <= 0)
-                                                PAGADO
+                                            @if ($estudiante->baja)
+                                                    CAUSO BAJA
                                             @else
-                                                PENDIENTE
+                                                @if ($estudiante->debe <= 0)
+                                                    PAGADO
+                                                @else
+                                                    PENDIENTE
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>
@@ -194,9 +207,9 @@
                                                         step="any" class="form-control d-inline" value="">
 
                                                     <!--<div class="input-group-append dropleft">
-                                                                                        <button id="agregarMontoUno" class="btn btn-outline-primary" type="button"
-                                                                                            onclick="aplicarMonto();">Aplicar</button>
-                                                                                    </div>-->
+                                                                                            <button id="agregarMontoUno" class="btn btn-outline-primary" type="button"
+                                                                                                onclick="aplicarMonto();">Aplicar</button>
+                                                                                        </div>-->
                                                 </div>
                                             </div>
                                             <div class="form-group w-100 mb-0">
@@ -373,8 +386,7 @@
                                             <label class="w-100 font-weight-bold size-14">Selecciona fecha de
                                                 pago</label>
                                             <div class="input-group mb-2">
-                                                <input type="date" class="form-control" name=""
-                                                    id=""
+                                                <input type="date" class="form-control" name="" id=""
                                                     value="{{ \Carbon\Carbon::now()->toDateString() }}">
                                             </div>
                                         </div>
@@ -422,9 +434,9 @@
                             <label for="exampleInputEmail1">Selecciona Diplomado</label>
                             <select name="diplomat_id_e" id="diplomat_id_e" class="form-control form-control-lg">
                                 @forelse ($diplomats as $diplomat)
-                                <option value="{{$diplomat->id}}">{{$diplomat->name}}</option>
+                                    <option value="{{ $diplomat->id }}">{{ $diplomat->name }}</option>
                                 @empty
-                                <option value="0">No hay diplomados registrados.</option>
+                                    <option value="0">No hay diplomados registrados.</option>
                                 @endforelse
                             </select>
                         </div>
@@ -432,34 +444,39 @@
                             <label for="exampleInputPassword1">Selecciona Generación</label>
                             <select name="generation_id_e" id="generation_id_e" class="form-control form-control-lg">
                                 @forelse ($generations as $generation)
-                                <option value="{{$generation->id}}">{{$generation->number_generation}}</option>
+                                    <option value="{{ $generation->id }}">{{ $generation->number_generation }}</option>
                                 @empty
-                                <option value="0">No hay generaciones registrados.</option>
+                                    <option value="0">No hay generaciones registrados.</option>
                                 @endforelse
                             </select>
                         </div>
                         <div class="form-group col-md-4">
                             <label for="">Descuento</label>
-                            <input type="number" value="0" min="1" step="1" id="discount_e" name="discount_e" class="form-control form-control-lg">
+                            <input type="number" value="0" min="1" step="1" id="discount_e" name="discount_e"
+                                class="form-control form-control-lg">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="">Número de Pagos</label>
-                            <input type="number" value="1" min="1" max="10" step="1" id="number_payments_e" name="number_payments_e" class="form-control form-control-lg">
+                            <input type="number" value="1" min="1" max="10" step="1" id="number_payments_e"
+                                name="number_payments_e" class="form-control form-control-lg">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="">¿De cuanto seran los pagos?</label>
-                            <input type="text" name="amount_of_payments_e" id="amount_of_payments_e" class="form-control form-control-lg">
+                            <input type="text" name="amount_of_payments_e" id="amount_of_payments_e"
+                                class="form-control form-control-lg">
                         </div>
                         <div class="form-group col-md-12">
                             <label for="">Monto Primer Pago</label>
-                            <input type="number" value="0" min="0" name="first_payment_e" id="first_payment_e" class="form-control form-control-lg">
+                            <input type="number" value="0" min="0" name="first_payment_e" id="first_payment_e"
+                                class="form-control form-control-lg">
                         </div>
                     </div>
                     <div class="row">
-                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante" class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
+                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante"
+                            class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
                     </div>
                 </div>
-              </div>
+            </div>
         </div>
         @include('admon.grupos.create')
         @include('admon.grupos.edit')
@@ -475,21 +492,21 @@
             $('#cats').each(function() {
                 dt = $(this).dataTable({
                     lengthMenu: [
-                    [25, 100, -1],
-                    [25, 100, "Todos"]
-                ],
-                pageLength: 25,
-                dom: 'lBfrtip',
-                buttons: [{
-                    extend: 'excel',
-                    text: '<span class="fas fa-file-excel-o"></span> Exportar Excel',
-                    exportOptions: {
-                        modifier: {
-                            search: 'applied',
-                            order: 'applied'
+                        [25, 100, -1],
+                        [25, 100, "Todos"]
+                    ],
+                    pageLength: 25,
+                    dom: 'lBfrtip',
+                    buttons: [{
+                        extend: 'excel',
+                        text: '<span class="fas fa-file-excel-o"></span> Exportar Excel',
+                        exportOptions: {
+                            modifier: {
+                                search: 'applied',
+                                order: 'applied'
+                            }
                         }
-                    }
-                }]
+                    }]
                 });
                 dt.fnDraw();
             })
@@ -572,13 +589,14 @@
             $("#block-pagos-vendedores").css("display", "none");
             $("#block-editar").css("display", "none");
             $("#pagar").css("display", "none");
-            $('#message-error-save').css('display', 'none');s
+            $('#message-error-save').css('display', 'none');
+            s
             location.reload();
         }
 
         function editarDatosEstudiante(id) {
             $("#ID_INS_EDITAR").val(id);
-            
+
             var route = '{{ url('/admon/CATdiplomados/datos/pagos') }}/' + id;
             Notiflix.Loading.Dots('Procesando...');
             $("#block-table").css("display", "none");
@@ -635,7 +653,7 @@
                     $('#message-error-save-N').css('display', 'none');
                     Notiflix.Report.Success('Bien hecho', 'Has editado los datos del alumno.',
                         'Click');
-                        location.reload();
+                    location.reload();
                 },
                 error: function(data) {
                     var response = JSON.parse(data.responseText);
@@ -787,10 +805,11 @@
 
         function eliminarEstudiante(btn) {
             var id = btn.value;
-            var route = "/admon/CATgrupos/estudiante/eliminar/" + id;
+
+            var route = "/admon/generaciones/alumnos/CAUSARBAJA/" + id;
             Notiflix.Confirm.Show(
                 'Cuotas Estudiantes',
-                '¿Esta seguro de eliminar este alumno del grupo?',
+                '¿Esta seguro de dar de baja a este alumno de la generación?',
                 'Si',
                 'No',
                 function() {
@@ -799,7 +818,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            type: 'DELETE',
+                            type: 'PUT',
                             dataType: 'json',
                             data: {
                                 id: id
@@ -807,7 +826,7 @@
                         })
                         .done(function(response) {
                             location.reload();
-                            Notiflix.Report.Success('Bien hecho', 'Has eliminado un registro.',
+                            Notiflix.Report.Success('Bien hecho', 'Has dado de baja un registro.',
                                 'Click');
                         })
                         .fail(function() {
@@ -857,7 +876,7 @@
                 $("#diplomado_d").text(data.d.name);
                 $("#generacion_d").text(data.g.number_generation);
                 $("#docente").text(data.dc.name + ' ' + data.dc.last_name + ' ' + data.dc.mother_last_name);
-                $("#a_pagar_final").text('$'+data.e.total_a_pagar);
+                $("#a_pagar_final").text('$' + data.e.total_a_pagar);
             });
         }
 

@@ -341,12 +341,14 @@ Route::group(['prefix' => 'admon'], function () {
 
 
     Route::get('/generaciones/alumnos/buscar', 'Admon\GenerationController@findStudent');
-
+    //here
     Route::get('/generaciones/alumnos/inscritos/{id}', 'Admon\GenerationController@listStudentsGeneration');
     Route::get('/generaciones/alumnos/inscritos/datos/{id}', 'Admon\GenerationController@studentsInscription');
     Route::get('/generaciones/alumnos/{id}', 'Admon\GenerationController@students');
     Route::get('/generaciones/alumnos/consultar/{id}', 'Admon\GenerationController@search');
+    //
     Route::put('/generaciones/alumnos/baja/{id}', 'Admon\GenerationController@down');
+    Route::put('/generaciones/alumnos/CAUSARBAJA/{id}', 'Admon\GenerationController@darBaja');
     Route::put('/generaciones/alumnos/alta/{id}', 'Admon\GenerationController@up');
     Route::delete('/generaciones/eliminar/alumno/{id}', 'Admon\GenerationController@deleteStudent');
     // Routes for news functions for payments

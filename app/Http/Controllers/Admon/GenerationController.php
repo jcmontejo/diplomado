@@ -113,12 +113,15 @@ class GenerationController extends Controller
                 'student_inscriptions.discount as descuento',
                 'student_inscriptions.first_payment as primer_pago',
                 'student_inscriptions.id as ID',
+                'student_inscriptions.baja as baja',
+                'student_inscriptions.fecha_baja as fecha_baja',
                 'student_inscriptions.final_cost as costo_final',
                 'student_inscriptions.status as status',
                 'debts.amount as debe',
                 'debts.id as debt_id'
             )
             ->get();
+        
 
         return view('admon.generations.estudiantes-inscritos', compact('estudiantes','generation', 'metodos', 'cuentas', 'diplomats', 'generations', 'accounts', 'methods', 'account_types'));
     }
@@ -569,35 +572,20 @@ class GenerationController extends Controller
         }
     }
 
-    public function down($id, Request $request)
+    public function darBaja($id, Request $request)
     {
         try {
-            DB::beginTransaction();
-
-            $debt = Debt::where('generation_id', '=', $id)->first();
-
+            $date = Carbon::now();
             $inscription = StudentInscription::find($id);
-            $inscription->status = 'Baja';
+            $inscription->baja = true;
+            $inscription->fecha_baja = $date;
             $inscription->save();
-
-            if ($inscription) {
-                $debt->status = 'BAJA';
-                $debt->save();
-
-                $low = new Low();
-                $low->reason = $request->reason;
-                $low->comments = $request->comments;
-                $low->studentinscriptions_id = $inscription->id;
-                $low->save();
-            }
-
-            DB::commit();
 
             return response()->json([
                 'success' => 'Record has been deleted successfully!',
             ]);
         } catch (\Exception $e) {
-            DB::rollBack();
+            return response()->json($e->getMessage());
         }
     }
 
