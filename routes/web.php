@@ -11,6 +11,8 @@
 |
 */
 
+use App\User;
+
 Route::get('/clear-cache', function () {
     $exitCode = Artisan::call('config:clear');
     $exitCode = Artisan::call('cache:clear');
@@ -672,5 +674,15 @@ Route::get('error', function(){
 });
 
 Route::get('matricular-alumnos', 'GeneralController@enrollment');
+
+Route::get('consultas', function(){
+    $emails = DB::table('users')->pluck('email');
+
+    /*foreach($emails as $email)
+    {
+        echo $email;
+    }*/
+    echo "success";
+});
 
 

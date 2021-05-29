@@ -1025,6 +1025,7 @@ class StudentController extends Controller
         }
     }
 
+
     public function nStudent(StoreStudent $request)
     {
         try {
@@ -1160,6 +1161,7 @@ class StudentController extends Controller
                 $inscription->amount_of_payments = $amount_of_payments;
                 $inscription->periodicity = $periodicity;
                 $inscription->type_of_inscription = 'NUEVO';
+                $inscription->baja = false;
                 $inscription->save();
 
                 $generation->number_students = $generation->number_students + 1;
