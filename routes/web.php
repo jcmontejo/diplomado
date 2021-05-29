@@ -440,6 +440,7 @@ Route::group(['prefix' => 'admon'], function () {
 
      Route::post('/alumnos/editarInscripcion', 'GrupoSeminarioController@editarDatosEstudiante');
      Route::post('/alumnos/editarInscripcionDiplomado', 'GrupoSeminarioController@editarDatosEstudianteDiplomado');
+     Route::post('/CATgrupos/estudiantes/editar/pago', 'GrupoSeminarioController@editarPago');
      
 
      //Pagos de diplomados

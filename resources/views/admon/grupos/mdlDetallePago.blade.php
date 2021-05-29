@@ -58,6 +58,10 @@
                     <form>
                         <input type="hidden" id="ID_PAGO_EDITAR">
                         <div class="form-group">
+                            <label for="exampleInputEmail1">Digita tu Clave Maestra</label>
+                            <input type="password" class="form-control form-control-lg" id="psdMasterEditarPago" placeholder="****************">
+                        </div>
+                        <div class="form-group">
                             <label for="exampleFormControlSelect1">CUENTA DESTINO</label>
                             <select class="form-control" id="cuentaDestinoEditar">
                                 @forelse ($cuentas as $cuenta)
@@ -88,7 +92,7 @@
                             <input type="number" min="1" step="any" class="form-control" id="montoRecibidoEditar">
                         </div>
                         <div class="form-group">
-                            <button type="button" class="btn btn-success btn-block"><i class="fas fa-check-square"></i>
+                            <button type="button" class="btn btn-success btn-block" onclick="actualizarPago();"><i class="fas fa-check-square"></i>
                                 ACTUALIZAR</button>
                                 <button type="button" class="btn btn-secondary btn-block" onclick="cancelarEdicion();"><i class="fas fa-window-close"></i>
                                     CANCELAR</button>

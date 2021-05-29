@@ -263,6 +263,7 @@ class GrupoSeminarioController extends Controller
             ->where('deuda_id', '=', $deuda->id)
             ->where('numero_de_pago', '=', $pago->numero_de_pago)
             ->select([
+                'pago_recibido_seminarios.id as id_pago',
                 'pago_recibido_seminarios.fecha_pago as fechaPago',
                 'pago_recibido_seminarios.monto_recibido as montoRecibido',
                 'payment_methods.name as metodoPago',
@@ -270,7 +271,7 @@ class GrupoSeminarioController extends Controller
                 'payment_methods.id as idMetodoPago',
                 'accounts.id as idCuentaDestino'
             ])->first();
-        
+
         return response()->json(['detalle_pago' => $pago_recibido]);
     }
 
@@ -373,6 +374,40 @@ class GrupoSeminarioController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return $e->getMessage();
+        }
+    }
+
+    public function editarPago(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $pago_recibido = PagoRecibidoSeminario::where('id', '=', $request->id_pago)->first();
+            $monto_anterior = $pago_recibido->monto_recibido;
+            $monto_nuevo = $request->monto;
+
+            $pago_editado = PagoRecibidoSeminario::find($request->id_pago);
+            $pago_editado->fecha_pago = $request->fecha_pago;
+            $pago_editado->monto_recibido = $request->monto;
+            $pago_editado->metodo_de_pago = $request->metodo_pago;
+            $pago_editado->cuenta_destino = $request->cuenta_destino;
+            $pago_editado->save();
+
+            $deuda = DeudaSeminario::find($pago_editado->deuda_id);
+            $deuda->monto += $monto_anterior;
+            $deuda->monto -= $monto_nuevo;
+            $deuda->save();
+
+            $inscripcion = InscripcionSeminarioGrupo::where('id', '=', $deuda->inscripcion_id)->first();
+            DB::commit();
+
+            return response()->json([
+                'i' => $inscripcion,
+                'p' => $pago_editado,
+                'd' => $deuda
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json($e->getMessage());
         }
     }
 

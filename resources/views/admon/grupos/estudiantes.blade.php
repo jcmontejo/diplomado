@@ -427,6 +427,7 @@
                 $("#metodoPago").text(data.detalle_pago.metodoPago);
                 $("#montoRecibido").text(data.detalle_pago.montoRecibido);
                 //Formulario de edición
+                $("#ID_PAGO_EDITAR").val(data.detalle_pago.id_pago);
                 $("#cuentaDestinoEditar").val(data.detalle_pago.idCuentaDestino).change();
                 $("#fechaPagoEditar").val(data.detalle_pago.fechaPago);
                 $("#metodoPagoEditar").val(data.detalle_pago.idMetodoPago).change();
@@ -441,7 +442,68 @@
         }
 
         function actualizarPago() {
-            
+            var route = '/admon/CATgrupos/estudiantes/editar/pago';
+            var id_pago = $("#ID_PAGO_EDITAR").val();
+            var cuenta_destino = $("#cuentaDestinoEditar").val();
+            var fecha_pago = $("#fechaPagoEditar").val();
+            var metodo_pago = $("#metodoPagoEditar").val();
+            var monto = $("#montoRecibidoEditar").val();
+            //checkPsd
+            var psd = $("#psdMasterEditarPago").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+            console.log(psd);
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                    url: route,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id_pago: id_pago,
+                        monto: monto,
+                        fecha_pago: fecha_pago,
+                        metodo_pago: metodo_pago,
+                        cuenta_destino: cuenta_destino
+                    },
+                    beforeSend: function() {
+                        Notiflix.Loading.Dots('Procesando...');
+                    },
+                    success: function(data) {
+                        Notiflix.Loading.Remove();
+                        $('#message-error-save').css('display', 'none');
+                        Notiflix.Report.Success('Bien hecho', 'Has guardado un nuevo pago.', 'Click');
+                        datosPagosSeminario(data.i.id);
+                        $("#montoUNo").val("");
+                        cancelarPago();
+                        //reload();
+                        console.log(data);
+                        $("#mdlDetallePago .close").click();
+                        $("#block-editar_pago").css("display", "none");
+                    },
+                    error: function(data) {
+                        Notiflix.Loading.Remove();
+                        Notiflix.Report.Failure('Algo salió mal', 'Revisa tu información', 'Cerrar');
+                        var response = JSON.parse(data.responseText);
+                        var errorString = "<ul>";
+                        $.each(response.errors, function(key, value) {
+                            errorString += "<li>" + value + "</li>";
+                        });
+                        $("#error-save").html(errorString);
+                        $("#message-error-save").fadeIn();
+                    }
+                });
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
         }
 
         function cancelarEdicion() {
