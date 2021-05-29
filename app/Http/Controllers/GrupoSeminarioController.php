@@ -251,6 +251,29 @@ class GrupoSeminarioController extends Controller
         }
     }
 
+    function detallePago($id)
+    {
+        $pago = PagoSeminario::findOrFail($id);
+        $deuda = DeudaSeminario::where('id', '=', $pago->deuda_id)->first();
+        $inscripcion = InscripcionSeminarioGrupo::where('id', '=', $deuda->inscripcion_id)->first();
+
+        $pago_recibido = PagoRecibidoSeminario::where('inscripcion_id', '=', $inscripcion->id)
+            ->join('payment_methods', 'pago_recibido_seminarios.metodo_de_pago', '=', 'payment_methods.id')
+            ->join('accounts', 'pago_recibido_seminarios.cuenta_destino', '=', 'accounts.id')
+            ->where('deuda_id', '=', $deuda->id)
+            ->where('numero_de_pago', '=', $pago->numero_de_pago)
+            ->select([
+                'pago_recibido_seminarios.fecha_pago as fechaPago',
+                'pago_recibido_seminarios.monto_recibido as montoRecibido',
+                'payment_methods.name as metodoPago',
+                'accounts.account_name as cuentaDestino',
+                'payment_methods.id as idMetodoPago',
+                'accounts.id as idCuentaDestino'
+            ])->first();
+        
+        return response()->json(['detalle_pago' => $pago_recibido]);
+    }
+
     public function store(Request $request)
     {
         if ($request->ajax()) {

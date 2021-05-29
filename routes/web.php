@@ -435,6 +435,7 @@ Route::group(['prefix' => 'admon'], function () {
      Route::get('/CATgrupos/datos/pagos/{id}', 'GrupoSeminarioController@dataStudents');
      Route::post('/CATgrupos/recibir/pago/', 'GrupoSeminarioController@storePayment');
      Route::post('/CATgrupos/agregar/pago/', 'GrupoSeminarioController@newPayment');
+     Route::get('/CATgrupos/detalle/pago/{id}', 'GrupoSeminarioController@detallePago');
      Route::delete('/CATgrupos/estudiante/eliminar/{id}', 'GrupoSeminarioController@deleteStudent');
 
      Route::post('/alumnos/editarInscripcion', 'GrupoSeminarioController@editarDatosEstudiante');

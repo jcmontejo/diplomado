@@ -162,7 +162,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div id="pendientes">
-
+                                    {{--Aquí van los pagos pendientes --}}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -320,6 +320,7 @@
         </div>
         @include('admon.grupos.create')
         @include('admon.grupos.edit')
+        @include('admon.grupos.mdlDetallePago')
     </div><!-- /.container-fluid -->
 @endsection
 @section('js')
@@ -389,8 +390,8 @@
                             ');" class="btn btn-block btn-outline-secondary h-100">';
                     } else {
                         pendientes +=
-                            '<button type="button" onClick="mostrarFormularioPago(' + value.id +
-                            ');" class="btn btn-block btn-success h-100" disabled>';
+                            '<button type="button" onClick="detalleDePago(' + value.id +
+                            ');" class="btn btn-block btn-success h-100" data-toggle="modal" data-target="#mdlDetallePago">';
                     }
                     pendientes += '<p class="mb-0 size-24">';
                     pendientes += '<i class="fas fa-cash-register"></i>';
@@ -400,7 +401,7 @@
                             '<br>Click para pagar</span></p>';
                     } else {
                         pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.numero_de_pago +
-                            '<br>Pago cubierto</span></p>';
+                            '<br>PAGADO</span></p>';
                     }
                     pendientes += '</button>';
                     $("#pendientes").append(pendientes);
@@ -412,6 +413,41 @@
         function mostrarFormularioPago(id) {
             $("#pagar").css("display", "block");
             $("#ID_PAGAR").val(id);
+        }
+
+        function detalleDePago(id) {
+            route = '/admon/CATgrupos/detalle/pago/' + id;
+            Notiflix.Loading.Dots('Procesando...');
+            $.get(route, function(data) {
+                Notiflix.Loading.Remove();
+                console.log(data);
+                //Tabla con información
+                $("#cuentaDestino").text(data.detalle_pago.cuentaDestino);
+                $("#fechaPago").text(data.detalle_pago.fechaPago);
+                $("#metodoPago").text(data.detalle_pago.metodoPago);
+                $("#montoRecibido").text(data.detalle_pago.montoRecibido);
+                //Formulario de edición
+                $("#cuentaDestinoEditar").val(data.detalle_pago.idCuentaDestino).change();
+                $("#fechaPagoEditar").val(data.detalle_pago.fechaPago);
+                $("#metodoPagoEditar").val(data.detalle_pago.idMetodoPago).change();
+                $("#montoRecibidoEditar").val(data.detalle_pago.montoRecibido);
+            });
+        }
+
+        function editarPago() {
+            Notiflix.Loading.Dots('Procesando...');
+            $("#block-editar_pago").css("display", "block");
+            Notiflix.Loading.Remove();
+        }
+
+        function actualizarPago() {
+            
+        }
+
+        function cancelarEdicion() {
+            Notiflix.Loading.Dots('Procesando...');
+            $("#block-editar_pago").css("display", "none");
+            Notiflix.Loading.Remove();
         }
 
         function editarDatosEstudiante(id) {

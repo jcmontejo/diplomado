@@ -696,6 +696,7 @@ class StudentController extends Controller
                         $inscription->amount_of_payments = $request->amount_of_payments;
                         $inscription->periodicity = $request->periodicity;
                         $inscription->type_of_inscription = $request->type_of_inscription;
+                        $inscription->baja = false;
                         $inscription->save();
 
                         $generation->number_students = $generation->number_students + 1;
