@@ -23,6 +23,7 @@ use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use App\PagoDocente;
 use App\PagoRecibidoDiplomado;
+use App\PagosRealizadosDocentes;
 use App\PaymentMethod;
 use App\User;
 use Carbon\Carbon;
@@ -121,11 +122,12 @@ class GenerationController extends Controller
                 'debts.id as debt_id'
             )
             ->get();
-        
 
-        return view('admon.generations.estudiantes-inscritos', compact('estudiantes','generation', 'metodos', 'cuentas', 'diplomats', 'generations', 'accounts', 'methods', 'account_types'));
+
+        return view('admon.generations.estudiantes-inscritos', compact('estudiantes', 'generation', 'metodos', 'cuentas', 'diplomats', 'generations', 'accounts', 'methods', 'account_types'));
     }
 
+    
     public function dataStudents($id)
     {
         $inscription = StudentInscription::find($id);
@@ -145,6 +147,64 @@ class GenerationController extends Controller
             'deuda' => $debt,
             'pagos' => $payments
         ]);
+    }
+
+    function detallePago($id)
+    {
+        $pago = Payment::findOrFail($id);
+        $deuda = Debt::where('id', '=', $pago->debt_id)->first();
+        $inscripcion = StudentInscription::where('id', '=', $deuda->generation_id)->first();
+
+        $pago_recibido = PagoRecibidoDiplomado::where('inscripcion_id', '=', $inscripcion->id)
+            ->join('payment_methods', 'pago_recibido_diplomados.metodo_de_pago', '=', 'payment_methods.id')
+            ->join('accounts', 'pago_recibido_diplomados.cuenta_destino', '=', 'accounts.id')
+            ->where('deuda_id', '=', $deuda->id)
+            ->where('numero_de_pago', '=', $pago->number_payment)
+            ->select([
+                'pago_recibido_diplomados.id as id_pago',
+                'pago_recibido_diplomados.fecha_pago as fechaPago',
+                'pago_recibido_diplomados.monto_recibido as montoRecibido',
+                'payment_methods.name as metodoPago',
+                'accounts.account_name as cuentaDestino',
+                'payment_methods.id as idMetodoPago',
+                'accounts.id as idCuentaDestino'
+            ])->first();
+
+        return response()->json(['detalle_pago' => $pago_recibido]);
+    }
+
+    public function editarPago(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $pago_recibido = PagoRecibidoDiplomado::where('id', '=', $request->id_pago)->first();
+            $monto_anterior = $pago_recibido->monto_recibido;
+            $monto_nuevo = $request->monto;
+
+            $pago_editado = PagoRecibidoDiplomado::find($request->id_pago);
+            $pago_editado->fecha_pago = $request->fecha_pago;
+            $pago_editado->monto_recibido = $request->monto;
+            $pago_editado->metodo_de_pago = $request->metodo_pago;
+            $pago_editado->cuenta_destino = $request->cuenta_destino;
+            $pago_editado->save();
+
+            $deuda = Debt::find($pago_editado->deuda_id);
+            $deuda->amount += $monto_anterior;
+            $deuda->amount -= $monto_nuevo;
+            $deuda->save();
+
+            $inscripcion = StudentInscription::where('id', '=', $deuda->generation_id)->first();
+            DB::commit();
+
+            return response()->json([
+                'i' => $inscripcion,
+                'p' => $pago_editado,
+                'd' => $deuda
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json($e->getMessage());
+        }
     }
 
     public function newPayment(Request $request)
@@ -231,7 +291,7 @@ class GenerationController extends Controller
         $diplomado = Diplomat::where('id', '=', $generacion->diplomat_id)->first();
         $esquema = PagoDocente::where('generacion_id', '=', $generacion->id)->first();
         $docente = Teacher::where('id', '=', $esquema->docente_id)->first();
-        
+
 
         return response()->json([
             'g' => $generacion,
@@ -239,6 +299,33 @@ class GenerationController extends Controller
             'e' => $esquema,
             'dc' => $docente
         ]);
+    }
+
+    public function aplicarPagoDocente(Request $request)
+    {
+        try {
+            //DB::beginTransaction();
+            $esquema = PagoDocente::find($request->id_pago);
+            $generacion = Generation::find($esquema->generacion_id);
+
+            $aplicar = new PagosRealizadosDocentes();
+            $aplicar->monto_pagado = $request->monto;
+            $aplicar->fecha_pago = $request->fecha_pago;
+            $aplicar->docente_id = $esquema->docente_id;
+            $aplicar->diplomado_id = $generacion->diplomat_id;
+            $aplicar->generacion_id = $generacion->id;
+            $aplicar->pago_docentes_id = $esquema->id;
+            $aplicar->save();
+
+            $esquema->total_a_pagar -= $aplicar->monto_pagado;
+            $esquema->save();
+
+            return response()->json("success");
+            //DB::commit();
+        } catch (\Exception $e) {
+            //DB::rollback();
+            return response()->json($e->getMessage());
+        }
     }
 
     public function studentsInscription($id)
@@ -588,6 +675,55 @@ class GenerationController extends Controller
             return response()->json($e->getMessage());
         }
     }
+    
+    public function reactivar($id, Request $request)
+    {
+        try {
+            $date = Carbon::now();
+            $inscription = StudentInscription::find($id);
+            $inscription->baja = false;
+            $inscription->fecha_baja = null;
+            $inscription->save();
+
+            return response()->json([
+                'success' => 'Record has been activated successfully!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
+
+    public function eliminarDef($id, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $ins = StudentInscription::find($id);
+
+            $debt = Debt::where('generation_id', '=', $ins->id)->first();
+
+            $payments = DB::table('payments')
+                ->where('debt_id', '=', $debt->id)->delete();
+
+            $payment_receiveds = DB::table('payment_receiveds')
+                ->where('debt_id', '=', $debt->id)->delete();
+
+            $agreements = DB::table('agreements')
+                ->join('debts', 'agreements.debt_id', '=', 'debts.id')
+                ->where('debts.id', '=', $debt->id)->delete();
+
+            $debt->delete();
+
+            $ins->delete();
+            DB::commit();
+
+            return response()->json([
+                'success' => 'Record has been deleted successfully!',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
 
     public function discount(Request $request)
     {
@@ -760,7 +896,7 @@ class GenerationController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             $payment = Payment::find($request->id_payment);
             //Get Data
             $debt = DB::table('debts')
@@ -831,7 +967,7 @@ class GenerationController extends Controller
                     ->json([
                         'message' => 'Cantidad mayor a la deuda.',
                         'error' => 1,
-                    ],400);
+                    ], 400);
             }
         } catch (Exception $e) {
             DB::rollBack();

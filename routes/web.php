@@ -351,6 +351,8 @@ Route::group(['prefix' => 'admon'], function () {
     //
     Route::put('/generaciones/alumnos/baja/{id}', 'Admon\GenerationController@down');
     Route::put('/generaciones/alumnos/CAUSARBAJA/{id}', 'Admon\GenerationController@darBaja');
+    Route::put('/generaciones/alumnos/REACTIVAR/{id}', 'Admon\GenerationController@reactivar');
+    Route::put('/generaciones/alumnos/ELIMINARDEFINITIVO/{id}', 'Admon\GenerationController@eliminarDef');
     Route::put('/generaciones/alumnos/alta/{id}', 'Admon\GenerationController@up');
     Route::delete('/generaciones/eliminar/alumno/{id}', 'Admon\GenerationController@deleteStudent');
     // Routes for news functions for payments
@@ -436,7 +438,9 @@ Route::group(['prefix' => 'admon'], function () {
      Route::post('/CATgrupos/recibir/pago/', 'GrupoSeminarioController@storePayment');
      Route::post('/CATgrupos/agregar/pago/', 'GrupoSeminarioController@newPayment');
      Route::get('/CATgrupos/detalle/pago/{id}', 'GrupoSeminarioController@detallePago');
-     Route::delete('/CATgrupos/estudiante/eliminar/{id}', 'GrupoSeminarioController@deleteStudent');
+
+     Route::delete('/CATgrupos/estudiante/baja/{id}', 'GrupoSeminarioController@bajaEstudiante');
+     Route::delete('/CATgrupos/estudiante/eliminar/{id}', 'GrupoSeminarioController@eliminarEstudiante');
 
      Route::post('/alumnos/editarInscripcion', 'GrupoSeminarioController@editarDatosEstudiante');
      Route::post('/alumnos/editarInscripcionDiplomado', 'GrupoSeminarioController@editarDatosEstudianteDiplomado');
@@ -447,9 +451,11 @@ Route::group(['prefix' => 'admon'], function () {
      Route::get('/CATdiplomados/datos/pagos/{id}', 'Admon\GenerationController@dataStudents');
      Route::post('/CATdiplomados/agregar/pago/', 'Admon\GenerationController@newPayment');
      Route::post('/CATdiplomados/recibir/pago/', 'Admon\GenerationController@storePayment');
+     Route::get('/CATdiplomados/detalle/pago/{id}', 'Admon\GenerationController@detallePago');
+     Route::post('/CATdiplomados/estudiantes/editar/pago', 'Admon\GenerationController@editarPago');
 
      Route::get('/CATdiplomados/datos/pagos/docentes/{id}', 'Admon\GenerationController@dataDocent');
-
+     Route::post('/CATdiplomados/aplicar_pago/docente/', 'Admon\GenerationController@aplicarPagoDocente');
      Route::get('/testSeminarios', 'GeneralController@corregirSeminarios');
 });
 

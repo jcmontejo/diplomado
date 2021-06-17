@@ -176,6 +176,17 @@
                     $("#btn_diplomado").css("display", "none");
                 }
             });
+
+            $('select[name="professionSave"]').on('change', function() {
+                var tipo = $(this).val();
+                if (tipo == 10) {
+                    $("#bandera_profesion").val(1);
+                    $("#bloque-profesion-alt").css("display", "block");
+                }else{
+                    $("#bandera_profesion").val(0);
+                    $("#bloque-profesion-alt").css("display", "none");
+                }
+            });
         });
 
         $('#status').on('change', function() {
@@ -700,6 +711,8 @@
             let crp = $("#curpStudent").val();
             let route_crp = "/ventas/alumnos/checkCurpTwo/" + crp;
 
+             //BANDERA PROFESION
+             var bandera = $("#bandera_profesion").val();
             //Datos alumno
             var curp = $("#curpStudent").val();
             var name = $("#nameStudent").val();
@@ -713,7 +726,11 @@
             var state = $("#stateStudent").val();
             var city = $("#cityStudent").val();
             var email = $("#emailStudent").val();
-            var profession = $("#professionStudent").val();
+            if (bandera != 0) {
+                    var profesion = $("#professionStudentAlt").val();
+                } else {
+                    var profession = $("#professionStudent").val();
+                }
 
             //Datos seminario
             var seminario_id = $("#seminario_id").val();
@@ -860,6 +877,8 @@
                     error: function(jqXHR, exception) {}
                 });
             } else {
+                //BANDERA PROFESION
+                var bandera_p = $("#bandera_profesion").val();
                 //Datos alumno
                 var curp = $("#curpStudent").val();
                 var name = $("#nameStudent").val();
@@ -873,7 +892,11 @@
                 var state = $("#stateStudent").val();
                 var city = $("#cityStudent").val();
                 var email = $("#emailStudent").val();
-                var profession = $("#professionStudent").val();
+                if (bandera_p != 0) {
+                    var profession = $("#professionStudentAlt").val();
+                } else {
+                    var profession = $("#professionStudent").val();
+                }
 
                 //Datos diplomado
                 var generation_id = $("#generation_id_N").val();

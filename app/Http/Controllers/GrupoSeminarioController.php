@@ -114,11 +114,12 @@ class GrupoSeminarioController extends Controller
                 'inscripcion_seminario_grupos.costo_final as costo_final',
                 'inscripcion_seminario_grupos.descuento as descuento',
                 'inscripcion_seminario_grupos.primer_pago as primer_pago',
+                'inscripcion_seminario_grupos.activo as baja',
                 'deuda_seminarios.monto as deuda',
                 'inscripcion_seminario_grupos.id as ID'
             ])
             ->where('inscripcion_seminario_grupos.grupo_id', '=', $id)
-            ->where('inscripcion_seminario_grupos.activo', '=', true)
+            //->where('inscripcion_seminario_grupos.activo', '=', true)
             ->get();
 
         return view('admon.grupos.estudiantes', compact('estudiantes', 'grupo', 'metodos', 'cuentas', 'accounts', 'methods', 'account_types', 'seminarios', 'grupos'));
@@ -150,10 +151,11 @@ class GrupoSeminarioController extends Controller
                 'inscripcion_seminario_grupos.descuento as descuento',
                 'inscripcion_seminario_grupos.primer_pago as primer_pago',
                 'deuda_seminarios.monto as deuda',
+                'inscripcion_seminario_grupos.activo as baja',
                 'inscripcion_seminario_grupos.id as ID'
             ])
             ->where('inscripcion_seminario_grupos.grupo_id', '=', $id)
-            ->where('inscripcion_seminario_grupos.activo', '=', true)
+            //->where('inscripcion_seminario_grupos.activo', '=', true)
             ->get();
 
         return view('auxiliar.seminarios.estudiantes', compact('estudiantes', 'grupo', 'metodos', 'cuentas', 'accounts', 'methods', 'account_types', 'seminarios', 'grupos'));
@@ -327,11 +329,21 @@ class GrupoSeminarioController extends Controller
         return response()->json("sucess");
     }
 
-    public function deleteStudent($id)
+
+    public function bajaEstudiante($id)
     {
         $estudiante = InscripcionSeminarioGrupo::find($id);
         $estudiante->activo = false;
         $estudiante->save();
+
+        return response()->json("sucess");
+    }
+
+    public function eliminarEstudiante($id)
+    {
+        $estudiante = InscripcionSeminarioGrupo::find($id);
+        //$estudiante->activo = false;
+        $estudiante->delete();
 
         return response()->json("sucess");
     }

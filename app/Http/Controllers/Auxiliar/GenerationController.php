@@ -101,12 +101,15 @@ class GenerationController extends Controller
                 'student_inscriptions.discount as descuento',
                 'student_inscriptions.first_payment as primer_pago',
                 'student_inscriptions.id as ID',
+                'student_inscriptions.baja as baja',
+                'student_inscriptions.fecha_baja as fecha_baja',
                 'student_inscriptions.final_cost as costo_final',
                 'student_inscriptions.status as status',
                 'debts.amount as debe',
                 'debts.id as debt_id'
             )
             ->get();
+
 
         return view('auxiliar.generations.estudiantes-inscritos', compact('estudiantes', 'generation', 'metodos', 'cuentas', 'diplomats', 'generations', 'accounts', 'methods', 'account_types'));
     }

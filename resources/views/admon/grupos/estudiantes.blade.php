@@ -35,6 +35,19 @@
                                     @endif>
                                         <td>
                                             <div class="btn-group">
+                                                @if ($estudiante->baja)
+                                                    <button type="button" class="btn btn-success"
+                                                        value="{{ $estudiante->ID }}"
+                                                        onClick="reactivarEstudiante({{ $estudiante->ID }});"
+                                                        data-toggle="tooltip" data-placement="top" title="Reactivar alumno"><i
+                                                            class="fa fa-arrow-circle-up"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
+                                                        data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
+                                                            class="fa fa-minus-circle"></i>
+                                                    </button>
+                                                @else
                                                 <button type="button" class="btn btn-primary"
                                                     value="{{ $estudiante->ID }}"
                                                     onClick="datosPagosSeminario({{ $estudiante->ID }});"
@@ -42,15 +55,21 @@
                                                         class="fa fa-cash-register"></i>
                                                 </button>
                                                 <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                    data-toggle="tooltip" data-placement="top" title="Eliminar"><i
-                                                        class="fa fa-trash"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
                                                     OnClick="editarDatosEstudiante({{$estudiante->ID}});" class="btn btn-info"
                                                     data-toggle="tooltip" data-placement="top" title="Editar"><i
                                                         class="fa fa-user-edit"></i>
                                                 </button>
+                                                <button type="button" value="{{ $estudiante->ID }}"
+                                                    OnClick="bajaEstudiante(this);" class="btn btn-secondary"
+                                                    data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
+                                                        class="fa fa-undo-alt"></i>
+                                                </button>
+                                                <button type="button" value="{{ $estudiante->ID }}"
+                                                    OnClick="eliminarEstudiante(this);" class="btn btn-danger"
+                                                    data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
+                                                        class="fa fa-minus-circle"></i>
+                                                </button>
+                                                @endif
                                             </div>
                                         </td>
                                         <td>{{ $estudiante->seminario }}</td>
@@ -733,6 +752,43 @@
                         .done(function(response) {
                             datosPagosSeminario(response.id);
                             Notiflix.Report.Success('Bien hecho', 'Has agregado un nuevo pago.',
+                                'Click');
+                        })
+                        .fail(function() {
+                            Notiflix.Report.Failure('Oooops!', 'Algo salio mal con la petición.',
+                                'Click');
+                        });
+                },
+                function() { // No button callback
+                    Notiflix.Notify.Warning('Petición cancelada.');
+                }
+            );
+        }
+
+
+        function bajaEstudiante(btn) {
+            var id = btn.value;
+            var route = "/admon/CATgrupos/estudiante/baja/" + id;
+            Notiflix.Confirm.Show(
+                'Cuotas Estudiantes',
+                '¿Esta seguro dar de baja este alumno del grupo?',
+                'Si',
+                'No',
+                function() {
+                    $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'DELETE',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                        })
+                        .done(function(response) {
+                            location.reload();
+                            Notiflix.Report.Success('Bien hecho', 'Has eliminado un registro.',
                                 'Click');
                         })
                         .fail(function() {

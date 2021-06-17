@@ -102,6 +102,7 @@
                                     placeholder="EJ. maria@alumno.com">
                             </div>
                             <div class="form-group col-md-12">
+                                <input type="hidden" id="bandera_profesion" value="0">
                                 <label for="exampleInputPassword1">Profesión</label>
                                 <select name="professionSave" id="professionStudent"
                                     class="form-control form-control-lg">
@@ -135,8 +136,13 @@
                                     <option>Trabajador social con especialidad psiquiátrica</option>
                                     <option>Médico general</option>
                                     <option>Enfermera general</option>
-                                    <option>Otro</option>
+                                    <option value="10">Otro</option>
                                 </select>
+                            </div>
+                            <div class="form-group col-md-12" style="display: none;" id="bloque-profesion-alt">
+                                <label for="exampleInputPassword1">Escribe la Profesión del Alumno</label>
+                                <input type="email" class="form-control form-control-lg" id="professionStudentAlt"
+                                    placeholder="EJ. Médico General">
                             </div>
                         </div>
                     </form>

@@ -5,6 +5,7 @@
         <!-- DataTales Example -->
         <div id="block-table" style="display: block;">
             <div class="btn-group" role="group" aria-label="Basic example">
+                <input type="hidden" id="id_g">
                 <button type="button" class="btn btn-primary" value="{{ $generation->id }}"
                     onclick="mostrarPagoDocente({{ $generation->id }});"><i class="fas fa-check"></i> Pagos a
                     docentes</button>
@@ -39,11 +40,16 @@
                                         <td>
                                             <div class="btn-group">
                                                 @if ($estudiante->baja)
-                                                    <button type="button" class="btn btn-warning"
+                                                    <button type="button" class="btn btn-success"
                                                         value="{{ $estudiante->ID }}"
-                                                        onClick="reactivarAlumno({{ $estudiante->ID }});"
-                                                        data-toggle="tooltip" data-placement="top" title="Pagos"><i
+                                                        onClick="reactivarEstudiante({{ $estudiante->ID }});"
+                                                        data-toggle="tooltip" data-placement="top" title="Reactivar alumno"><i
                                                             class="fa fa-arrow-circle-up"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
+                                                        data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
+                                                            class="fa fa-minus-circle"></i>
                                                     </button>
                                                 @else
                                                     <button type="button" class="btn btn-primary"
@@ -53,14 +59,19 @@
                                                             class="fa fa-cash-register"></i>
                                                     </button>
                                                     <button type="button" value="{{ $estudiante->ID }}"
-                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                        data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
-                                                            class="fa fa-trash"></i>
-                                                    </button>
-                                                    <button type="button" value="{{ $estudiante->ID }}"
                                                         OnClick="editarDatosEstudiante({{ $estudiante->ID }});"
                                                         class="btn btn-info" data-toggle="tooltip" data-placement="top"
                                                         title="Editar"><i class="fa fa-user-edit"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="bajaEstudiante(this);" class="btn btn-secondary"
+                                                        data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
+                                                            class="fa fa-undo-alt"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
+                                                        data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
+                                                            class="fa fa-minus-circle"></i>
                                                     </button>
                                                 @endif
                                             </div>
@@ -378,7 +389,8 @@
                                             <label class="w-100 font-weight-bold size-14">Digita monto a
                                                 pagar</label>
                                             <div class="input-group mb-2">
-                                                <input id="" onkeyup="aplicarMontoDocente();" type="number" min="1"
+                                                <input type="hidden" id="id_esquema_pago">
+                                                <input id="montoPagarDocente" onkeyup="aplicarMontoDocente();" type="number" min="1"
                                                     step="any" class="form-control d-inline" value="">
                                             </div>
                                         </div>
@@ -386,7 +398,7 @@
                                             <label class="w-100 font-weight-bold size-14">Selecciona fecha de
                                                 pago</label>
                                             <div class="input-group mb-2">
-                                                <input type="date" class="form-control" name="" id=""
+                                                <input type="date" class="form-control" name="" id="fechaPagarDocente"
                                                     value="{{ \Carbon\Carbon::now()->toDateString() }}">
                                             </div>
                                         </div>
@@ -397,7 +409,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="size-16"><b>Total*</b></td>
-                                                    <td class="size-16 text-right"><b id="">$0.00 MXN</b></td>
+                                                    <td class="size-16 text-right"><b id="sMontoPagarDocente">$0.00 MXN</b></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -480,6 +492,7 @@
         </div>
         @include('admon.grupos.create')
         @include('admon.grupos.edit')
+        @include('admon.generations.mdlDetallePago')
     </div><!-- /.container-fluid -->
 @endsection
 @section('js')
@@ -528,7 +541,7 @@
                     '<strong>Generación: </strong>' + data.generacion.number_generation);
                 $("#fecha").html('<strong>Fecha de inscripción: </strong>' + data.inscripcion.created_at);
                 $("#costo").text(data.diplomado.cost);
-                $("#vendido").text(data.inscripcion.costo_final);
+                $("#vendido").text(data.inscripcion.final_cost);
                 $("#pagado").text(data.inscripcion.final_cost - data.deuda.amount);
                 $("#debe").text(data.deuda.amount);
                 if (data.deuda.amount <= 0) {
@@ -546,8 +559,8 @@
                             ');" class="btn btn-block btn-outline-secondary h-100">';
                     } else {
                         pendientes +=
-                            '<button type="button" onClick="mostrarFormularioPago(' + value.id +
-                            ');" class="btn btn-block btn-success h-100" disabled>';
+                            '<button type="button" onClick="detalleDePago(' + value.id +
+                            ');" class="btn btn-block btn-success h-100" data-toggle="modal" data-target="#mdlDetallePago">';
                     }
                     pendientes += '<p class="mb-0 size-24">';
                     pendientes += '<i class="fas fa-cash-register"></i>';
@@ -564,6 +577,97 @@
                 });
 
             });
+        }
+        
+        function detalleDePago(id) {
+            route = '/admon/CATdiplomados/detalle/pago/' + id;
+            Notiflix.Loading.Dots('Procesando...');
+            $.get(route, function(data) {
+                Notiflix.Loading.Remove();
+                console.log(data);
+                //Tabla con información
+                $("#cuentaDestino").text(data.detalle_pago.cuentaDestino);
+                $("#fechaPago").text(data.detalle_pago.fechaPago);
+                $("#metodoPago").text(data.detalle_pago.metodoPago);
+                $("#montoRecibido").text(data.detalle_pago.montoRecibido);
+                //Formulario de edición
+                $("#ID_PAGO_EDITAR").val(data.detalle_pago.id_pago);
+                $("#cuentaDestinoEditar").val(data.detalle_pago.idCuentaDestino).change();
+                $("#fechaPagoEditar").val(data.detalle_pago.fechaPago);
+                $("#metodoPagoEditar").val(data.detalle_pago.idMetodoPago).change();
+                $("#montoRecibidoEditar").val(data.detalle_pago.montoRecibido);
+            });
+        }
+
+        function editarPago() {
+            Notiflix.Loading.Dots('Procesando...');
+            $("#block-editar_pago").css("display", "block");
+            Notiflix.Loading.Remove();
+        }
+
+        function actualizarPago() {
+            var route = '/admon/CATdiplomados/estudiantes/editar/pago';
+            var id_pago = $("#ID_PAGO_EDITAR").val();
+            var cuenta_destino = $("#cuentaDestinoEditar").val();
+            var fecha_pago = $("#fechaPagoEditar").val();
+            var metodo_pago = $("#metodoPagoEditar").val();
+            var monto = $("#montoRecibidoEditar").val();
+            //checkPsd
+            var psd = $("#psdMasterEditarPago").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+            console.log(psd);
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                    url: route,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id_pago: id_pago,
+                        monto: monto,
+                        fecha_pago: fecha_pago,
+                        metodo_pago: metodo_pago,
+                        cuenta_destino: cuenta_destino
+                    },
+                    beforeSend: function() {
+                        Notiflix.Loading.Dots('Procesando...');
+                    },
+                    success: function(data) {
+                        Notiflix.Loading.Remove();
+                        $('#message-error-save').css('display', 'none');
+                        Notiflix.Report.Success('Bien hecho', 'Has guardado un nuevo pago.', 'Click');
+                        datosPagosDiplomados(data.i.id);
+                        $("#montoUNo").val("");
+                        cancelarPago();
+                        //reload();
+                        console.log(data);
+                        $("#mdlDetallePago .close").click();
+                        $("#block-editar_pago").css("display", "none");
+                    },
+                    error: function(data) {
+                        Notiflix.Loading.Remove();
+                        Notiflix.Report.Failure('Algo salió mal', 'Revisa tu información', 'Cerrar');
+                        var response = JSON.parse(data.responseText);
+                        var errorString = "<ul>";
+                        $.each(response.errors, function(key, value) {
+                            errorString += "<li>" + value + "</li>";
+                        });
+                        $("#error-save").html(errorString);
+                        $("#message-error-save").fadeIn();
+                    }
+                });
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
         }
 
         function mostrarFormularioPago(id) {
@@ -803,13 +907,13 @@
             );
         }
 
-        function eliminarEstudiante(btn) {
+        function bajaEstudiante(btn) {
             var id = btn.value;
 
             var route = "/admon/generaciones/alumnos/CAUSARBAJA/" + id;
             Notiflix.Confirm.Show(
                 'Cuotas Estudiantes',
-                '¿Esta seguro de dar de baja a este alumno de la generación?',
+                '¿Esta seguro de dar de baja a este alumno del grupo?',
                 'Si',
                 'No',
                 function() {
@@ -840,6 +944,81 @@
             );
         }
 
+        function reactivarEstudiante(btn) {
+            var id = btn;
+            console.log(btn);
+            var route = "/admon/generaciones/alumnos/REACTIVAR/" + id;
+            Notiflix.Confirm.Show(
+                'Cuotas Estudiantes',
+                '¿Esta seguro de re activar a este alumno al grupo?',
+                'Si',
+                'No',
+                function() {
+                    $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'PUT',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                        })
+                        .done(function(response) {
+                            location.reload();
+                            Notiflix.Report.Success('Bien hecho', 'Has re activado un registro.',
+                                'Click');
+                        })
+                        .fail(function() {
+                            Notiflix.Report.Failure('Oooops!', 'Algo salio mal con la petición.',
+                                'Click');
+                        });
+                },
+                function() { // No button callback
+                    Notiflix.Notify.Warning('Petición cancelada.');
+                }
+            );
+        }
+
+        function eliminarEstudiante(btn) {
+            var id = btn.value;
+
+            var route = "/admon/generaciones/alumnos/ELIMINARDEFINITIVO/" + id;
+            Notiflix.Confirm.Show(
+                'Cuotas Estudiantes',
+                '¿Esta seguro de dar eliminar a este alumno del grupo?',
+                'Si',
+                'No',
+                function() {
+                    $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'PUT',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                        })
+                        .done(function(response) {
+                            location.reload();
+                            Notiflix.Report.Success('Bien hecho', 'Has eliminado un registro.',
+                                'Click');
+                        })
+                        .fail(function() {
+                            Notiflix.Report.Failure('Oooops!', 'Algo salio mal con la petición.',
+                                'Click');
+                        });
+                },
+                function() { // No button callback
+                    Notiflix.Notify.Warning('Petición cancelada.');
+                }
+            );
+        }
+
+
         // Funciones para pagar a docentes
         function mostrarPagoDocente(id) {
             $("#block-table").css("display", "none");
@@ -847,6 +1026,7 @@
             datosPagosDocente(id);
         }
 
+        
         function datosPagosDocente(id) {
             var ID = id;
             var route = '{{ url('/admon/CATdiplomados/datos/pagos/docentes/') }}/' + ID;
@@ -858,6 +1038,7 @@
                 Notiflix.Loading.Remove();
                 console.log(data);
                 if (data.e.tipo_pago == 1) {
+                    $("#id_esquema_pago").val(data.e.id);
                     $("#tipo_pago").text('PAGO POR ESTUDIANTE');
                     $("#por_estudiante").text(data.e.pago_por_estudiante);
                     $("#total_estudiantes").text(data.e.total_estudiantes);
@@ -865,6 +1046,7 @@
                     $("#por_semana").text('----------');
                     $("#total_semanas").text('----------');
                 } else {
+                    $("#id_esquema_pago").val(data.e.id);
                     $("#tipo_pago").text('PAGO POR SEMANA');
                     $("#por_semana").text(data.e.pago_por_semana);
                     $("#total_semanas").text(data.e.total_semanas);
@@ -878,6 +1060,69 @@
                 $("#docente").text(data.dc.name + ' ' + data.dc.last_name + ' ' + data.dc.mother_last_name);
                 $("#a_pagar_final").text('$' + data.e.total_a_pagar);
             });
+        }
+
+        function aplicarMontoDocente() {
+            var montouNo = $("#montoPagarDocente").val();
+            $("#sMontoPagarDocente").text('$ ' + montouNo + ' MXN');
+        }
+
+        function aplicarPagoDocente() {
+            var monto_aplicar = $("#montoPagarDocente").val();
+            let id_pago = $("#id_esquema_pago").val();
+            var monto = $("#montoPagarDocente").val();
+            var fecha_pago = $("#fechaPagarDocente").val();
+            //var metodo_pago = $("#metodo_pago").val();
+            //var cuenta_destino = $("#cuenta_destino").val();
+
+            var route = "{{url('admon/CATdiplomados/aplicar_pago/docente')}}";
+
+            if (monto_aplicar != "") {
+                $.ajax({
+                    url: route,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id_pago: id_pago,
+                        monto: monto,
+                        fecha_pago: fecha_pago,
+                        //metodo_pago: metodo_pago,
+                        //cuenta_destino: cuenta_destino
+                    },
+                    beforeSend: function() {
+                        Notiflix.Loading.Dots('Procesando...');
+                    },
+                    success: function(data) {
+                        Notiflix.Loading.Remove();
+                        $('#message-error-save').css('display', 'none');
+                        Notiflix.Report.Success('Bien hecho', 'Has guardado un nuevo pago.', 'Click');
+                        datosPagosDiplomados(data.i.id);
+                        $("#montoPagarDocente").val("");
+                        var gen = $("#id_g").val();
+                        datosPagosDocente(gen);
+                        //cancelarPago();
+                        //reload();
+                        console.log(data);
+                    },
+                    error: function(data) {
+                        Notiflix.Loading.Remove();
+                        Notiflix.Report.Failure('Algo salió mal', 'Revisa tu información', 'Cerrar');
+                        var response = JSON.parse(data.responseText);
+                        var errorString = "<ul>";
+                        $.each(response.errors, function(key, value) {
+                            errorString += "<li>" + value + "</li>";
+                        });
+                        $("#error-save").html(errorString);
+                        $("#message-error-save").fadeIn();
+                    }
+                });
+            } else {
+                Notiflix.Notify.Failure('El monto del pago no puede estar vacío o ser zero.');
+            }
+
         }
 
     </script>
