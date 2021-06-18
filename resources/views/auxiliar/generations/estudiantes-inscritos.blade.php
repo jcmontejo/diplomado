@@ -42,14 +42,10 @@
                                                 @if ($estudiante->baja)
                                                     <button type="button" class="btn btn-success"
                                                         value="{{ $estudiante->ID }}"
-                                                        onClick="reactivarEstudiante({{ $estudiante->ID }});"
+                                                        OnClick="activarMod({{ $estudiante->ID }});" data-toggle="modal"
+                                                        data-target="#modalActivar"
                                                         data-toggle="tooltip" data-placement="top" title="Reactivar alumno"><i
                                                             class="fa fa-arrow-circle-up"></i>
-                                                    </button>
-                                                    <button type="button" value="{{ $estudiante->ID }}"
-                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                        data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
-                                                            class="fa fa-minus-circle"></i>
                                                     </button>
                                                 @else
                                                     <button type="button" class="btn btn-primary"
@@ -64,14 +60,10 @@
                                                         title="Editar"><i class="fa fa-user-edit"></i>
                                                     </button>
                                                     <button type="button" value="{{ $estudiante->ID }}"
-                                                        OnClick="bajaEstudiante(this);" class="btn btn-secondary"
+                                                        OnClick="bajaMod({{ $estudiante->ID }});" data-toggle="modal"
+                                                        data-target="#modalBaja" class="btn btn-secondary"
                                                         data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
                                                             class="fa fa-undo-alt"></i>
-                                                    </button>
-                                                    <button type="button" value="{{ $estudiante->ID }}"
-                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                        data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
-                                                            class="fa fa-minus-circle"></i>
                                                     </button>
                                                 @endif
                                             </div>
@@ -490,6 +482,9 @@
         @include('admon.grupos.create')
         @include('admon.grupos.edit')
         @include('auxiliar.generations.modal-convenio')
+        @include('auxiliar.seminarios.mdlBaja')
+        @include('auxiliar.seminarios.mdlActivar')
+        @include('auxiliar.seminarios.mdlEliminar')
     </div><!-- /.container-fluid -->
 @endsection
 @section('js')
@@ -1079,6 +1074,156 @@
                 }
             );
         }
+
+        function bajaMod(btn) {
+            $("#id-delete").val(btn);
+        }
+
+        $("#bajaEstudiante").click(function() {
+            var id = $("#id-delete").val();
+            var route = "/admon/generaciones/alumnos/CAUSARBAJA/";
+            //checkPsd
+            var psd = $("#psdMasterDelete").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function() {
+                                $("#modalBaja").modal('toggle');
+                                $("#psdMasterDelete").val("");
+                                Notiflix.Report.Success('Bien hecho',
+                                    'Has eliminado un registro.',
+                                    'Click');
+                                location.reload();
+                            },
+                            error: function(data) {
+                                Notiflix.Report.Failure('Oooops!',
+                                    'Algo salio mal con la petición.',
+                                    'Click');
+                            }
+                        })
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
+        });
+
+        function activarMod(btn) {
+            $("#id-activar").val(btn);
+        }
+
+        $("#activarEstudiante").click(function() {
+            var id = $("#id-activar").val();
+            var route = "/admon/generaciones/alumnos/REACTIVAR/";
+            //checkPsd
+            var psd = $("#psdMasterActivar").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function() {
+                                $("#modalActivar").modal('toggle');
+                                $("#psdMasterActivar").val("");
+                                Notiflix.Report.Success('Bien hecho',
+                                    'Has eliminado un registro.',
+                                    'Click');
+                                location.reload();
+                            },
+                            error: function(data) {
+                                Notiflix.Report.Failure('Oooops!',
+                                    'Algo salio mal con la petición.',
+                                    'Click');
+                            }
+                        })
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
+        });
+
+        function eliminarMod(btn) {
+            $("#id-eliminar").val(btn);
+        }
+
+        $("#eliminarEstudiante").click(function() {
+            var id = $("#id-eliminar").val();
+            var route = "/admon/generaciones/alumnos/ELIMINARDEFINITIVO/";
+            //checkPsd
+            var psd = $("#psdMasterEliminar").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function() {
+                                $("#modalEliminar").modal('toggle');
+                                $("#psdMasterEliminar").val("");
+                                Notiflix.Report.Success('Bien hecho',
+                                    'Has activado un registro.',
+                                    'Click');
+                                location.reload();
+                            },
+                            error: function(data) {
+                                Notiflix.Report.Failure('Oooops!',
+                                    'Algo salio mal con la petición.',
+                                    'Click');
+                            }
+                        })
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
+        });
 
 
         // Funciones para pagar a docentes

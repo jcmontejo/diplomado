@@ -27,48 +27,38 @@
                             </thead>
                             <tbody>
                                 @forelse ($estudiantes as $estudiante)
-                                @php
-                                    $deuda = App\DeudaSeminario::where('inscripcion_id', '=', $estudiante->ID)->first();
-                                @endphp
-                                    <tr @if ($deuda->monto <= 0)
-                                        class="bg-success-custom"
-                                    @endif>
+                                    @php
+                                        $deuda = App\DeudaSeminario::where('inscripcion_id', '=', $estudiante->ID)->first();
+                                    @endphp
+                                    <tr @if ($deuda->monto <= 0) class="bg-success-custom" @endif>
                                         <td>
                                             <div class="btn-group">
                                                 @if (!$estudiante->baja)
                                                     <button type="button" class="btn btn-success"
                                                         value="{{ $estudiante->ID }}"
-                                                        onClick="reactivarEstudiante({{ $estudiante->ID }});"
-                                                        data-toggle="tooltip" data-placement="top" title="Reactivar alumno"><i
-                                                            class="fa fa-arrow-circle-up"></i>
-                                                    </button>
-                                                    <button type="button" value="{{ $estudiante->ID }}"
-                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                        data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
-                                                            class="fa fa-minus-circle"></i>
+                                                        OnClick="activarMod({{ $estudiante->ID }});" data-toggle="modal"
+                                                        data-target="#modalActivar"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Reactivar alumno"><i class="fa fa-arrow-circle-up"></i>
                                                     </button>
                                                 @else
-                                                <button type="button" class="btn btn-primary"
-                                                    value="{{ $estudiante->ID }}"
-                                                    onClick="datosPagosSeminario({{ $estudiante->ID }});"
-                                                    data-toggle="tooltip" data-placement="top" title="Pagos"><i
-                                                        class="fa fa-cash-register"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="editarDatosEstudiante({{$estudiante->ID}});" class="btn btn-info"
-                                                    data-toggle="tooltip" data-placement="top" title="Editar"><i
-                                                        class="fa fa-user-edit"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="bajaEstudiante(this);" class="btn btn-secondary"
-                                                    data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
-                                                        class="fa fa-undo-alt"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                    data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
-                                                        class="fa fa-minus-circle"></i>
-                                                </button>
+                                                    <button type="button" class="btn btn-primary"
+                                                        value="{{ $estudiante->ID }}"
+                                                        onClick="datosPagosSeminario({{ $estudiante->ID }});"
+                                                        data-toggle="tooltip" data-placement="top" title="Pagos"><i
+                                                            class="fa fa-cash-register"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="editarDatosEstudiante({{ $estudiante->ID }});"
+                                                        class="btn btn-info" data-toggle="tooltip" data-placement="top"
+                                                        title="Editar"><i class="fa fa-user-edit"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="bajaMod({{ $estudiante->ID }});" data-toggle="modal"
+                                                        data-target="#modalBaja" class="btn btn-secondary"
+                                                        data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
+                                                            class="fa fa-undo-alt"></i>
+                                                    </button>
                                                 @endif
                                             </div>
                                         </td>
@@ -197,9 +187,9 @@
                                                         step="any" class="form-control d-inline" value="">
 
                                                     <!--<div class="input-group-append dropleft">
-                                                                        <button id="agregarMontoUno" class="btn btn-outline-primary" type="button"
-                                                                            onclick="aplicarMonto();">Aplicar</button>
-                                                                    </div>-->
+                                                                            <button id="agregarMontoUno" class="btn btn-outline-primary" type="button"
+                                                                                onclick="aplicarMonto();">Aplicar</button>
+                                                                        </div>-->
                                                 </div>
                                             </div>
                                             <div class="form-group w-100 mb-0">
@@ -284,9 +274,10 @@
                             <label for="exampleInputEmail1">Selecciona Seminario</label>
                             <select name="seminario_id_e" id="seminario_id_e" class="form-control form-control-lg">
                                 @forelse ($seminarios as $seminario)
-                                <option value="{{$seminario->id}}">{{$seminario->nombre}} [${{$seminario->precio_venta}}]</option>
+                                    <option value="{{ $seminario->id }}">{{ $seminario->nombre }}
+                                        [${{ $seminario->precio_venta }}]</option>
                                 @empty
-                                <option value="0">No hay seminarios registrados.</option>
+                                    <option value="0">No hay seminarios registrados.</option>
                                 @endforelse
                             </select>
                         </div>
@@ -294,9 +285,9 @@
                             <label for="exampleInputPassword1">Selecciona Grupo</label>
                             <select name="grupo_id_e" id="grupo_id_e" class="form-control form-control-lg">
                                 @forelse ($grupos as $grupo)
-                                <option value="{{$grupo->id}}">{{$grupo->nombre}}</option>
+                                    <option value="{{ $grupo->id }}">{{ $grupo->nombre }}</option>
                                 @empty
-                                <option value="0">No hay grupos registrados.</option>
+                                    <option value="0">No hay grupos registrados.</option>
                                 @endforelse
                             </select>
                         </div>
@@ -324,21 +315,25 @@
                             <label for="">Método de Pago</label>
                             <select name="metodo_de_pago_e" id="metodo_de_pago_e" class="form-control form-control-lg">
                                 @forelse ($methods as $method)
-                                <option value="{{$method->id}}">{{$method->name}}</option>
+                                    <option value="{{ $method->id }}">{{ $method->name }}</option>
                                 @empty
-                                <option>NO HAY MÉTODOS REGISTRADAS</option>
+                                    <option>NO HAY MÉTODOS REGISTRADAS</option>
                                 @endforelse
                             </select>
                         </div>
                     </div>
                     <div class="row">
-                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante" class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
+                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante"
+                            class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
                     </div>
                 </div>
-              </div>
+            </div>
         </div>
         @include('admon.grupos.create')
         @include('admon.grupos.edit')
+        @include('auxiliar.seminarios.mdlDetallePago')
+        @include('auxiliar.seminarios.mdlBaja')
+        @include('auxiliar.seminarios.mdlActivar')
     </div><!-- /.container-fluid -->
 @endsection
 @section('js')
@@ -351,9 +346,9 @@
             $('#cats').each(function() {
                 dt = $(this).dataTable({
                     dom: 'Bfrtip',
-        buttons: [
-            'excel', 'pdf'
-        ]
+                    buttons: [
+                        'excel', 'pdf'
+                    ]
                 });
                 dt.fnDraw();
             })
@@ -386,32 +381,34 @@
 
                 $("#pendientes").empty();
                 if (data.deuda.monto <= 0) {
-                    
-                }else{
+
+                } else {
                     $.each(data.pagos, function(key, value) {
-                    var pendientes = '';
-                    if (value.activo) {
-                        pendientes +=
-                            '<button type="button" onClick="mostrarFormularioPago(' + value.id +
-                            ');" class="btn btn-block btn-outline-secondary h-100">';
-                    } else {
-                        pendientes +=
-                            '<button type="button" onClick="mostrarFormularioPago(' + value.id +
-                            ');" class="btn btn-block btn-success h-100" disabled>';
-                    }
-                    pendientes += '<p class="mb-0 size-24">';
-                    pendientes += '<i class="fas fa-cash-register"></i>';
-                    pendientes += '</p>';
-                    if (value.activo) {
-                        pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.numero_de_pago +
-                            '<br>Click para pagar</span></p>';
-                    } else {
-                        pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.numero_de_pago +
-                            '<br>Pago cubierto</span></p>';
-                    }
-                    pendientes += '</button>';
-                    $("#pendientes").append(pendientes);
-                });
+                        var pendientes = '';
+                        if (value.activo) {
+                            pendientes +=
+                                '<button type="button" onClick="mostrarFormularioPago(' + value.id +
+                                ');" class="btn btn-block btn-outline-secondary h-100">';
+                        } else {
+                            pendientes +=
+                                '<button type="button" onClick="detalleDePago(' + value.id +
+                                ');" class="btn btn-block btn-success h-100" data-toggle="modal" data-target="#mdlDetallePago">';
+                        }
+                        pendientes += '<p class="mb-0 size-24">';
+                        pendientes += '<i class="fas fa-cash-register"></i>';
+                        pendientes += '</p>';
+                        if (value.activo) {
+                            pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value
+                                .numero_de_pago +
+                                '<br>Click para pagar</span></p>';
+                        } else {
+                            pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value
+                                .numero_de_pago +
+                                '<br>Pago cubierto</span></p>';
+                        }
+                        pendientes += '</button>';
+                        $("#pendientes").append(pendientes);
+                    });
                 }
             });
         }
@@ -423,7 +420,7 @@
 
         function editarDatosEstudiante(id) {
             $("#ID_INS_EDITAR").val(id);
-            
+
             var route = '{{ url('/admon/CATgrupos/datos/pagos') }}/' + id;
             Notiflix.Loading.Dots('Procesando...');
             $("#block-table").css("display", "none");
@@ -691,12 +688,12 @@
             );
         }
 
-        function eliminarEstudiante(btn) {
-            var id = btn.value;
-            var route = "/admon/CATgrupos/estudiante/eliminar/" + id;
+        function activarEstudiante(btn) {
+            var id = btn;
+            var route = "/admon/CATgrupos/estudiante/activar/" + id;
             Notiflix.Confirm.Show(
                 'Cuotas Estudiantes',
-                '¿Esta seguro de eliminar este alumno del grupo?',
+                '¿Esta seguro activar este alumno al grupo?',
                 'Si',
                 'No',
                 function() {
@@ -725,6 +722,122 @@
                     Notiflix.Notify.Warning('Petición cancelada.');
                 }
             );
+        }
+
+        function bajaMod(btn) {
+            $("#id-delete").val(btn);
+        }
+
+        $("#bajaEstudiante").click(function() {
+            var id = $("#id-delete").val();
+            var route = "/admon/CATgrupos/estudiante/baja/";
+            //checkPsd
+            var psd = $("#psdMasterDelete").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function() {
+                                $("#modalBaja").modal('toggle');
+                                $("#psdMasterDelete").val("");
+                                Notiflix.Report.Success('Bien hecho', 'Has eliminado un registro.',
+                                'Click');
+                                location.reload();
+                            },
+                            error: function(data) {
+                                Notiflix.Report.Failure('Oooops!', 'Algo salio mal con la petición.',
+                                'Click');
+                            }
+                        })
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
+        });
+
+        function activarMod(btn) {
+            $("#id-activar").val(btn);
+        }
+
+        $("#activarEstudiante").click(function() {
+            var id = $("#id-activar").val();
+            var route = "/admon/CATgrupos/estudiante/activar/";
+            //checkPsd
+            var psd = $("#psdMasterActivar").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function() {
+                                $("#modalActivar").modal('toggle');
+                                $("#psdMasterActivar").val("");
+                                Notiflix.Report.Success('Bien hecho', 'Has eliminado un registro.',
+                                'Click');
+                                location.reload();
+                            },
+                            error: function(data) {
+                                Notiflix.Report.Failure('Oooops!', 'Algo salio mal con la petición.',
+                                'Click');
+                            }
+                        })
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
+        });
+
+        function detalleDePago(id) {
+            route = '/admon/CATgrupos/detalle/pago/' + id;
+            Notiflix.Loading.Dots('Procesando...');
+            $.get(route, function(data) {
+                Notiflix.Loading.Remove();
+                console.log(data);
+                //Tabla con información
+                $("#cuentaDestino").text(data.detalle_pago.cuentaDestino);
+                $("#fechaPago").text(data.detalle_pago.fechaPago);
+                $("#metodoPago").text(data.detalle_pago.metodoPago);
+                $("#montoRecibido").text(data.detalle_pago.montoRecibido);
+                //Formulario de edición
+                $("#ID_PAGO_EDITAR").val(data.detalle_pago.id_pago);
+                $("#cuentaDestinoEditar").val(data.detalle_pago.idCuentaDestino).change();
+                $("#fechaPagoEditar").val(data.detalle_pago.fechaPago);
+                $("#metodoPagoEditar").val(data.detalle_pago.idMetodoPago).change();
+                $("#montoRecibidoEditar").val(data.detalle_pago.montoRecibido);
+            });
         }
 
     </script>

@@ -27,48 +27,50 @@
                             </thead>
                             <tbody>
                                 @forelse ($estudiantes as $estudiante)
-                                @php
-                                    $deuda = App\DeudaSeminario::where('inscripcion_id', '=', $estudiante->ID)->first();
-                                @endphp
-                                    <tr @if ($deuda->monto <= 0)
-                                        class="bg-success-custom"
-                                    @endif>
+                                    @php
+                                        $deuda = App\DeudaSeminario::where('inscripcion_id', '=', $estudiante->ID)->first();
+                                    @endphp
+                                    <tr @if ($deuda->monto <= 0) class="bg-success-custom" @endif>
                                         <td>
                                             <div class="btn-group">
-                                                @if ($estudiante->baja)
+                                                @if (!$estudiante->baja)
                                                     <button type="button" class="btn btn-success"
                                                         value="{{ $estudiante->ID }}"
-                                                        onClick="reactivarEstudiante({{ $estudiante->ID }});"
-                                                        data-toggle="tooltip" data-placement="top" title="Reactivar alumno"><i
+                                                        OnClick="activarMod({{ $estudiante->ID }});" data-toggle="modal"
+                                                        data-target="#modalActivar" data-toggle="tooltip"
+                                                        data-placement="top" title="Reactivar alumno"><i
                                                             class="fa fa-arrow-circle-up"></i>
                                                     </button>
                                                     <button type="button" value="{{ $estudiante->ID }}"
-                                                        OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                        data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
-                                                            class="fa fa-minus-circle"></i>
+                                                        OnClick="eliminarMod({{ $estudiante->ID }});" data-toggle="modal"
+                                                        data-target="#modalEliminar" class="btn btn-danger"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Eliminar del grupo"><i class="fa fa-minus-circle"></i>
                                                     </button>
                                                 @else
-                                                <button type="button" class="btn btn-primary"
-                                                    value="{{ $estudiante->ID }}"
-                                                    onClick="datosPagosSeminario({{ $estudiante->ID }});"
-                                                    data-toggle="tooltip" data-placement="top" title="Pagos"><i
-                                                        class="fa fa-cash-register"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="editarDatosEstudiante({{$estudiante->ID}});" class="btn btn-info"
-                                                    data-toggle="tooltip" data-placement="top" title="Editar"><i
-                                                        class="fa fa-user-edit"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="bajaEstudiante(this);" class="btn btn-secondary"
-                                                    data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
-                                                        class="fa fa-undo-alt"></i>
-                                                </button>
-                                                <button type="button" value="{{ $estudiante->ID }}"
-                                                    OnClick="eliminarEstudiante(this);" class="btn btn-danger"
-                                                    data-toggle="tooltip" data-placement="top" title="Eliminar del grupo"><i
-                                                        class="fa fa-minus-circle"></i>
-                                                </button>
+                                                    <button type="button" class="btn btn-primary"
+                                                        value="{{ $estudiante->ID }}"
+                                                        onClick="datosPagosSeminario({{ $estudiante->ID }});"
+                                                        data-toggle="tooltip" data-placement="top" title="Pagos"><i
+                                                            class="fa fa-cash-register"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="editarDatosEstudiante({{ $estudiante->ID }});"
+                                                        class="btn btn-info" data-toggle="tooltip" data-placement="top"
+                                                        title="Editar"><i class="fa fa-user-edit"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="bajaMod({{ $estudiante->ID }});" data-toggle="modal"
+                                                        data-target="#modalBaja" class="btn btn-secondary"
+                                                        data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
+                                                            class="fa fa-undo-alt"></i>
+                                                    </button>
+                                                    <button type="button" value="{{ $estudiante->ID }}"
+                                                        OnClick="eliminarMod({{ $estudiante->ID }});" data-toggle="modal"
+                                                        data-target="#modalEliminar" class="btn btn-danger"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Eliminar del grupo"><i class="fa fa-minus-circle"></i>
+                                                    </button>
                                                 @endif
                                             </div>
                                         </td>
@@ -181,7 +183,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div id="pendientes">
-                                    {{--Aquí van los pagos pendientes --}}
+                                    {{-- Aquí van los pagos pendientes --}}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -197,9 +199,9 @@
                                                         step="any" class="form-control d-inline" value="">
 
                                                     <!--<div class="input-group-append dropleft">
-                                                                        <button id="agregarMontoUno" class="btn btn-outline-primary" type="button"
-                                                                            onclick="aplicarMonto();">Aplicar</button>
-                                                                    </div>-->
+                                                                            <button id="agregarMontoUno" class="btn btn-outline-primary" type="button"
+                                                                                onclick="aplicarMonto();">Aplicar</button>
+                                                                        </div>-->
                                                 </div>
                                             </div>
                                             <div class="form-group w-100 mb-0">
@@ -284,9 +286,10 @@
                             <label for="exampleInputEmail1">Selecciona Seminario</label>
                             <select name="seminario_id_e" id="seminario_id_e" class="form-control form-control-lg">
                                 @forelse ($seminarios as $seminario)
-                                <option value="{{$seminario->id}}">{{$seminario->nombre}} [${{$seminario->precio_venta}}]</option>
+                                    <option value="{{ $seminario->id }}">{{ $seminario->nombre }}
+                                        [${{ $seminario->precio_venta }}]</option>
                                 @empty
-                                <option value="0">No hay seminarios registrados.</option>
+                                    <option value="0">No hay seminarios registrados.</option>
                                 @endforelse
                             </select>
                         </div>
@@ -294,9 +297,9 @@
                             <label for="exampleInputPassword1">Selecciona Grupo</label>
                             <select name="grupo_id_e" id="grupo_id_e" class="form-control form-control-lg">
                                 @forelse ($grupos as $grupo)
-                                <option value="{{$grupo->id}}">{{$grupo->nombre}}</option>
+                                    <option value="{{ $grupo->id }}">{{ $grupo->nombre }}</option>
                                 @empty
-                                <option value="0">No hay grupos registrados.</option>
+                                    <option value="0">No hay grupos registrados.</option>
                                 @endforelse
                             </select>
                         </div>
@@ -324,22 +327,26 @@
                             <label for="">Método de Pago</label>
                             <select name="metodo_de_pago_e" id="metodo_de_pago_e" class="form-control form-control-lg">
                                 @forelse ($methods as $method)
-                                <option value="{{$method->id}}">{{$method->name}}</option>
+                                    <option value="{{ $method->id }}">{{ $method->name }}</option>
                                 @empty
-                                <option>NO HAY MÉTODOS REGISTRADAS</option>
+                                    <option>NO HAY MÉTODOS REGISTRADAS</option>
                                 @endforelse
                             </select>
                         </div>
                     </div>
                     <div class="row">
-                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante" class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
+                        <button type="button" id="editarDatosEstudiante" name="editarDatosEstudiante"
+                            class="btn btn-block btn-success"><i class="fas fa-user-edit"></i> ACTUALIZAR DATOS</button>
                     </div>
                 </div>
-              </div>
+            </div>
         </div>
         @include('admon.grupos.create')
         @include('admon.grupos.edit')
         @include('admon.grupos.mdlDetallePago')
+        @include('auxiliar.seminarios.mdlBaja')
+        @include('auxiliar.seminarios.mdlActivar')
+        @include('auxiliar.seminarios.mdlEliminar')
     </div><!-- /.container-fluid -->
 @endsection
 @section('js')
@@ -352,21 +359,21 @@
             $('#cats').each(function() {
                 dt = $(this).dataTable({
                     lengthMenu: [
-                    [25, 100, -1],
-                    [25, 100, "Todos"]
-                ],
-                pageLength: 25,
-                dom: 'lBfrtip',
-                buttons: [{
-                    extend: 'excel',
-                    text: '<span class="fas fa-file-excel-o"></span> Exportar Excel',
-                    exportOptions: {
-                        modifier: {
-                            search: 'applied',
-                            order: 'applied'
+                        [25, 100, -1],
+                        [25, 100, "Todos"]
+                    ],
+                    pageLength: 25,
+                    dom: 'lBfrtip',
+                    buttons: [{
+                        extend: 'excel',
+                        text: '<span class="fas fa-file-excel-o"></span> Exportar Excel',
+                        exportOptions: {
+                            modifier: {
+                                search: 'applied',
+                                order: 'applied'
+                            }
                         }
-                    }
-                }]
+                    }]
                 });
                 dt.fnDraw();
             })
@@ -399,32 +406,35 @@
 
                 $("#pendientes").empty();
                 if (data.deuda.monto <= 0) {
-                    
-                }else{
+
+                } else {
                     $.each(data.pagos, function(key, value) {
-                    var pendientes = '';
-                    if (value.activo) {
-                        pendientes +=
-                            '<button type="button" onClick="mostrarFormularioPago(' + value.id +
-                            ');" class="btn btn-block btn-outline-secondary h-100">';
-                    } else {
-                        pendientes +=
-                            '<button type="button" onClick="detalleDePago(' + value.id +
-                            ');" class="btn btn-block btn-success h-100" data-toggle="modal" data-target="#mdlDetallePago">';
-                    }
-                    pendientes += '<p class="mb-0 size-24">';
-                    pendientes += '<i class="fas fa-cash-register"></i>';
-                    pendientes += '</p>';
-                    if (value.activo) {
-                        pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.numero_de_pago +
-                            '<br>Click para pagar</span></p>';
-                    } else {
-                        pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value.numero_de_pago +
-                            '<br>PAGADO</span></p>';
-                    }
-                    pendientes += '</button>';
-                    $("#pendientes").append(pendientes);
-                });
+                        var pendientes = '';
+
+                        if (value.activo) {
+                            pendientes +=
+                                '<button type="button" onClick="mostrarFormularioPago(' + value.id +
+                                ');" class="btn btn-block btn-outline-secondary h-100">';
+                        } else {
+                            pendientes +=
+                                '<button type="button" onClick="detalleDePago(' + value.id +
+                                ');" class="btn btn-block btn-success h-100" data-toggle="modal" data-target="#mdlDetallePago">';
+                        }
+                        pendientes += '<p class="mb-0 size-24">';
+                        pendientes += '<i class="fas fa-cash-register"></i>';
+                        pendientes += '</p>';
+                        if (value.activo) {
+                            pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value
+                                .numero_de_pago +
+                                '<br>Click para pagar</span></p>';
+                        } else {
+                            pendientes += '<p class="mb-0 size-12"><span>Pago número ' + value
+                                .numero_de_pago +
+                                '<br>PAGADO</span></p>';
+                        }
+                        pendientes += '</button>';
+                        $("#pendientes").append(pendientes);
+                    });
                 }
             });
         }
@@ -475,46 +485,48 @@
                 $.get(route_psd, function(res) {
                     if (res.success == true) {
                         $.ajax({
-                    url: route,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        id_pago: id_pago,
-                        monto: monto,
-                        fecha_pago: fecha_pago,
-                        metodo_pago: metodo_pago,
-                        cuenta_destino: cuenta_destino
-                    },
-                    beforeSend: function() {
-                        Notiflix.Loading.Dots('Procesando...');
-                    },
-                    success: function(data) {
-                        Notiflix.Loading.Remove();
-                        $('#message-error-save').css('display', 'none');
-                        Notiflix.Report.Success('Bien hecho', 'Has guardado un nuevo pago.', 'Click');
-                        datosPagosSeminario(data.i.id);
-                        $("#montoUNo").val("");
-                        cancelarPago();
-                        //reload();
-                        console.log(data);
-                        $("#mdlDetallePago .close").click();
-                        $("#block-editar_pago").css("display", "none");
-                    },
-                    error: function(data) {
-                        Notiflix.Loading.Remove();
-                        Notiflix.Report.Failure('Algo salió mal', 'Revisa tu información', 'Cerrar');
-                        var response = JSON.parse(data.responseText);
-                        var errorString = "<ul>";
-                        $.each(response.errors, function(key, value) {
-                            errorString += "<li>" + value + "</li>";
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id_pago: id_pago,
+                                monto: monto,
+                                fecha_pago: fecha_pago,
+                                metodo_pago: metodo_pago,
+                                cuenta_destino: cuenta_destino
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function(data) {
+                                Notiflix.Loading.Remove();
+                                $('#message-error-save').css('display', 'none');
+                                Notiflix.Report.Success('Bien hecho', 'Has guardado un nuevo pago.',
+                                    'Click');
+                                datosPagosSeminario(data.i.id);
+                                $("#montoUNo").val("");
+                                cancelarPago();
+                                //reload();
+                                console.log(data);
+                                $("#mdlDetallePago .close").click();
+                                $("#block-editar_pago").css("display", "none");
+                            },
+                            error: function(data) {
+                                Notiflix.Loading.Remove();
+                                Notiflix.Report.Failure('Algo salió mal', 'Revisa tu información',
+                                    'Cerrar');
+                                var response = JSON.parse(data.responseText);
+                                var errorString = "<ul>";
+                                $.each(response.errors, function(key, value) {
+                                    errorString += "<li>" + value + "</li>";
+                                });
+                                $("#error-save").html(errorString);
+                                $("#message-error-save").fadeIn();
+                            }
                         });
-                        $("#error-save").html(errorString);
-                        $("#message-error-save").fadeIn();
-                    }
-                });
                     } else {
                         alert('Clave maestra incorrecta.');
                     }
@@ -533,7 +545,7 @@
 
         function editarDatosEstudiante(id) {
             $("#ID_INS_EDITAR").val(id);
-            
+
             var route = '{{ url('/admon/CATgrupos/datos/pagos') }}/' + id;
             Notiflix.Loading.Dots('Procesando...');
             $("#block-table").css("display", "none");
@@ -836,6 +848,176 @@
                     Notiflix.Notify.Warning('Petición cancelada.');
                 }
             );
+        }
+
+        function bajaMod(btn) {
+            $("#id-delete").val(btn);
+        }
+
+        $("#bajaEstudiante").click(function() {
+            var id = $("#id-delete").val();
+            var route = "/admon/CATgrupos/estudiante/baja/";
+            //checkPsd
+            var psd = $("#psdMasterDelete").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function() {
+                                $("#modalBaja").modal('toggle');
+                                $("#psdMasterDelete").val("");
+                                Notiflix.Report.Success('Bien hecho',
+                                    'Has eliminado un registro.',
+                                    'Click');
+                                location.reload();
+                            },
+                            error: function(data) {
+                                Notiflix.Report.Failure('Oooops!',
+                                    'Algo salio mal con la petición.',
+                                    'Click');
+                            }
+                        })
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
+        });
+
+        function activarMod(btn) {
+            $("#id-activar").val(btn);
+        }
+
+        $("#activarEstudiante").click(function() {
+            var id = $("#id-activar").val();
+            var route = "/admon/CATgrupos/estudiante/activar/";
+            //checkPsd
+            var psd = $("#psdMasterActivar").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function() {
+                                $("#modalActivar").modal('toggle');
+                                $("#psdMasterActivar").val("");
+                                Notiflix.Report.Success('Bien hecho',
+                                    'Has eliminado un registro.',
+                                    'Click');
+                                location.reload();
+                            },
+                            error: function(data) {
+                                Notiflix.Report.Failure('Oooops!',
+                                    'Algo salio mal con la petición.',
+                                    'Click');
+                            }
+                        })
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
+        });
+
+        function eliminarMod(btn) {
+            $("#id-eliminar").val(btn);
+        }
+
+        $("#eliminarEstudiante").click(function() {
+            var id = $("#id-eliminar").val();
+            var route = "/admon/CATgrupos/estudiante/eliminar/";
+            //checkPsd
+            var psd = $("#psdMasterEliminar").val();
+            var route_psd = "/admon/consultar/contrasenia/" + psd;
+
+            if (psd != "") {
+                $.get(route_psd, function(res) {
+                    if (res.success == true) {
+                        $.ajax({
+                            url: route,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                id: id
+                            },
+                            beforeSend: function() {
+                                Notiflix.Loading.Dots('Procesando...');
+                            },
+                            success: function() {
+                                $("#modalEliminar").modal('toggle');
+                                $("#psdMasterEliminar").val("");
+                                Notiflix.Report.Success('Bien hecho',
+                                    'Has activado un registro.',
+                                    'Click');
+                                location.reload();
+                            },
+                            error: function(data) {
+                                Notiflix.Report.Failure('Oooops!',
+                                    'Algo salio mal con la petición.',
+                                    'Click');
+                            }
+                        })
+                    } else {
+                        alert('Clave maestra incorrecta.');
+                    }
+                });
+            } else {
+                alert('Por favor llena el campo de clave maestra.');
+            }
+        });
+
+        function detalleDePago(id) {
+            route = '/admon/CATgrupos/detalle/pago/' + id;
+            Notiflix.Loading.Dots('Procesando...');
+            $.get(route, function(data) {
+                Notiflix.Loading.Remove();
+                console.log(data);
+                //Tabla con información
+                $("#cuentaDestino").text(data.detalle_pago.cuentaDestino);
+                $("#fechaPago").text(data.detalle_pago.fechaPago);
+                $("#metodoPago").text(data.detalle_pago.metodoPago);
+                $("#montoRecibido").text(data.detalle_pago.montoRecibido);
+                //Formulario de edición
+                $("#ID_PAGO_EDITAR").val(data.detalle_pago.id_pago);
+                $("#cuentaDestinoEditar").val(data.detalle_pago.idCuentaDestino).change();
+                $("#fechaPagoEditar").val(data.detalle_pago.fechaPago);
+                $("#metodoPagoEditar").val(data.detalle_pago.idMetodoPago).change();
+                $("#montoRecibidoEditar").val(data.detalle_pago.montoRecibido);
+            });
         }
 
     </script>

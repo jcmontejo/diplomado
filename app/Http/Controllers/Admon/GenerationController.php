@@ -659,11 +659,11 @@ class GenerationController extends Controller
         }
     }
 
-    public function darBaja($id, Request $request)
+    public function darBaja(Request $request)
     {
         try {
             $date = Carbon::now();
-            $inscription = StudentInscription::find($id);
+            $inscription = StudentInscription::find($request->id);
             $inscription->baja = true;
             $inscription->fecha_baja = $date;
             $inscription->save();
@@ -676,11 +676,11 @@ class GenerationController extends Controller
         }
     }
     
-    public function reactivar($id, Request $request)
+    public function reactivar(Request $request)
     {
         try {
             $date = Carbon::now();
-            $inscription = StudentInscription::find($id);
+            $inscription = StudentInscription::find($request->id);
             $inscription->baja = false;
             $inscription->fecha_baja = null;
             $inscription->save();
@@ -693,11 +693,11 @@ class GenerationController extends Controller
         }
     }
 
-    public function eliminarDef($id, Request $request)
+    public function eliminarDef(Request $request)
     {
         try {
             DB::beginTransaction();
-            $ins = StudentInscription::find($id);
+            $ins = StudentInscription::find($request->id);
 
             $debt = Debt::where('generation_id', '=', $ins->id)->first();
 

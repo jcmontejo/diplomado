@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use DB;
+use PHPUnit\Framework\Constraint\IsTrue;
 
 class GrupoSeminarioController extends Controller
 {
@@ -330,18 +331,27 @@ class GrupoSeminarioController extends Controller
     }
 
 
-    public function bajaEstudiante($id)
+    public function bajaEstudiante(Request $request)
     {
-        $estudiante = InscripcionSeminarioGrupo::find($id);
+        $estudiante = InscripcionSeminarioGrupo::find($request->id);
         $estudiante->activo = false;
         $estudiante->save();
 
         return response()->json("sucess");
     }
 
-    public function eliminarEstudiante($id)
+    public function activarEstudiante(Request $request)
     {
-        $estudiante = InscripcionSeminarioGrupo::find($id);
+        $estudiante = InscripcionSeminarioGrupo::find($request->id);
+        $estudiante->activo = true;
+        $estudiante->save();
+
+        return response()->json("sucess");
+    }
+
+    public function eliminarEstudiante(Request $request)
+    {
+        $estudiante = InscripcionSeminarioGrupo::find($request->id);
         //$estudiante->activo = false;
         $estudiante->delete();
 
