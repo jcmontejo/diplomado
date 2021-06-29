@@ -351,7 +351,9 @@ Route::group(['prefix' => 'admon'], function () {
     //
     Route::put('/generaciones/alumnos/baja/{id}', 'Admon\GenerationController@down');
     Route::post('/generaciones/alumnos/CAUSARBAJA/', 'Admon\GenerationController@darBaja');
+    Route::put('/generaciones/alumnos/CAUSARBAJA/{id}', 'Admon\GenerationController@darBajaAuxiliar');
     Route::post('/generaciones/alumnos/REACTIVAR/', 'Admon\GenerationController@reactivar');
+    Route::put('/generaciones/alumnos/REACTIVAR/{id}', 'Admon\GenerationController@reactivarAuxiliar');
     Route::post('/generaciones/alumnos/ELIMINARDEFINITIVO/', 'Admon\GenerationController@eliminarDef');
     Route::put('/generaciones/alumnos/alta/{id}', 'Admon\GenerationController@up');
     Route::delete('/generaciones/eliminar/alumno/{id}', 'Admon\GenerationController@deleteStudent');
@@ -440,8 +442,11 @@ Route::group(['prefix' => 'admon'], function () {
      Route::get('/CATgrupos/detalle/pago/{id}', 'GrupoSeminarioController@detallePago');
 
      Route::post('/CATgrupos/estudiante/baja/', 'GrupoSeminarioController@bajaEstudiante');
+     Route::delete('/CATgrupos/estudiante/baja/{id}', 'GrupoSeminarioController@bajaEstudianteAuxiliar');
      Route::post('/CATgrupos/estudiante/eliminar/', 'GrupoSeminarioController@eliminarEstudiante');
      Route::post('/CATgrupos/estudiante/activar/', 'GrupoSeminarioController@activarEstudiante');
+     Route::delete('/CATgrupos/estudiante/activar/{id}', 'GrupoSeminarioController@activarEstudianteAuxiliar');
+
 
      Route::post('/alumnos/editarInscripcion', 'GrupoSeminarioController@editarDatosEstudiante');
      Route::post('/alumnos/editarInscripcionDiplomado', 'GrupoSeminarioController@editarDatosEstudianteDiplomado');

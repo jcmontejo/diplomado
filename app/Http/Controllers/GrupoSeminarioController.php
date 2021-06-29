@@ -340,9 +340,27 @@ class GrupoSeminarioController extends Controller
         return response()->json("sucess");
     }
 
+    public function bajaEstudianteAuxiliar($id)
+    {
+        $estudiante = InscripcionSeminarioGrupo::find($id);
+        $estudiante->activo = false;
+        $estudiante->save();
+
+        return response()->json("sucess");
+    }
+
     public function activarEstudiante(Request $request)
     {
         $estudiante = InscripcionSeminarioGrupo::find($request->id);
+        $estudiante->activo = true;
+        $estudiante->save();
+
+        return response()->json("sucess");
+    }
+
+    public function activarEstudianteAuxiliar($id)
+    {
+        $estudiante = InscripcionSeminarioGrupo::find($id);
         $estudiante->activo = true;
         $estudiante->save();
 

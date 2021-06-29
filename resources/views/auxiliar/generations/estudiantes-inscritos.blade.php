@@ -42,8 +42,7 @@
                                                 @if ($estudiante->baja)
                                                     <button type="button" class="btn btn-success"
                                                         value="{{ $estudiante->ID }}"
-                                                        OnClick="activarMod({{ $estudiante->ID }});" data-toggle="modal"
-                                                        data-target="#modalActivar"
+                                                        OnClick="reactivarEstudiante({{ $estudiante->ID }});"
                                                         data-toggle="tooltip" data-placement="top" title="Reactivar alumno"><i
                                                             class="fa fa-arrow-circle-up"></i>
                                                     </button>
@@ -60,8 +59,7 @@
                                                         title="Editar"><i class="fa fa-user-edit"></i>
                                                     </button>
                                                     <button type="button" value="{{ $estudiante->ID }}"
-                                                        OnClick="bajaMod({{ $estudiante->ID }});" data-toggle="modal"
-                                                        data-target="#modalBaja" class="btn btn-secondary"
+                                                        OnClick="bajaEstudiante({{ $estudiante->ID }});" class="btn btn-secondary"
                                                         data-toggle="tooltip" data-placement="top" title="Causar Baja"><i
                                                             class="fa fa-undo-alt"></i>
                                                     </button>
@@ -965,7 +963,7 @@
         }
 
         function bajaEstudiante(btn) {
-            var id = btn.value;
+            var id = btn;
 
             var route = "/admon/generaciones/alumnos/CAUSARBAJA/" + id;
             Notiflix.Confirm.Show(

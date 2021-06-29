@@ -675,12 +675,46 @@ class GenerationController extends Controller
             return response()->json($e->getMessage());
         }
     }
+
+    public function darBajaAuxiliar($id)
+    {
+        try {
+            $date = Carbon::now();
+            $inscription = StudentInscription::find($id);
+            $inscription->baja = true;
+            $inscription->fecha_baja = $date;
+            $inscription->save();
+
+            return response()->json([
+                'success' => 'Record has been deleted successfully!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
     
     public function reactivar(Request $request)
     {
         try {
             $date = Carbon::now();
             $inscription = StudentInscription::find($request->id);
+            $inscription->baja = false;
+            $inscription->fecha_baja = null;
+            $inscription->save();
+
+            return response()->json([
+                'success' => 'Record has been activated successfully!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
+
+    public function reactivarAuxiliar($id)
+    {
+        try {
+            $date = Carbon::now();
+            $inscription = StudentInscription::find($id);
             $inscription->baja = false;
             $inscription->fecha_baja = null;
             $inscription->save();
