@@ -540,7 +540,7 @@ Route::group(['prefix' => 'auxiliar'], function () {
     Route::get('/CATgrupos/estudiantes/{id}', 'GrupoSeminarioController@showStudentsAuxiliar');
 });
 
-//Rutas para control escolar
+//Rutas para control escolar...
 Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-alumnos'], function () {
     //Alumnos
     Route::get('/alumnos/lista', 'Escolar\StudentController@index');
@@ -583,6 +583,11 @@ Route::group(['prefix' => 'control-escolar', 'middleware' => 'permission:modulo-
     Route::get('/generaciones/enviar/recibo/{id}', 'Escolar\GenerationController@sendVoucher');
     Route::get('/generaciones/enviar/recibo/dos/{id}', 'Escolar\GenerationController@sendVoucherTwo');
     Route::post('/generaciones/editar/pago/', 'Escolar\GenerationController@editPay');
+
+    //Seminarios
+    Route::get('/CATgrupos/listado', 'GrupoSeminarioController@indexControl');
+    Route::get('/CATgrupos/datos', 'GrupoSeminarioController@dataControl');
+    Route::get('/CATgrupos/estudiantes/{id}', 'GrupoSeminarioController@showStudentsControl');
 });
 
 Route::group(['prefix' => 'clinica'], function () {
